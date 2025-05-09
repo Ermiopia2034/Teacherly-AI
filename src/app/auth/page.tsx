@@ -5,7 +5,7 @@ import Link from "next/link";
 import styles from "./auth.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
 
-// Component that uses useSearchParams
+// Component that uses useSearchParamss
 function AuthContent() {
   const searchParams = useSearchParams();
   const mode = searchParams.get('mode');
