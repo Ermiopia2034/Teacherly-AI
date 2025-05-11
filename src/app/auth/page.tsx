@@ -57,7 +57,7 @@ function AuthContent() {
         await auth.signup({ email, password, full_name: name });
       }
       // Redirect is handled by the useEffect watching auth.user
-      // router.push("/dashboard"); // No longer needed here
+      // router.push("/dashboard"); // No longer needed herer
     } catch (err: unknown) {
       console.error("Auth failed:", err);
       // Type guard to safely access properties
