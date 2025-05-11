@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import styles from './dashboard.module.css';
+import { useAuth } from '@/context/AuthContext'; // Assuming @ is src path
 
 export default function DashboardLayout({
   children,
@@ -12,6 +13,8 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const auth = useAuth();
+  const router = useRouter();
 
   // Check if viewport is mobile on initial load and when window resizes
   useEffect(() => {
@@ -34,6 +37,33 @@ export default function DashboardLayout({
     // Cleanup event listener
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    if (!auth.isLoading && !auth.user) {
+      router.push('/auth');
+    }
+  }, [auth.isLoading, auth.user, router]);
+
+  const handleLogout = async () => {
+    try {
+      await auth.logout();
+      router.push('/auth'); // Redirect to login after logout
+    } catch (error) {
+      console.error("Logout failed in layout:", error);
+      // Optionally show an error message to the user
+    }
+  };
+
+  if (auth.isLoading) {
+    // You can replace this with a more sophisticated loading spinner or skeleton screen
+    return <div className={styles.loadingScreen}>Loading dashboard...</div>;
+  }
+
+  if (!auth.user) {
+    // This case should ideally be handled by the redirect in useEffect,
+    // but as a fallback, prevent rendering the dashboard for unauthenticated users.
+    return null;
+  }
 
   const toggleSidebar = () => {
     setSidebarCollapsed(!isSidebarCollapsed);
@@ -123,14 +153,14 @@ export default function DashboardLayout({
             </svg>
             <span>Help</span>
           </Link>
-          <Link href="/" className={styles.navItem}>
+          <button onClick={handleLogout} className={`${styles.navItem} ${styles.logoutButton}`}>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
               <polyline points="16 17 21 12 16 7"></polyline>
               <line x1="21" y1="12" x2="9" y2="12"></line>
             </svg>
             <span>Logout Account</span>
-          </Link>
+          </button>
         </div>
       </aside>
 

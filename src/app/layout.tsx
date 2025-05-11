@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Merriweather, Lato } from "next/font/google";
 import "./globals.css";
 import "./responsive.css";
+import { AuthProvider } from "@/context/AuthContext"; // Assuming @ is src path
 
 const merriweather = Merriweather({
   subsets: ["latin"],
@@ -30,7 +31,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${merriweather.variable} ${lato.variable}`}>
       <body>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

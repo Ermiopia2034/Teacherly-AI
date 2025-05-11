@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import styles from "./auth.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useAuth } from "@/context/AuthContext"; // Assuming @ is src path
 
 // Component that uses useSearchParamss
 function AuthContent() {
@@ -15,7 +16,9 @@ function AuthContent() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [isAnimating, setIsAnimating] = useState(false);
+  const [error, setError] = useState<string | null>(null); // For displaying auth errors
   const router = useRouter();
+  const auth = useAuth();
 
   // Set initial mode based on URL parameter
   useEffect(() => {
@@ -25,6 +28,13 @@ function AuthContent() {
       setIsLogin(true);
     }
   }, [mode]);
+
+  // Redirect if user is already logged in
+  useEffect(() => {
+    if (auth.user) {
+      router.push("/dashboard");
+    }
+  }, [auth.user, router]);
 
   // Toggle between login and signup
   const toggleMode = () => {
@@ -36,16 +46,37 @@ function AuthContent() {
   };
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null); // Clear previous errors
 
-    // Here you would typically handle authentication
-    // For now, we'll just simulate a successful login/signup
-    console.log(isLogin ? "Logging in..." : "Signing up...");
-    console.log({ email, password, name });
-
-    // Redirect to home page after successful login/signup
-    router.push("/");
+    try {
+      if (isLogin) {
+        await auth.login({ email, password });
+      } else {
+        await auth.signup({ email, password, full_name: name });
+      }
+      // Redirect is handled by the useEffect watching auth.user
+      // router.push("/dashboard"); // No longer needed here
+    } catch (err: unknown) {
+      console.error("Auth failed:", err);
+      // Type guard to safely access properties
+      if (err && typeof err === 'object' && 'response' in err) {
+        const errorWithResponse = err as { 
+          response?: { data?: { detail?: string } },
+          message?: string 
+        };
+        setError(
+          errorWithResponse.response?.data?.detail || 
+          errorWithResponse.message || 
+          "An unexpected error occurred."
+        );
+      } else if (err instanceof Error) {
+        setError(err.message || "An unexpected error occurred.");
+      } else {
+        setError("An unexpected error occurred.");
+      }
+    }
   };
 
   return (
@@ -76,6 +107,8 @@ function AuthContent() {
               ? "Enter your credentials to access your account"
               : "Fill in the form to create your account"}
           </p>
+
+          {error && <p className={styles.errorMessage}>{error}</p>}
 
           <form onSubmit={handleSubmit} className={styles.form}>
             {!isLogin && (
@@ -147,8 +180,8 @@ function AuthContent() {
               </div>
             </div>
 
-            <button type="submit" className={styles.submitButton}>
-              {isLogin ? "Sign In" : "Create Account"}
+            <button type="submit" className={styles.submitButton} disabled={auth.isLoading}>
+              {auth.isLoading ? "Processing..." : (isLogin ? "Sign In" : "Create Account")}
               <span className={styles.buttonIcon}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
