@@ -18,6 +18,7 @@ export default function ForgotPassword() {
     setError(null); // Clear previous errors
 
     try {
+      // The origin parameter will be automatically added by the requestPasswordReset function
       await requestPasswordReset({ email });
       // On success, show the confirmation message
       setIsSubmitted(true);

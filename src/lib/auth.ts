@@ -76,6 +76,7 @@ export const fetchCurrentUser = async (): Promise<User | null> => {
 // Interfaces for Password Reset
 export interface ForgotPasswordPayload {
   email: string;
+  origin?: string;  // Optional origin to determine frontend URL
 }
 
 export interface ResetPasswordPayload {
@@ -91,8 +92,13 @@ export interface MessageResponse {
 // --- Password Reset Functions ---
 
 export const requestPasswordReset = async (payload: ForgotPasswordPayload): Promise<MessageResponse> => {
-  // Backend expects { "email": "user@example.com" }
-  const response = await apiClient.post('/auth/forgot-password', payload);
+  // Add the origin to help backend determine which URL to use
+  const data = { 
+    email: payload.email,
+    origin: typeof window !== 'undefined' ? window.location.origin : undefined
+  };
+  
+  const response = await apiClient.post('/auth/forgot-password', data);
   return response.data; // Returns { "message": "..." }
 };
 
