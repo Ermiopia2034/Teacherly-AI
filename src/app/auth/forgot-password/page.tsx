@@ -23,16 +23,27 @@ export default function ForgotPassword() {
       setIsSubmitted(true);
     } catch (err: unknown) {
       console.error("Password reset request failed:", err);
-      // Try to get a specific error message, otherwise show generic
-      let message = "An unexpected error occurred. Please try again.";
-      if (err instanceof Error) {
-        // Attempt to access nested properties common in API error responses
-        // Use type assertion carefully or add more specific checks if needed
-        const axiosError = err as any; // Use 'as any' cautiously or define a type/interface
-        message = axiosError.response?.data?.detail || err.message || message;
+      let message = "An unexpected error occurred. Please try again."; // Default message
+
+      // Type-safe check for nested error details (e.g., from Axios)
+      if (typeof err === 'object' && err !== null && 'response' in err) {
+        const response = (err as { response?: unknown }).response;
+        if (typeof response === 'object' && response !== null && 'data' in response) {
+          const data = (response as { data?: unknown }).data;
+          if (typeof data === 'object' && data !== null && 'detail' in data && typeof data.detail === 'string') {
+            message = data.detail; // Use the specific detail message
+          } else if (err instanceof Error) {
+            message = err.message; // Fallback to standard error message
+          }
+        } else if (err instanceof Error) {
+          message = err.message; // Fallback if response exists but no data
+        }
+      } else if (err instanceof Error) {
+        message = err.message; // Handle standard Error objects
       } else if (typeof err === 'string') {
-        message = err;
+        message = err; // Handle simple string errors
       }
+
       setError(message);
       setIsSubmitted(false); // Stay on the form if there's an error
     } finally {
