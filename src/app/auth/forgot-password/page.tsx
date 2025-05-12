@@ -67,7 +67,7 @@ export default function ForgotPassword() {
             <>
               <h1 className={styles.title}>Reset Password</h1>
               <p className={styles.subtitle}>
-                Enter your email address and we'll send you a link to reset your password
+                Enter your email address and we&apos;ll send you a link to reset your password
               </p>
 
               <form onSubmit={handleSubmit} className={styles.form}>
@@ -127,9 +127,9 @@ export default function ForgotPassword() {
                 </svg>
               </div>
               <h2>Check Your Email</h2>
-              <p>We've sent a password reset link to <strong>{email}</strong></p>
+              <p>We&apos;ve sent a password reset link to <strong>{email}</strong></p>
               <p className={forgotStyles.note}>
-                If you don't see the email, check your spam folder or make sure you entered the correct email address.
+                If you don&apos;t see the email, check your spam folder or make sure you entered the correct email address.
               </p>
             </div>
           )}

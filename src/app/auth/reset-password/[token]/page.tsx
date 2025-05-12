@@ -6,6 +6,15 @@ import Link from "next/link";
 import styles from "../../auth.module.css"; // Re-use auth styles
 import { resetPassword } from "../../../../lib/auth"; // Import the API function
 
+// Define a proper interface for API errors
+interface ApiError extends Error {
+  response?: {
+    data?: {
+      detail?: string;
+    };
+  };
+}
+
 export default function ResetPasswordPage() {
   const params = useParams();
   const router = useRouter();
@@ -64,8 +73,8 @@ export default function ResetPasswordPage() {
       let message = "An error occurred while resetting your password. The link may be invalid or expired.";
       if (err instanceof Error) {
          // Attempt to access nested properties common in API error responses
-        // Use type assertion carefully or add more specific checks if needed
-        const axiosError = err as any; // Use 'as any' cautiously or define a type/interface
+        // Use a proper type instead of 'any'
+        const axiosError = err as ApiError;
         message = axiosError.response?.data?.detail || err.message || message;
       } else if (typeof err === 'string') {
          message = err;
