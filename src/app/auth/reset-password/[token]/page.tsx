@@ -59,9 +59,17 @@ export default function ResetPasswordPage() {
       setTimeout(() => {
         router.push("/auth");
       }, 3000); // 3 second delay
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Password reset failed:", err);
-      const message = err.response?.data?.detail || err.message || "An error occurred while resetting your password. The link may be invalid or expired.";
+      let message = "An error occurred while resetting your password. The link may be invalid or expired.";
+      if (err instanceof Error) {
+         // Attempt to access nested properties common in API error responses
+        // Use type assertion carefully or add more specific checks if needed
+        const axiosError = err as any; // Use 'as any' cautiously or define a type/interface
+        message = axiosError.response?.data?.detail || err.message || message;
+      } else if (typeof err === 'string') {
+         message = err;
+      }
       setError(message);
     } finally {
       setIsLoading(false);

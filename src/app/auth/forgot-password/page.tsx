@@ -21,10 +21,18 @@ export default function ForgotPassword() {
       await requestPasswordReset({ email });
       // On success, show the confirmation message
       setIsSubmitted(true);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Password reset request failed:", err);
       // Try to get a specific error message, otherwise show generic
-      const message = err.response?.data?.detail || err.message || "An unexpected error occurred. Please try again.";
+      let message = "An unexpected error occurred. Please try again.";
+      if (err instanceof Error) {
+        // Attempt to access nested properties common in API error responses
+        // Use type assertion carefully or add more specific checks if needed
+        const axiosError = err as any; // Use 'as any' cautiously or define a type/interface
+        message = axiosError.response?.data?.detail || err.message || message;
+      } else if (typeof err === 'string') {
+        message = err;
+      }
       setError(message);
       setIsSubmitted(false); // Stay on the form if there's an error
     } finally {
