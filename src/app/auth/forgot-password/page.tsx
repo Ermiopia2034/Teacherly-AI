@@ -4,16 +4,32 @@ import { useState } from "react";
 import Link from "next/link";
 import styles from "../auth.module.css";
 import forgotStyles from "./forgot-password.module.css";
+import { requestPasswordReset } from "../../../lib/auth"; // Import the API function
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [error, setError] = useState<string | null>(null); // Error state
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically handle the password reset request
-    console.log("Password reset requested for:", email);
-    setIsSubmitted(true);
+    setIsLoading(true);
+    setError(null); // Clear previous errors
+
+    try {
+      await requestPasswordReset({ email });
+      // On success, show the confirmation message
+      setIsSubmitted(true);
+    } catch (err: any) {
+      console.error("Password reset request failed:", err);
+      // Try to get a specific error message, otherwise show generic
+      const message = err.response?.data?.detail || err.message || "An unexpected error occurred. Please try again.";
+      setError(message);
+      setIsSubmitted(false); // Stay on the form if there's an error
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -32,7 +48,7 @@ export default function ForgotPassword() {
             <>
               <h1 className={styles.title}>Reset Password</h1>
               <p className={styles.subtitle}>
-                Enter your email address and we&apos;ll send you a link to reset your password
+                Enter your email address and we'll send you a link to reset your password
               </p>
 
               <form onSubmit={handleSubmit} className={styles.form}>
@@ -52,18 +68,34 @@ export default function ForgotPassword() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
+                      disabled={isLoading} // Disable input while loading
+                      aria-invalid={error ? "true" : "false"} // Indicate error state for accessibility
                     />
                   </div>
                 </div>
 
-                <button type="submit" className={styles.submitButton}>
-                  Send Reset Link
-                  <span className={styles.buttonIcon}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                      <polyline points="12 5 19 12 12 19"></polyline>
+                {/* Error Message Display */}
+                {error && (
+                  <div className={styles.errorMessage} role="alert">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.errorIcon}>
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="8" x2="12" y2="12"></line>
+                      <line x1="12" y1="16" x2="12.01" y2="16"></line>
                     </svg>
-                  </span>
+                    {error}
+                  </div>
+                )}
+
+                <button type="submit" className={styles.submitButton} disabled={isLoading}>
+                  {isLoading ? "Sending..." : "Send Reset Link"}
+                  {!isLoading && ( // Only show icon when not loading
+                    <span className={styles.buttonIcon}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                      </svg>
+                    </span>
+                  )}
                 </button>
               </form>
             </>
@@ -76,9 +108,9 @@ export default function ForgotPassword() {
                 </svg>
               </div>
               <h2>Check Your Email</h2>
-              <p>We&apos;ve sent a password reset link to <strong>{email}</strong></p>
+              <p>We've sent a password reset link to <strong>{email}</strong></p>
               <p className={forgotStyles.note}>
-                If you don&apos;t see the email, check your spam folder or make sure you entered the correct email address.
+                If you don't see the email, check your spam folder or make sure you entered the correct email address.
               </p>
             </div>
           )}

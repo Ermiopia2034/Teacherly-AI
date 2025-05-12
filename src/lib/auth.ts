@@ -73,3 +73,31 @@ export const fetchCurrentUser = async (): Promise<User | null> => {
     throw error; // Re-throw for further handling if needed
   }
 };
+// Interfaces for Password Reset
+export interface ForgotPasswordPayload {
+  email: string;
+}
+
+export interface ResetPasswordPayload {
+  token: string;
+  new_password: string; // Matches backend Pydantic schema field name
+}
+
+// Response type for simple message responses from backend
+export interface MessageResponse {
+  message: string;
+}
+
+// --- Password Reset Functions ---
+
+export const requestPasswordReset = async (payload: ForgotPasswordPayload): Promise<MessageResponse> => {
+  // Backend expects { "email": "user@example.com" }
+  const response = await apiClient.post('/auth/forgot-password', payload);
+  return response.data; // Returns { "message": "..." }
+};
+
+export const resetPassword = async (payload: ResetPasswordPayload): Promise<MessageResponse> => {
+  // Backend expects { "token": "...", "new_password": "..." }
+  const response = await apiClient.post('/auth/reset-password', payload);
+  return response.data; // Returns { "message": "..." }
+};
