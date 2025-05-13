@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
 import styles from '../dashboard.module.css';
+import Link from 'next/link';
 import AnimatedElement from '@/components/AnimatedElement';
+import PageHeader from '@/components/ui/PageHeader/PageHeader';
+import DashboardFeatureCard from '@/components/features/dashboard/DashboardFeatureCard/DashboardFeatureCard'; // Changed import
 
 export default function GenerationHub() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -12,110 +14,82 @@ export default function GenerationHub() {
     setIsLoaded(true);
   }, []);
 
+  const breadcrumbItems = [
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Generation Hub' },
+  ];
+
+  const materialIcon = (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="3" y1="9" x2="21" y2="9"></line>
+      <line x1="9" y1="21" x2="9" y2="9"></line>
+    </svg>
+  );
+
+  const examIcon = (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="16" y1="13" x2="8" y2="13"></line>
+      <line x1="16" y1="17" x2="8" y2="17"></line>
+      <polyline points="10 9 9 9 8 9"></polyline>
+    </svg>
+  );
+
   return (
     <div className={`${isLoaded ? styles.fadeIn : ''}`}>
-      <header className={styles.pageHeader}>
-        <div className={styles.breadcrumb}>
-          <Link href="/dashboard">Dashboard</Link>
-          <span className={styles.breadcrumbSeparator}>/</span>
-          <span>exam / teaching material</span>
-        </div>
-        <h1 className={styles.pageTitle}>Generation Hub</h1>
-      </header>
+      {/* Manual Breadcrumb implementation */}
+      <div className={styles.breadcrumbContainer}>
+        {breadcrumbItems.map((item, index) => (
+          <React.Fragment key={item.label}>
+            {item.href ? (
+              <Link href={item.href} className={styles.breadcrumbLink}>
+                {item.label}
+              </Link>
+            ) : (
+              <span className={styles.breadcrumbCurrent}>{item.label}</span>
+            )}
+            {index < breadcrumbItems.length - 1 && (
+              <span className={styles.breadcrumbSeparator}>/</span>
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+      <PageHeader title="Generation Hub" />
 
       <div className={styles.cardsGrid}>
-        <AnimatedElement animation="left" delay={0.1}>
-          <div className={styles.card}>
-            <div className={styles.cardHeader}>
-              <div>
-                <h2 className={styles.cardTitle}>Generate material</h2>
-              </div>
-              <div className={styles.cardIcon}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <line x1="3" y1="9" x2="21" y2="9"></line>
-                  <line x1="9" y1="21" x2="9" y2="9"></line>
-                </svg>
-              </div>
-            </div>
-            <div className={styles.cardContent}>
-              <ul className={styles.cardList}>
-                <li className={styles.cardListItem}>
-                  <div className={styles.cardListItemIcon} style={{ backgroundColor: '#FFB547' }}></div>
-                  <span className={styles.cardListItemText}>Create New material</span>
-                </li>
-                <li className={styles.cardListItem}>
-                  <div className={styles.cardListItemIcon} style={{ backgroundColor: '#FFB547' }}></div>
-                  <span className={styles.cardListItemText}>update materials</span>
-                </li>
-              </ul>
-            </div>
-            <div className={styles.cardFooter}>
-              <Link href="/dashboard/generation-hub/material" className={styles.cardLink}>
-                Create Material
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              </Link>
-            </div>
-          </div>
-        </AnimatedElement>
+        <DashboardFeatureCard
+          title="Generate material"
+          description="Create new material, update existing materials." // Simplified description
+          icon={materialIcon}
+          mainContent="Use AI to generate various teaching materials for your classes." // Generic main content
+          linkHref="/dashboard/generation-hub/material"
+          linkText="Create Material"
+          animationDelay={0.1} // Existing prop from DashboardFeatureCard
+          pulseIcon={true} // Example of using existing prop
+        />
 
-        <AnimatedElement animation="right" delay={0.2}>
-          <div className={styles.card}>
-            <div className={styles.cardHeader}>
-              <div>
-                <h2 className={styles.cardTitle}>Generate Exam</h2>
-              </div>
-              <div className={styles.cardIcon}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="16" y1="13" x2="8" y2="13"></line>
-                  <line x1="16" y1="17" x2="8" y2="17"></line>
-                  <polyline points="10 9 9 9 8 9"></polyline>
-                </svg>
-              </div>
-            </div>
-            <div className={styles.cardContent}>
-              <ul className={styles.cardList}>
-                <li className={styles.cardListItem}>
-                  <div className={styles.cardListItemIcon} style={{ backgroundColor: '#00C896' }}></div>
-                  <span className={styles.cardListItemText}>Quiz exam</span>
-                </li>
-                <li className={styles.cardListItem}>
-                  <div className={styles.cardListItemIcon} style={{ backgroundColor: '#00C896' }}></div>
-                  <span className={styles.cardListItemText}>Mid exam</span>
-                </li>
-                <li className={styles.cardListItem}>
-                  <div className={styles.cardListItemIcon} style={{ backgroundColor: '#00C896' }}></div>
-                  <span className={styles.cardListItemText}>final exam</span>
-                </li>
-              </ul>
-            </div>
-            <div className={styles.cardFooter}>
-              <Link href="/dashboard/generation-hub/exam" className={styles.cardLink}>
-                Create Exam
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              </Link>
-            </div>
-          </div>
-        </AnimatedElement>
+        <DashboardFeatureCard
+          title="Generate Exam"
+          description="Quiz exams, mid exams, final exams." // Simplified description
+          icon={examIcon}
+          mainContent="Generate different types of exams tailored to your needs." // Generic main content
+          linkHref="/dashboard/generation-hub/exam"
+          linkText="Create Exam"
+          animationDelay={0.2} // Existing prop
+        />
       </div>
 
       <AnimatedElement animation="up" delay={0.3}>
-        <div className={styles.card}>
+        <div className={styles.card} style={{ marginTop: '2rem' }}>
           <div className={styles.cardHeader}>
             <div>
               <h2 className={styles.cardTitle}>Recent Generations</h2>
             </div>
           </div>
           <div className={styles.cardContent}>
-            <p>You haven&apos;t generated any content yet. Use the cards above to create your first teaching material or exam.</p>
+            <p>You haven't generated any content yet. Use the cards above to create your first teaching material or exam.</p>
           </div>
         </div>
       </AnimatedElement>

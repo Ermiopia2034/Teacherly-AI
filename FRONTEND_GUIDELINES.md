@@ -43,7 +43,7 @@ The frontend aims for a clear and maintainable component structure located under
 
 -   **Base UI Components (`src/components/ui/`):**
     -   These are atomic, highly reusable, and primarily presentational components. They form the building blocks of the application's look and feel.
-    -   Examples: `Button`, `Card` (generic), `Input`, `Modal`, [`PageHeader`](./src/components/ui/PageHeader/PageHeader.tsx).
+    -   Examples: `Button`, `Card` (generic), `Input`, [`LabeledInput`](./src/components/ui/LabeledInput/LabeledInput.tsx), [`LabeledSelect`](./src/components/ui/LabeledSelect/LabeledSelect.tsx), [`LabeledTextarea`](./src/components/ui/LabeledTextarea/LabeledTextarea.tsx), `Modal`, [`PageHeader`](./src/components/ui/PageHeader/PageHeader.tsx).
     -   **Guideline:** When creating a new generic UI element (e.g., a custom select dropdown, a tooltip), it should be placed here. Each component should reside in its own directory (e.g., `src/components/ui/Button/Button.tsx`).
 -   **Feature-Specific Components (`src/components/features/`):**
     -   These components are tied to specific application features or domains. They often compose multiple `ui/` components and may contain more business logic.

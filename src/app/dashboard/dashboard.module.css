@@ -216,6 +216,33 @@
 
 /* Dashboard Page Styles */
 
+/* New Breadcrumb Styles for Generation Hub Page */
+.breadcrumbContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem; /* Added some margin below breadcrumbs */
+  padding: 0.5rem 0; /* Optional padding for better spacing */
+}
+
+.breadcrumbLink {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.breadcrumbLink:hover {
+  color: var(--primary-hover-color, #0056b3); /* Ensure you have a hover color defined */
+  text-decoration: underline;
+}
+
+.breadcrumbCurrent {
+  color: var(--foreground); /* Or a specific color for the current page */
+  font-weight: 500;
+}
+/* End of New Breadcrumb Styles */
 .breadcrumb {
   display: flex;
   align-items: center;
@@ -259,6 +286,13 @@
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.3s ease;
+}
+.cardSubtitle {
+  font-size: 0.875rem; /* 14px */
+  color: var(--text-muted);
+  margin-top: 4px;
+  margin-bottom: 0; /* Reset if needed */
+  line-height: 1.4;
 }
 
 .card:hover {

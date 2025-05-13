@@ -1,0 +1,88 @@
+.formGroup {
+  margin-bottom: 20px; /* Existing: from dashboard.module.css this is 1.5rem (24px) vs 20px */
+  display: flex;
+  flex-direction: column;
+}
+
+.formLabel {
+  display: block;
+  font-weight: 600; /* from dashboard.module.css */
+  color: var(--foreground, #e0e0e0); /* Dark theme: light text */
+  margin-bottom: 8px; /* dashboard.module.css uses 0.5rem (8px) */
+  font-size: 0.9rem; /* 14.4px */
+  font-family: var(--font-body); /* from dashboard.module.css */
+}
+
+.requiredIndicator {
+  color: #e53e3e;
+  margin-left: 4px;
+}
+
+.selectWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.formSelect {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 1rem; /* Adjusted padding for arrow (12px 40px 12px 16px) */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Dark theme: light border */
+  border-radius: 4px; /* from dashboard.module.css (vs 6px) */
+  font-size: 1rem; /* 16px */
+  color: var(--foreground, #e0e0e0); /* Dark theme: light text */
+  background-color: rgba(255, 255, 255, 0.05); /* Dark theme: subtle dark background */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  font-family: var(--font-body); /* from dashboard.module.css */
+  line-height: 1.6; /* from dashboard.module.css */
+}
+
+.formSelect:focus {
+  outline: none;
+  border-color: var(--primary, #00c896); /* Dark theme: primary color */
+  background-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb, 0, 200, 150), 0.3);
+}
+
+.formSelect:disabled {
+  background-color: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted, #888);
+  cursor: not-allowed;
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.selectArrow {
+  position: absolute;
+  top: 50%;
+  right: 1rem; /* (16px) */
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-muted, #888); /* Arrow color for dark theme */
+}
+
+.selectArrow svg {
+  display: block;
+  width: 1em; /* Use em for sizing relative to font size */
+  height: 1em;
+}
+
+/* Dark theme options - browser dependent, but good to have */
+.formSelect option {
+  background-color: var(--card-bg-alt, #2a2a2a); /* A slightly lighter dark for dropdown items */
+  color: var(--foreground, #e0e0e0);
+}
+
+
+/* Validation states */
+.formSelect.invalid {
+  border-color: #e53e3e;
+  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.25);
+}
+
+.formSelect.valid {
+  border-color: #38a169;
+  box-shadow: 0 0 0 3px rgba(56, 161, 105, 0.25);
+}

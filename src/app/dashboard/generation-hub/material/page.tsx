@@ -2,8 +2,14 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import styles from '../../dashboard.module.css';
+import styles from '../../dashboard.module.css'; // Assuming form styles are in dashboard.module.css or will be moved
 import AnimatedElement from '@/components/AnimatedElement';
+import PageHeader from '@/components/ui/PageHeader/PageHeader';
+import LabeledInput from '@/components/ui/LabeledInput/LabeledInput';
+import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
+import LabeledTextarea from '@/components/ui/LabeledTextarea/LabeledTextarea';
+// Assuming a generic Button component exists or will be created as per guidelines
+// import Button from '@/components/ui/Button/Button';
 
 export default function MaterialGeneration() {
   const [formData, setFormData] = useState({
@@ -21,109 +27,107 @@ export default function MaterialGeneration() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would handle the form submission, e.g., send to an API
     console.log('Form submitted:', formData);
-    // For demo purposes, we'll just show an alert
     alert('Material generation request submitted!');
   };
 
+  const breadcrumbItems = [
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Generation Hub', href: '/dashboard/generation-hub' },
+    { label: 'Create Material' },
+  ];
+
+  const contentTypeOptions = [
+    { value: 'lesson', label: 'Lesson Plan' },
+    { value: 'worksheet', label: 'Worksheet' },
+    { value: 'presentation', label: 'Presentation Slides' },
+    { value: 'activity', label: 'Classroom Activity' },
+    { value: 'homework', label: 'Homework Assignment' },
+  ];
+
   return (
     <div>
-      <header className={styles.pageHeader}>
-        <div className={styles.breadcrumb}>
-          <Link href="/dashboard">Dashboard</Link>
-          <span className={styles.breadcrumbSeparator}>/</span>
-          <Link href="/dashboard/generation-hub">Generation Hub</Link>
-          <span className={styles.breadcrumbSeparator}>/</span>
-          <span>Create Material</span>
-        </div>
-        <h1 className={styles.pageTitle}>Create Teaching Material</h1>
-      </header>
+      {/* Manual Breadcrumb implementation - same as generation-hub main page */}
+      <div className={styles.breadcrumbContainer}>
+        {breadcrumbItems.map((item, index) => (
+          <React.Fragment key={item.label}>
+            {item.href ? (
+              <Link href={item.href} className={styles.breadcrumbLink}>
+                {item.label}
+              </Link>
+            ) : (
+              <span className={styles.breadcrumbCurrent}>{item.label}</span>
+            )}
+            {index < breadcrumbItems.length - 1 && (
+              <span className={styles.breadcrumbSeparator}>/</span>
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+      <PageHeader title="Create Teaching Material" />
 
       <AnimatedElement animation="up" delay={0.1}>
-        <div className={styles.card}>
+        <div className={styles.card}> {/* Using dashboard.module.css styles.card */}
           <div className={styles.cardHeader}>
             <div>
               <h2 className={styles.cardTitle}>Material Generator</h2>
-              <p>Fill in the details to generate your teaching material</p>
+              <p className={styles.cardSubtitle}>Fill in the details to generate your teaching material</p> {/* Added cardSubtitle class */}
             </div>
           </div>
           <div className={styles.cardContent}>
             <form onSubmit={handleSubmit} className={styles.form}>
-              <div className={styles.formGroup}>
-                <label htmlFor="subject" className={styles.formLabel}>Subject</label>
-                <input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  className={styles.formInput}
-                  placeholder="e.g., Mathematics, Science, English"
-                  required
-                />
-              </div>
+              <LabeledInput
+                label="Subject"
+                id="subject"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                placeholder="e.g., Mathematics, Science, English"
+                required
+              />
 
-              <div className={styles.formGroup}>
-                <label htmlFor="grade" className={styles.formLabel}>Grade Level</label>
-                <input
-                  type="text"
-                  id="grade"
-                  name="grade"
-                  value={formData.grade}
-                  onChange={handleChange}
-                  className={styles.formInput}
-                  placeholder="e.g., 5th Grade, High School, College"
-                  required
-                />
-              </div>
+              <LabeledInput
+                label="Grade Level"
+                id="grade"
+                name="grade"
+                value={formData.grade}
+                onChange={handleChange}
+                placeholder="e.g., 5th Grade, High School, College"
+                required
+              />
 
-              <div className={styles.formGroup}>
-                <label htmlFor="topic" className={styles.formLabel}>Topic</label>
-                <input
-                  type="text"
-                  id="topic"
-                  name="topic"
-                  value={formData.topic}
-                  onChange={handleChange}
-                  className={styles.formInput}
-                  placeholder="e.g., Fractions, Photosynthesis, Shakespeare"
-                  required
-                />
-              </div>
+              <LabeledInput
+                label="Topic"
+                id="topic"
+                name="topic"
+                value={formData.topic}
+                onChange={handleChange}
+                placeholder="e.g., Fractions, Photosynthesis, Shakespeare"
+                required
+              />
 
-              <div className={styles.formGroup}>
-                <label htmlFor="contentType" className={styles.formLabel}>Content Type</label>
-                <select
-                  id="contentType"
-                  name="contentType"
-                  value={formData.contentType}
-                  onChange={handleChange}
-                  className={styles.formSelect}
-                  required
-                >
-                  <option value="lesson">Lesson Plan</option>
-                  <option value="worksheet">Worksheet</option>
-                  <option value="presentation">Presentation Slides</option>
-                  <option value="activity">Classroom Activity</option>
-                  <option value="homework">Homework Assignment</option>
-                </select>
-              </div>
+              <LabeledSelect
+                label="Content Type"
+                id="contentType"
+                name="contentType"
+                value={formData.contentType}
+                onChange={handleChange}
+                options={contentTypeOptions}
+                required
+              />
 
-              <div className={styles.formGroup}>
-                <label htmlFor="additionalInfo" className={styles.formLabel}>Additional Information</label>
-                <textarea
-                  id="additionalInfo"
-                  name="additionalInfo"
-                  value={formData.additionalInfo}
-                  onChange={handleChange}
-                  className={styles.formTextarea}
-                  placeholder="Any specific requirements or details you want to include..."
-                  rows={4}
-                ></textarea>
-              </div>
+              <LabeledTextarea
+                label="Additional Information"
+                id="additionalInfo"
+                name="additionalInfo"
+                value={formData.additionalInfo}
+                onChange={handleChange}
+                placeholder="Any specific requirements or details you want to include..."
+                rows={4}
+              />
 
               <div className={styles.formActions}>
+                {/* Replace with standard Button component if available */}
                 <button type="submit" className={styles.submitButton}>
                   Generate Material
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -131,6 +135,7 @@ export default function MaterialGeneration() {
                     <polyline points="12 5 19 12 12 19"></polyline>
                   </svg>
                 </button>
+                {/* Replace with standard Button component (variant='outline' or similar) if available */}
                 <Link href="/dashboard/generation-hub" className={styles.cancelButton}>
                   Cancel
                 </Link>
