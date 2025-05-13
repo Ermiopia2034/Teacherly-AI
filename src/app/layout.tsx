@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Merriweather, Lato } from "next/font/google";
 import "./globals.css";
 import "./responsive.css";
-import { AuthProvider } from "@/context/AuthContext"; // Assuming @ is src path
+import ClientProviders from '@/components/ClientProviders';
 
 const merriweather = Merriweather({
   subsets: ["latin"],
@@ -28,13 +28,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Metadata can still be exported from here even if "use client" is at the top,
+  // as long as RootLayout itself doesn't use client-only hooks directly.
+  // However, best practice is to keep RootLayout as server component if possible.
+  // For this case, placing provider and initializer makes this structure fine.
   return (
     <html lang="en" className={`${merriweather.variable} ${lato.variable}`}>
       <body>
-        <AuthProvider>
+        <ClientProviders>
           {children}
-        </AuthProvider>
+        </ClientProviders>
       </body>
     </html>
   );
 }
+
+// Note: RootLayout remains a Server Component, allowing metadata export.
+// ClientProviders is a Client Component that handles Redux Provider and client-side logic.

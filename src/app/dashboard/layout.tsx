@@ -4,7 +4,9 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import styles from './dashboard.module.css';
-import { useAuth } from '@/context/AuthContext'; // Assuming @ is src path
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '@/lib/store';
+import { logoutUser, selectUser, selectIsAuthLoading } from '@/lib/features/auth/authSlice';
 
 export default function DashboardLayout({
   children,
@@ -13,8 +15,10 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const auth = useAuth();
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const user = useSelector(selectUser);
+  const isLoadingAuth = useSelector(selectIsAuthLoading);
 
   // Check if viewport is mobile on initial load and when window resizes
   useEffect(() => {
@@ -39,29 +43,34 @@ export default function DashboardLayout({
   }, []);
 
   useEffect(() => {
-    if (!auth.isLoading && !auth.user) {
-      router.push('/auth');
+    // We rely on fetchUser being dispatched in RootLayout.
+    // If still loading, wait. If not loading and no user, redirect.
+    if (!isLoadingAuth && !user) {
+      router.push('/auth?mode=login&redirect=/dashboard'); // Added redirect query
     }
-  }, [auth.isLoading, auth.user, router]);
+  }, [isLoadingAuth, user, router]);
 
   const handleLogout = async () => {
     try {
-      await auth.logout();
-      router.push('/auth'); // Redirect to login after logout
+      await dispatch(logoutUser()).unwrap(); // unwrap to catch potential rejections
+      router.push('/auth');
     } catch (error) {
       console.error("Logout failed in layout:", error);
-      // Optionally show an error message to the user
+      // Optionally show an error message to the user, e.g., via a local state or a notification system
     }
   };
 
-  if (auth.isLoading) {
-    // You can replace this with a more sophisticated loading spinner or skeleton screen
+  // isLoadingAuth will be true initially due to fetchUser, then false.
+  // If after loading there's no user, the useEffect above will redirect.
+  // So, we can show loading screen while isLoadingAuth is true AND there's no user yet.
+  // Or if fetchUser has completed and there's still no user (already handled by redirect).
+  if (isLoadingAuth && !user) {
     return <div className={styles.loadingScreen}>Loading dashboard...</div>;
   }
 
-  if (!auth.user) {
-    // This case should ideally be handled by the redirect in useEffect,
-    // but as a fallback, prevent rendering the dashboard for unauthenticated users.
+  // If not loading and still no user, it means redirect should have happened.
+  // As a safeguard, return null, but this should be rare.
+  if (!isLoadingAuth && !user) {
     return null;
   }
 
