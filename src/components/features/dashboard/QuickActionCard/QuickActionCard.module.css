@@ -1,0 +1,74 @@
+.card {
+  background-color: var(--card-bg);
+  border-radius: 6px;
+  padding: 1rem;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex; /* Added for consistent height in grid */
+  flex-direction: column; /* Added for consistent height in grid */
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--gradient-1); /* Or a different gradient if desired */
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.card:hover::before {
+  transform: scaleX(1);
+}
+
+.cardHeader {
+  margin-bottom: 0.75rem; /* Adjusted for simpler card */
+  flex-grow: 1; /* Pushes footer down if header is the only content part */
+}
+
+.cardTitle {
+  font-size: 1.0rem; /* Slightly smaller for quick action */
+  font-weight: 600; /* Slightly less bold */
+  font-family: var(--font-heading);
+  color: var(--foreground);
+  line-height: 1.3;
+}
+
+.cardFooter {
+  margin-top: auto; /* Pushes footer to the bottom */
+  text-align: right;
+}
+
+.cardLink {
+  color: var(--primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.cardLink:hover {
+  color: var(--foreground);
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card {
+    padding: 0.75rem;
+  }
+}

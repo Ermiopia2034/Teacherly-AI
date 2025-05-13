@@ -1,0 +1,34 @@
+.pageHeader {
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.pageTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  margin-bottom: 0.75rem;
+  background: linear-gradient(to right, var(--foreground), #a0a0a0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  line-height: 1.2;
+}
+
+/* Responsive Styles for PageHeader */
+@media (max-width: 992px) {
+  .pageTitle {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .pageHeader {
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+  }
+  .pageTitle {
+    font-size: 1.35rem;
+  }
+}

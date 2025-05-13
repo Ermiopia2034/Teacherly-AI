@@ -1,12 +1,13 @@
 # Teacherly AI Frontend - Development Guidelines
 
-This document outlines the frontend's current architecture, focusing on authentication, interaction with the backend API, and state management, providing guidelines for future development.
+This document outlines the frontend's current architecture, focusing on authentication, component structure, interaction with the backend API, and state management, providing guidelines for future development.
 
-## Current Status (As of May 12, 2025)
+## Current Status (As of May 13, 2025)
 
 -   **Framework:** Next.js (App Router)
 -   **Language:** TypeScript
--   **Styling:** CSS Modules (e.g., `auth.module.css`), global CSS (`globals.css`).
+-   **Styling:** CSS Modules (e.g., `auth.module.css`, component-specific modules like `PageHeader.module.css`), global CSS (`globals.css`).
+-   **Component Structure:** Organized into `ui/` (atomic, presentational components) and `features/` (domain-specific components) under `src/components/`.
 -   **API Client:** Axios
 -   **State Management (Auth):** React Context API (`AuthContext`)
 
@@ -36,6 +37,27 @@ This document outlines the frontend's current architecture, focusing on authenti
     -   **Redirects:** Navigation after login/logout is likely handled within the `AuthContext` functions (e.g., using `useRouter` from `next/navigation` after a successful login) or potentially via route protection logic in layouts.
 4.  **Route Protection:** Authenticated routes (like the dashboard) might be protected by checking the user state from `AuthContext` within their layout ([`src/app/dashboard/layout.tsx`](./src/app/dashboard/layout.tsx)) or page components, redirecting unauthenticated users to the login page.
 
+## Component Structure and Reusability
+
+The frontend aims for a clear and maintainable component structure located under [`src/components/`](./src/components/).
+
+-   **Base UI Components (`src/components/ui/`):**
+    -   These are atomic, highly reusable, and primarily presentational components. They form the building blocks of the application's look and feel.
+    -   Examples: `Button`, `Card` (generic), `Input`, `Modal`, [`PageHeader`](./src/components/ui/PageHeader/PageHeader.tsx).
+    -   **Guideline:** When creating a new generic UI element (e.g., a custom select dropdown, a tooltip), it should be placed here. Each component should reside in its own directory (e.g., `src/components/ui/Button/Button.tsx`).
+-   **Feature-Specific Components (`src/components/features/`):**
+    -   These components are tied to specific application features or domains. They often compose multiple `ui/` components and may contain more business logic.
+    -   They are organized into subdirectories named after the feature they belong to (e.g., `src/components/features/dashboard/`, `src/components/features/generation-hub/`).
+    -   Examples: [`DashboardFeatureCard`](./src/components/features/dashboard/DashboardFeatureCard/DashboardFeatureCard.tsx), [`QuickActionCard`](./src/components/features/dashboard/QuickActionCard/QuickActionCard.tsx).
+    -   **Guideline:** When building UI for a specific part of the application (e.g., a student list item, a form for generating exams), components should be placed within the relevant feature directory.
+-   **Common Components (`src/components/common/`):** (Proposed - consider for truly global, non-UI specific utilities if needed, e.g., `AnimatedElement`)
+    -   General-purpose utility components that might not strictly be "UI" or "feature" specific.
+    -   Example: [`AnimatedElement`](./src/components/AnimatedElement.tsx) (currently in `src/components/`, consider moving to `src/components/common/`).
+-   **Styling:**
+    -   **Guideline:** Each component **must** have its own CSS Module file (e.g., `MyComponent.module.css`) for scoped styles. This prevents style conflicts and improves maintainability. Import styles as `import styles from './MyComponent.module.css';`.
+-   **Reusability:**
+    -   **Guideline:** Before creating a new component, check if a similar one already exists in `ui/` or within the relevant `features/` directory that can be reused or extended. Aim to build a robust library of reusable components.
+
 ## Key Files Summary
 
 -   [`src/lib/auth.ts`](./src/lib/auth.ts): Axios instance configuration and raw API call functions.
@@ -43,13 +65,17 @@ This document outlines the frontend's current architecture, focusing on authenti
 -   [`src/app/layout.tsx`](./src/app/layout.tsx): Root layout, likely includes the `AuthProvider`.
 -   [`src/app/auth/page.tsx`](./src/app/auth/page.tsx): Login/Signup UI.
 -   [`src/app/dashboard/layout.tsx`](./src/app/dashboard/layout.tsx): Layout for authenticated routes, potentially includes auth checks.
+-   [`src/app/dashboard/page.tsx`](./src/app/dashboard/page.tsx): Example page demonstrating usage of new reusable dashboard components.
+-   [`src/components/ui/`](./src/components/ui/): Directory for atomic, reusable UI components.
+-   [`src/components/features/`](./src/components/features/): Directory for feature-specific components.
 
-## Development Guidelines
+## Development Guidelines (General)
 
 -   **API Interaction:** Use the `apiClient` from [`src/lib/auth.ts`](./src/lib/auth.ts) for all backend communication. Define new API functions within `src/lib/` (e.g., `src/lib/content.ts` for content-related endpoints).
 -   **Authentication State:** Rely on `AuthContext` for accessing the current user's data and performing login/logout actions.
+-   **Component Creation:** Follow the `ui/` and `features/` structure outlined above. Always use CSS Modules for styling.
 -   **Environment:** Ensure `NEXT_PUBLIC_API_URL` is configured in `.env.local` (and other environment files as needed) pointing to the correct backend URL. Remember to add `.env*.local` to `.gitignore`.
 -   **Error Handling:** Implement user-friendly error handling for API request failures (e.g., displaying messages from backend responses or generic error alerts). The `AuthContext` is a good place to centralize some of this for auth actions.
 -   **Dependencies:** Add new frontend dependencies using `npm install` or `yarn add`. Keep dependencies up-to-date where feasible.
 
-Adhering to these patterns will help maintain consistency and ensure that authentication and backend communication work reliably as new features are added.
+Adhering to these patterns will help maintain consistency and ensure that authentication, backend communication, and component architecture work reliably as new features are added.
