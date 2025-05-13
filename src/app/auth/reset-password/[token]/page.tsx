@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "../../auth.module.css"; // Re-use auth styles
-import { resetPassword } from "../../../../lib/auth"; // Import the API function
+import { resetPassword } from "../../../../lib/api/auth"; // Import the API function
 
 // Define a proper interface for API errors
 interface ApiError extends Error {

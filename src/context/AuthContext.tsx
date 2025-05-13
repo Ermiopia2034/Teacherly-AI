@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, fetchCurrentUser, login as apiLogin, logout as apiLogout, signup as apiSignup, LoginCredentials, SignupCredentials } from '@/lib/auth'; // Assuming @ is src path
+import { User, fetchCurrentUser, login as apiLogin, logout as apiLogout, signup as apiSignup, LoginCredentials, SignupCredentials } from '@/lib/api/auth'; // Assuming @ is src path
 
 interface AuthContextType {
   user: User | null;

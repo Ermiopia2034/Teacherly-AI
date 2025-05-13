@@ -1,7 +1,5 @@
-import axios from 'axios';
-
-// Define the base URL for your API. Adjust if your backend runs elsewhere.
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+import apiClient from './client';
+import { isAxiosError } from 'axios'; // For error checking in fetchCurrentUser
 
 // Define interfaces for expected data structures
 // These should align with your backend Pydantic schemas
@@ -23,13 +21,6 @@ export interface LoginCredentials {
 export interface SignupCredentials extends LoginCredentials {
   full_name?: string;
 }
-
-// Create an Axios instance for API calls
-// We use `withCredentials: true` so that cookies (like HttpOnly auth token) are sent
-const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  withCredentials: true, 
-});
 
 export const signup = async (credentials: SignupCredentials): Promise<User> => {
   const response = await apiClient.post('/auth/register', {
@@ -64,7 +55,7 @@ export const fetchCurrentUser = async (): Promise<User | null> => {
     const response = await apiClient.get('/auth/users/me');
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.status === 401) {
+    if (isAxiosError(error) && error.response?.status === 401) {
       // Not authenticated or token expired
       return null;
     }
