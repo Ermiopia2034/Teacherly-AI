@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import styles from '../../dashboard.module.css'; // Assuming form styles are in dashboard.module.css
+import styles from '@/app/dashboard/dashboard.module.css'; // Assuming form styles are in dashboard.module.css
 import AnimatedElement from '@/components/AnimatedElement';
 import PageHeader from '@/components/ui/PageHeader/PageHeader';
 import LabeledInput from '@/components/ui/LabeledInput/LabeledInput';

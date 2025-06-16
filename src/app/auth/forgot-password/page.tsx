@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import styles from "../auth.module.css";
 import forgotStyles from "./forgot-password.module.css";
-import { requestPasswordReset } from "../../../lib/api/auth"; // Import the API function
+import { requestPasswordReset } from "@/lib/api/auth"; // Import the API function
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");

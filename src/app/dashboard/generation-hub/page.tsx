@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import styles from '../dashboard.module.css';
+import styles from '@/app/dashboard/dashboard.module.css';
 import Link from 'next/link';
 import AnimatedElement from '@/components/AnimatedElement';
 import PageHeader from '@/components/ui/PageHeader/PageHeader';

@@ -2,14 +2,15 @@
 
 This document outlines the frontend's current architecture, focusing on authentication, component structure, interaction with the backend API, and state management, providing guidelines for future development.
 
-## Current Status (As of May 13, 2025)
+## Current Status (As of June 16, 2025)
 
 -   **Framework:** Next.js (App Router)
 -   **Language:** TypeScript
 -   **Styling:** CSS Modules (e.g., `auth.module.css`, component-specific modules like `PageHeader.module.css`), global CSS (`globals.css`).
--   **Component Structure:** Organized into `ui/` (atomic, presentational components) and `features/` (domain-specific components) under `src/components/`.
+-   **Component Structure:** Organized into `ui/` (atomic, presentational components), `features/` (domain-specific components), and `common/` (shared utility components) under `src/components/`.
 -   **API Client:** Axios
 -   **State Management:** Redux Toolkit (`@reduxjs/toolkit`)
+-   **Import Paths:** Standardized to use path aliases (e.g., `@/components/...`).
 
 ## Backend Connection
 
@@ -18,6 +19,17 @@ This document outlines the frontend's current architecture, focusing on authenti
 -   **API Client:** A pre-configured Axios instance (`apiClient`) is created in [`src/lib/api/client.ts`](./src/lib/api/client.ts).
     -   **`withCredentials: true`:** This crucial setting ensures that the browser sends the HttpOnly `access_token` cookie (set by the backend during login) with subsequent requests to the backend API. This is necessary for maintaining the authenticated session.
     -   **Guideline:** Always use this `apiClient` instance for making requests to the backend API to ensure credentials are handled correctly. Avoid using the global `axios` directly for backend calls.
+
+## Import Path Standardization
+
+To maintain a clean and predictable project structure, all import paths must use the configured path aliases. This avoids long, brittle relative paths (`../../../`) and makes code easier to move and read.
+
+-   **Alias:** The primary alias is `@/`, which maps to the `src/` directory.
+-   **Guideline:** **Always** use aliases for imports from anywhere within the `src/` directory.
+    -   **Correct:** `import { Button } from '@/components/ui/Button';`
+    -   **Correct:** `import { apiClient } from '@/lib/api/client';`
+    -   **Incorrect:** `import { Button } from '../../ui/Button';`
+-   **Verification:** Use find/replace or search tools to ensure no relative paths that traverse up directories (e.g., `../`) remain in the codebase.
 
 ## State Management with Redux Toolkit
 
@@ -75,17 +87,18 @@ The application uses Redux Toolkit for robust and scalable state management.
 The frontend aims for a clear and maintainable component structure located under [`src/components/`](./src/components/).
 
 -   **Base UI Components (`src/components/ui/`):**
-    -   These are atomic, highly reusable, and primarily presentational components. They form the building blocks of the application's look and feel.
-    -   Examples: `Button`, `Card` (generic), `Input`, [`LabeledInput`](./src/components/ui/LabeledInput/LabeledInput.tsx), [`LabeledSelect`](./src/components/ui/LabeledSelect/LabeledSelect.tsx), [`LabeledTextarea`](./src/components/ui/LabeledTextarea/LabeledTextarea.tsx), `Modal`, [`PageHeader`](./src/components/ui/PageHeader/PageHeader.tsx).
-    -   **Guideline:** When creating a new generic UI element (e.g., a custom select dropdown, a tooltip), it should be placed here. Each component should reside in its own directory (e.g., `src/components/ui/Button/Button.tsx`).
+    -   These are atomic, highly reusable, and primarily presentational components. They form the building blocks of the application's look and feel and should be application-agnostic.
+    -   Examples: [`Button`](./src/components/ui/Button/Button.tsx), [`Card`](./src/components/ui/Card/Card.tsx), [`Breadcrumb`](./src/components/ui/Breadcrumb/Breadcrumb.tsx), [`LabeledInput`](./src/components/ui/LabeledInput/LabeledInput.tsx), [`LabeledSelect`](./src/components/ui/LabeledSelect/LabeledSelect.tsx), [`LabeledTextarea`](./src/components/ui/LabeledTextarea/LabeledTextarea.tsx), [`PageHeader`](./src/components/ui/PageHeader/PageHeader.tsx).
+    -   **Guideline:** When creating a new generic UI element (e.g., a modal, a tooltip), it **must** be placed here. Each component **must** reside in its own directory (e.g., `src/components/ui/Button/`) containing the component file (`Button.tsx`), its CSS module (`Button.module.css`), and an `index.ts` for clean exports.
 -   **Feature-Specific Components (`src/components/features/`):**
     -   These components are tied to specific application features or domains. They often compose multiple `ui/` components and may contain more business logic.
-    -   They are organized into subdirectories named after the feature they belong to (e.g., `src/components/features/dashboard/`, `src/components/features/generation-hub/`).
+    -   They are organized into subdirectories named after the feature they belong to (e.g., `src/components/features/dashboard/`, `src/components/features/generation-hub/`, `src/components/features/auth/`).
     -   Examples: [`DashboardFeatureCard`](./src/components/features/dashboard/DashboardFeatureCard/DashboardFeatureCard.tsx), [`QuickActionCard`](./src/components/features/dashboard/QuickActionCard/QuickActionCard.tsx).
     -   **Guideline:** When building UI for a specific part of the application (e.g., a student list item, a form for generating exams), components should be placed within the relevant feature directory.
--   **Common Components (`src/components/common/`):** (Proposed - consider for truly global, non-UI specific utilities if needed, e.g., `AnimatedElement`)
-    -   General-purpose utility components that might not strictly be "UI" or "feature" specific.
-    -   Example: [`AnimatedElement`](./src/components/AnimatedElement.tsx) (currently in `src/components/`, consider moving to `src/components/common/`).
+-   **Common Components (`src/components/common/`):**
+    -   General-purpose utility components that are shared across different features but are not as atomic as `ui/` components. They might have more specific logic but are not tied to a single feature.
+    -   Example: `AnimatedElement`, `AnimatedSection`.
+    -   **Guideline:** Use this directory for components that don't fit neatly into `ui` or a specific `feature` directory.
 -   **Styling:**
     -   **Guideline:** Each component **must** have its own CSS Module file (e.g., `MyComponent.module.css`) for scoped styles. This prevents style conflicts and improves maintainability. Import styles as `import styles from './MyComponent.module.css';`.
 -   **Reusability:**
@@ -173,29 +186,29 @@ Next.js applications can experience "hydration mismatches" when the server-rende
 
 By following these patterns, you can prevent hydration errors and ensure a smooth user experience without visual flickering.
 
-## Key Files Summary (Post Redux Integration)
+## Key Files Summary (Post Refactor)
 
--   [`src/lib/api/auth.ts`](./src/lib/api/auth.ts): Axios instance configuration and raw API call functions for authentication.
+-   [`src/lib/api/client.ts`](./src/lib/api/client.ts): Axios instance configuration.
+-   [`src/lib/api/auth.ts`](./src/lib/api/auth.ts): Raw API call functions for authentication.
 -   [`src/lib/store.ts`](./src/lib/store.ts): Redux store configuration.
 -   [`src/lib/features/auth/authSlice.ts`](./src/lib/features/auth/authSlice.ts): Redux slice for authentication state and actions.
 -   [`src/app/layout.tsx`](./src/app/layout.tsx): Root layout (Server Component), uses `ClientProviders` to wrap children.
 -   [`src/components/ClientProviders.tsx`](./src/components/ClientProviders.tsx): Client Component that wraps Redux Provider and AppInitializer.
 -   [`src/components/AppInitializer.tsx`](./src/components/AppInitializer.tsx): Client Component that dispatches the initial `fetchUser` action.
--   [`src/app/auth/page.tsx`](./src/app/auth/page.tsx): Login/Signup UI, interacts with Redux auth slice.
--   [`src/app/dashboard/layout.tsx`](./src/app/dashboard/layout.tsx): Layout for authenticated routes, uses Redux state for auth checks and logout.
--   [`src/app/dashboard/page.tsx`](./src/app/dashboard/page.tsx): Example page demonstrating usage of new reusable dashboard components.
--   [`src/components/ui/`](./src/components/ui/): Directory for atomic, reusable UI components.
+-   [`src/components/ui/`](./src/components/ui/): Directory for atomic, reusable UI components (e.g., `Button`, `Card`).
 -   [`src/components/features/`](./src/components/features/): Directory for feature-specific components.
+-   [`src/components/common/`](./src/components/common/): Directory for shared, non-feature-specific components.
 
 ## Development Guidelines (General)
 
+-   **Import Paths:** Strictly use `@/` path aliases for all imports within the `src/` directory.
 -   **API Interaction:** Use the `apiClient` from [`src/lib/api/client.ts`](./src/lib/api/client.ts) for all backend communication. Define new API functions within `src/lib/api/` (e.g., `src/lib/api/content.ts` for content-related endpoints).
 -   **State Management:**
     -   Use Redux Toolkit for global and feature-specific state.
     -   Create new slices in `src/lib/features/` for new state domains.
     -   Follow established patterns for actions, reducers, thunks, and selectors.
     -   Use `useSelector` and `useDispatch` in components to interact with the store.
--   **Component Creation:** Follow the `ui/` and `features/` structure outlined above. Always use CSS Modules for styling.
+-   **Component Creation:** Follow the `ui/`, `features/`, and `common/` structure outlined above. Always use CSS Modules for styling, with each component in its own folder with an `index.ts`.
 -   **Environment:** Ensure `NEXT_PUBLIC_API_URL` is configured in `.env.local` (and other environment files as needed) pointing to the correct backend URL. Remember to add `.env*.local` to `.gitignore`.
 -   **Error Handling:** Implement user-friendly error handling for API request failures. Thunks should `rejectWithValue` with error messages, which can then be selected and displayed in components.
 -   **Dependencies:** Add new frontend dependencies using `npm install` or `yarn add`. Keep dependencies up-to-date where feasible.
