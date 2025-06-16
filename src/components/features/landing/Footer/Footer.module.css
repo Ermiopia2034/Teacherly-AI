@@ -1,0 +1,261 @@
+.footer {
+  background-color: var(--card-bg);
+  padding: 4rem 2rem 2rem;
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 1.2s ease-out;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  bottom: -100px;
+  right: -100px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: rgba(0, 200, 150, 0.05);
+  filter: blur(100px);
+  z-index: 0;
+}
+
+.footerContent {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.footerLogo {
+  color: transparent;
+  background: var(--gradient-1);
+  background-clip: text;
+  -webkit-background-clip: text;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
+.footerAbout {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  max-width: 300px;
+  margin-bottom: 1.5rem;
+}
+
+.socialLinks {
+  display: flex;
+  gap: 1rem;
+}
+
+.socialIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+}
+
+.socialIcon:hover {
+  background-color: var(--primary);
+  color: #000;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 200, 150, 0.3);
+}
+
+.footerColumn h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--foreground);
+  position: relative;
+  display: inline-block;
+}
+
+.footerColumn h4::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background: var(--gradient-1);
+  transition: width 0.3s ease;
+}
+
+.footerColumn:hover h4::after {
+  width: 100%;
+}
+
+.footerLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.footerLink {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  position: relative;
+  width: fit-content;
+}
+
+.footerLink::before {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--primary);
+  transition: width 0.3s ease;
+}
+
+.footerLink:hover {
+  color: var(--foreground);
+  transform: translateX(5px);
+}
+
+.footerLink:hover::before {
+  width: 100%;
+}
+
+.footerBottom {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.footerCopyright {
+  transition: color 0.3s ease;
+}
+
+.footerCopyright:hover {
+  color: var(--foreground);
+}
+
+.footerBottomLinks {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footerBottomLink {
+  color: var(--text-muted);
+  transition: color 0.3s ease;
+}
+
+.footerBottomLink:hover {
+  color: var(--foreground);
+}
+
+@media (max-width: 1200px) {
+  .footer {
+    padding: 3.5rem 1.5rem 1.5rem;
+  }
+
+  .footerContent {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .footer {
+    padding: 3rem 1.5rem 1.5rem;
+  }
+
+  .footerContent {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .footerAbout {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 2.5rem 1.25rem 1.25rem;
+  }
+
+  .footerContent {
+    gap: 1.5rem;
+  }
+
+  .footerBottom {
+    margin-top: 2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .footer {
+    padding: 2rem 1rem 1rem;
+  }
+
+  .footerContent {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .footerColumn {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .footerColumn:last-child {
+    border-bottom: none;
+  }
+
+  .footerBottom {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+
+  .footerBottomLinks {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .socialLinks {
+    justify-content: center;
+  }
+
+  .footerLogo,
+  .footerAbout {
+    text-align: center;
+  }
+
+  .footerColumn h4 {
+    display: block;
+    text-align: center;
+    width: 100%;
+  }
+
+  .footerColumn h4::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .footerLinks {
+    align-items: center;
+  }
+}

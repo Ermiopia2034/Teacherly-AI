@@ -1,0 +1,85 @@
+.animatedElement {
+  opacity: 0;
+}
+
+.isVisible {
+  opacity: 1;
+}
+
+.slideUp {
+  animation-name: slideUp;
+}
+
+.slideDown {
+  animation-name: slideDown;
+}
+
+.slideLeft {
+  animation-name: slideLeft;
+}
+
+.slideRight {
+  animation-name: slideRight;
+}
+
+.fade {
+  animation-name: fade;
+}
+
+.scale {
+  animation-name: scale;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translate3d(0, 50px, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translate3d(0, -50px, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes slideLeft {
+  from {
+    transform: translate3d(50px, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes slideRight {
+  from {
+    transform: translate3d(-50px, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale {
+  from {
+    transform: scale(0.8);
+  }
+  to {
+    transform: scale(1);
+  }
+}

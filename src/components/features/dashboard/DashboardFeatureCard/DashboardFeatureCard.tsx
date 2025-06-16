@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import styles from './DashboardFeatureCard.module.css';
-import AnimatedElement from '@/components/AnimatedElement'; // Assuming AnimatedElement is in components root
+import AnimatedElement from '@/components/common/AnimatedElement/AnimatedElement';
 
 interface DashboardFeatureCardProps {
   title: string;

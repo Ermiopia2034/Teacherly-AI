@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import styles from './dashboard.module.css'; // Keep for .fadeIn and .cardsGrid until those are potentially moved or refactored
-import AnimatedElement from '@/components/AnimatedElement';
+import AnimatedElement from '@/components/common/AnimatedElement/AnimatedElement';
 import PageHeader from '@/components/ui/PageHeader/PageHeader';
 import DashboardFeatureCard from '@/components/features/dashboard/DashboardFeatureCard/DashboardFeatureCard';
 import QuickActionCard from '@/components/features/dashboard/QuickActionCard/QuickActionCard';
