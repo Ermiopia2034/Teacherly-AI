@@ -16,7 +16,7 @@ class ErrorBoundary extends Component<Props, State> {
     hasError: false,
   };
 
-  public static getDerivedStateFromError(_: Error): State {
+  public static getDerivedStateFromError(): State {
     // Update state so the next render will show the fallback UI.
     return { hasError: true };
   }
@@ -41,7 +41,7 @@ class ErrorBoundary extends Component<Props, State> {
       return (
         <div style={{ padding: '2rem', textAlign: 'center', border: '1px solid #ff000030', borderRadius: '8px', margin: '1rem' }}>
           <h2 style={{ color: '#ff4d4d' }}>Something went wrong.</h2>
-          <p>We've logged the error and will look into it.</p>
+          <p>We&amp;apos;ve logged the error and will look into it.</p>
           <button
             onClick={this.handleReset}
             style={{

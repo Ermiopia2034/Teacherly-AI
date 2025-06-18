@@ -66,7 +66,7 @@ export default function GenerationHub() {
             </div>
           </div>
           <div className={styles.cardContent}>
-            <p>You haven't generated any content yet. Use the cards above to create your first teaching material or exam.</p>
+            <p>You haven&amp;apos;t generated any content yet. Use the cards above to create your first teaching material or exam.</p>
           </div>
         </div>
       </AnimatedElement>
