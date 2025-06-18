@@ -3,6 +3,7 @@
 import { Provider } from 'react-redux';
 import { store } from '@/lib/store';
 import AppInitializer from './AppInitializer';
+import ErrorBoundary from './common/ErrorBoundary';
 
 interface ClientProvidersProps {
   children: React.ReactNode;
@@ -11,9 +12,11 @@ interface ClientProvidersProps {
 export default function ClientProviders({ children }: ClientProvidersProps) {
   return (
     <Provider store={store}>
-      <AppInitializer>
-        {children}
-      </AppInitializer>
+      <ErrorBoundary>
+        <AppInitializer>
+          {children}
+        </AppInitializer>
+      </ErrorBoundary>
     </Provider>
   );
-} 
+}

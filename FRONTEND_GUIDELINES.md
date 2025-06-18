@@ -97,8 +97,8 @@ The frontend aims for a clear and maintainable component structure located under
     -   **Guideline:** When building UI for a specific part of the application (e.g., a student list item, a form for generating exams), components should be placed within the relevant feature directory.
 -   **Common Components (`src/components/common/`):**
     -   General-purpose utility components that are shared across different features but are not as atomic as `ui/` components. They might have more specific logic but are not tied to a single feature.
-    -   Example: `AnimatedElement`, `AnimatedSection`.
-    -   **Guideline:** Use this directory for components that don't fit neatly into `ui` or a specific `feature` directory.
+    -   Example: `AnimatedElement`, `AnimatedSection`, `FadeInContainer`, `ErrorBoundary`.
+    -   **Guideline:** Use this directory for components that don't fit neatly into `ui` or a specific `feature` directory, including structural components, wrappers, and error handling logic.
 -   **Styling:**
     -   **Guideline:** Each component **must** have its own CSS Module file (e.g., `MyComponent.module.css`) for scoped styles. This prevents style conflicts and improves maintainability. Import styles as `import styles from './MyComponent.module.css';`.
 -   **Reusability:**
@@ -117,11 +117,12 @@ Next.js App Router uses React Server Components by default, which requires caref
     -   Must include the `'use client'` directive at the top of the file
     -   Required for components that use React hooks, event handlers, or browser-only APIs
     -   All components that use Redux hooks (`useSelector`, `useDispatch`) must be Client Components
-    -   Client-specific functionality (like Redux providers) should be isolated in dedicated Client Components
+    -   Client-specific functionality (like Redux providers) should be isolated in dedicated Client Components.
+    -   **Guideline:** Strive to keep pages as Server Components by default. If client-side interactivity is needed, extract that logic into a minimal Client Component (e.g., `FadeInContainer`) rather than marking the entire page as `'use client'`.
 3.  **Handling Redux in Next.js App Router:**
-    -   The Redux store and Provider are wrapped in a dedicated Client Component: [`src/components/ClientProviders.tsx`](./src/components/ClientProviders.tsx)
-    -   This component is then used in the Server Component layout (`src/app/layout.tsx`)
-    -   This approach prevents errors during static rendering while maintaining proper state management
+    -   The Redux store and Provider are wrapped in a dedicated Client Component: [`src/components/ClientProviders.tsx`](./src/components/ClientProviders.tsx).
+    -   This component is then used in the Server Component layout (`src/app/layout.tsx`).
+    -   This approach prevents errors during static rendering while maintaining proper state management.
 
 ## Preventing Hydration Mismatches
 
@@ -186,6 +187,14 @@ Next.js applications can experience "hydration mismatches" when the server-rende
 
 By following these patterns, you can prevent hydration errors and ensure a smooth user experience without visual flickering.
 
+## Error Handling & Accessibility
+
+-   **Error Boundaries:** The application is wrapped in a global `ErrorBoundary` in [`src/components/ClientProviders.tsx`](./src/components/ClientProviders.tsx). This component catches runtime errors in the client-side React tree and displays a fallback UI instead of a blank page.
+    -   **Guideline:** For more granular error handling, you can wrap specific, complex features in their own `ErrorBoundary` if needed.
+-   **Accessibility (a11y):**
+    -   **Semantic HTML:** Use appropriate HTML5 tags (`<main>`, `<nav>`, `<header>`, `<footer>`, etc.) instead of generic `<div>`s where possible to improve page structure and screen reader navigation.
+    -   **ARIA Labels:** All interactive elements that do not have visible text (e.g., icon-only buttons) **must** have an `aria-label` attribute describing their function. Example: `<button aria-label="Toggle sidebar">...</button>`.
+
 ## Key Files Summary (Post Refactor)
 
 -   [`src/lib/api/client.ts`](./src/lib/api/client.ts): Axios instance configuration.
@@ -193,11 +202,11 @@ By following these patterns, you can prevent hydration errors and ensure a smoot
 -   [`src/lib/store.ts`](./src/lib/store.ts): Redux store configuration.
 -   [`src/lib/features/auth/authSlice.ts`](./src/lib/features/auth/authSlice.ts): Redux slice for authentication state and actions.
 -   [`src/app/layout.tsx`](./src/app/layout.tsx): Root layout (Server Component), uses `ClientProviders` to wrap children.
--   [`src/components/ClientProviders.tsx`](./src/components/ClientProviders.tsx): Client Component that wraps Redux Provider and AppInitializer.
+-   [`src/components/ClientProviders.tsx`](./src/components/ClientProviders.tsx): Client Component that wraps the Redux Provider, `AppInitializer`, and the global `ErrorBoundary`.
 -   [`src/components/AppInitializer.tsx`](./src/components/AppInitializer.tsx): Client Component that dispatches the initial `fetchUser` action.
 -   [`src/components/ui/`](./src/components/ui/): Directory for atomic, reusable UI components (e.g., `Button`, `Card`).
 -   [`src/components/features/`](./src/components/features/): Directory for feature-specific components.
--   [`src/components/common/`](./src/components/common/): Directory for shared, non-feature-specific components.
+-   [`src/components/common/`](./src/components/common/): Directory for shared, non-feature-specific components (e.g., `ErrorBoundary`).
 
 ## Development Guidelines (General)
 

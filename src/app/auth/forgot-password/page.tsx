@@ -1,55 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/lib/store";
+import {
+  requestPasswordResetLink,
+  selectIsAuthLoading,
+  selectAuthError,
+  clearAuthError,
+} from "@/lib/features/auth/authSlice";
 import styles from "../auth.module.css";
 import forgotStyles from "./forgot-password.module.css";
-import { requestPasswordReset } from "@/lib/api/auth"; // Import the API function
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Loading state
-  const [error, setError] = useState<string | null>(null); // Error state
+  const dispatch = useDispatch<AppDispatch>();
+  const isLoading = useSelector(selectIsAuthLoading);
+  const error = useSelector(selectAuthError);
+
+  useEffect(() => {
+    // Clear any existing auth errors when the component mounts
+    return () => {
+      dispatch(clearAuthError());
+    };
+  }, [dispatch]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError(null); // Clear previous errors
+    dispatch(clearAuthError());
 
-    try {
-      // The origin parameter will be automatically added by the requestPasswordReset function
-      await requestPasswordReset({ email });
-      // On success, show the confirmation message
+    const result = await dispatch(requestPasswordResetLink({ email }));
+    if (requestPasswordResetLink.fulfilled.match(result)) {
       setIsSubmitted(true);
-    } catch (err: unknown) {
-      console.error("Password reset request failed:", err);
-      let message = "An unexpected error occurred. Please try again."; // Default message
-
-      // Type-safe check for nested error details (e.g., from Axios)
-      if (typeof err === 'object' && err !== null && 'response' in err) {
-        const response = (err as { response?: unknown }).response;
-        if (typeof response === 'object' && response !== null && 'data' in response) {
-          const data = (response as { data?: unknown }).data;
-          if (typeof data === 'object' && data !== null && 'detail' in data && typeof data.detail === 'string') {
-            message = data.detail; // Use the specific detail message
-          } else if (err instanceof Error) {
-            message = err.message; // Fallback to standard error message
-          }
-        } else if (err instanceof Error) {
-          message = err.message; // Fallback if response exists but no data
-        }
-      } else if (err instanceof Error) {
-        message = err.message; // Handle standard Error objects
-      } else if (typeof err === 'string') {
-        message = err; // Handle simple string errors
-      }
-
-      setError(message);
-      setIsSubmitted(false); // Stay on the form if there's an error
-    } finally {
-      setIsLoading(false);
     }
+    // The error is now managed by the Redux state and displayed via the selector.
   };
 
   return (

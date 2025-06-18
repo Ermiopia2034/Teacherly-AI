@@ -85,18 +85,16 @@ export default function DashboardLayout({
   return (
     <div className={styles.dashboardContainer}>
       <header className={styles.dashboardHeader}>
-        <div className={styles.headerLeft}>
-          <button className={styles.toggleButton} onClick={toggleSidebar}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-          </button>
-          <Link href="/dashboard" className={styles.logo}>
-            Teacherly
-          </Link>
-        </div>
+        <button className={styles.toggleButton} onClick={toggleSidebar} aria-label="Toggle sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <Link href="/dashboard" className={styles.logo}>
+          Teacherly
+        </Link>
       </header>
 
       <aside className={`${styles.sidebar} ${isSidebarCollapsed ? styles.collapsed : ''}`}>
@@ -153,7 +151,7 @@ export default function DashboardLayout({
           </div>
         </div>
 
-        <div className={styles.sidebarFooter}>
+        <footer className={styles.sidebarFooter}>
           <Link href="/dashboard/help" className={`${styles.navItem} ${isActive('/dashboard/help') ? styles.active : ''}`}>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10"></circle>
@@ -170,7 +168,7 @@ export default function DashboardLayout({
             </svg>
             <span>Logout Account</span>
           </button>
-        </div>
+        </footer>
       </aside>
 
       <main className={`${styles.mainContent} ${isSidebarCollapsed ? styles.expandedContent : ''}`}>

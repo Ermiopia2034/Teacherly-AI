@@ -1,22 +1,15 @@
-'use client';
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styles from '@/app/dashboard/dashboard.module.css';
-import Link from 'next/link';
 import AnimatedElement from '@/components/AnimatedElement';
 import PageHeader from '@/components/ui/PageHeader/PageHeader';
-import DashboardFeatureCard from '@/components/features/dashboard/DashboardFeatureCard/DashboardFeatureCard'; // Changed import
+import DashboardFeatureCard from '@/components/features/dashboard/DashboardFeatureCard/DashboardFeatureCard';
+import Breadcrumb from '@/components/ui/Breadcrumb/Breadcrumb';
+import FadeInContainer from '@/components/common/FadeInContainer/FadeInContainer';
 
 export default function GenerationHub() {
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    setIsLoaded(true);
-  }, []);
-
   const breadcrumbItems = [
     { label: 'Dashboard', href: '/dashboard' },
-    { label: 'Generation Hub' },
+    { label: 'Generation Hub', isCurrent: true },
   ];
 
   const materialIcon = (
@@ -38,46 +31,30 @@ export default function GenerationHub() {
   );
 
   return (
-    <div className={`${isLoaded ? styles.fadeIn : ''}`}>
-      {/* Manual Breadcrumb implementation */}
-      <div className={styles.breadcrumbContainer}>
-        {breadcrumbItems.map((item, index) => (
-          <React.Fragment key={item.label}>
-            {item.href ? (
-              <Link href={item.href} className={styles.breadcrumbLink}>
-                {item.label}
-              </Link>
-            ) : (
-              <span className={styles.breadcrumbCurrent}>{item.label}</span>
-            )}
-            {index < breadcrumbItems.length - 1 && (
-              <span className={styles.breadcrumbSeparator}>/</span>
-            )}
-          </React.Fragment>
-        ))}
-      </div>
+    <FadeInContainer>
+      <Breadcrumb items={breadcrumbItems} />
       <PageHeader title="Generation Hub" />
 
       <div className={styles.cardsGrid}>
         <DashboardFeatureCard
           title="Generate material"
-          description="Create new material, update existing materials." // Simplified description
+          description="Create new material, update existing materials."
           icon={materialIcon}
-          mainContent="Use AI to generate various teaching materials for your classes." // Generic main content
+          mainContent="Use AI to generate various teaching materials for your classes."
           linkHref="/dashboard/generation-hub/material"
           linkText="Create Material"
-          animationDelay={0.1} // Existing prop from DashboardFeatureCard
-          pulseIcon={true} // Example of using existing prop
+          animationDelay={0.1}
+          pulseIcon={true}
         />
 
         <DashboardFeatureCard
           title="Generate Exam"
-          description="Quiz exams, mid exams, final exams." // Simplified description
+          description="Quiz exams, mid exams, final exams."
           icon={examIcon}
-          mainContent="Generate different types of exams tailored to your needs." // Generic main content
+          mainContent="Generate different types of exams tailored to your needs."
           linkHref="/dashboard/generation-hub/exam"
           linkText="Create Exam"
-          animationDelay={0.2} // Existing prop
+          animationDelay={0.2}
         />
       </div>
 
@@ -89,10 +66,10 @@ export default function GenerationHub() {
             </div>
           </div>
           <div className={styles.cardContent}>
-            <p>You haven&apos;t generated any content yet. Use the cards above to create your first teaching material or exam.</p>
+            <p>You haven't generated any content yet. Use the cards above to create your first teaching material or exam.</p>
           </div>
         </div>
       </AnimatedElement>
-    </div>
+    </FadeInContainer>
   );
 }
