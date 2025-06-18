@@ -189,7 +189,7 @@ graph TD
     *   Example: `../components/AnimatedElement` becomes `@/components/common/AnimatedElement`.
 4.  Test pages using these components (e.g., `app/page.tsx`, `dashboard/generation-hub/exam/page.tsx`).
 
-#### Days 5-6: Extract Landing Page Feature Components
+#### Days 5-6: Extract Landing Page Feature Components ✅ Done
 **Target File:** [`src/app/page.tsx`](teacherly-ai/src/app/page.tsx).
 **Issue Ref:** Consolidated Analysis II.A.
 
@@ -201,7 +201,7 @@ graph TD
 5.  **Shared Sub-components:** If elements like `StatItem` or `ServiceCard` are complex enough, extract them into `src/components/features/landing/components/`.
 6.  **Refactor `app/page.tsx`:** Replace inline JSX with imported feature components. Page should become primarily a layout of these sections.
 
-#### Day 7: Extract Generation Hub Feature Components
+#### Day 7: Extract Generation Hub Feature Components ✅ Done
 **Target Files:** [`src/app/dashboard/generation-hub/exam/page.tsx`](teacherly-ai/src/app/dashboard/generation-hub/exam/page.tsx), and [`material/page.tsx`](teacherly-ai/src/app/dashboard/generation-hub/material/page.tsx) if similar.
 **Issue Ref:** Consolidated Analysis II.A.
 
