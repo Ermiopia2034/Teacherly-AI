@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import styles from './ExamForm.module.css';
+import Button from '@/components/ui/Button/Button';
 import LabeledInput from '@/components/ui/LabeledInput/LabeledInput';
 import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
 import LabeledTextarea from '@/components/ui/LabeledTextarea/LabeledTextarea';
@@ -124,16 +125,22 @@ export default function ExamForm() {
           />
 
           <div className={styles.formActions}>
-            <button type="submit" className={styles.submitButton}>
-              Generate Exam
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
-              </svg>
-            </button>
-            <Link href="/dashboard/generation-hub" className={styles.cancelButton}>
-              Cancel
+            <Link href="/dashboard/generation-hub">
+              <Button variant="outline" type="button">
+                Cancel
+              </Button>
             </Link>
+            <Button
+              type="submit"
+              iconRight={
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              }
+            >
+              Generate Exam
+            </Button>
           </div>
         </form>
       </div>

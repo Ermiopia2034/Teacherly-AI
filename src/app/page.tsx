@@ -1,4 +1,6 @@
 import styles from "./page.module.css";
+import Link from "next/link";
+import Button from "@/components/ui/Button";
 import AnimatedElement from "@/components/common/AnimatedElement/AnimatedElement";
 import HeroSection from "@/components/features/landing/HeroSection";
 import ServicesSection from "@/components/features/landing/ServicesSection";
@@ -11,8 +13,12 @@ export default function Home() {
       <header className={styles.header}>
         <div className={styles.logo}>Teacherly</div>
         <div className={styles.signIn}>
-          <a href="/auth?mode=login" className={styles.signInLink}>Sign in</a> |
-          <a href="/auth?mode=signup" className={styles.ctaButton}>Join</a>
+          <Link href="/auth?mode=login">
+            <Button variant="link">Sign In</Button>
+          </Link>
+          <Link href="/auth?mode=signup">
+            <Button>Join</Button>
+          </Link>
         </div>
       </header>
 

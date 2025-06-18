@@ -1,5 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
 import styles from "./HeroSection.module.css";
+import Button from "@/components/ui/Button/Button";
 import ScrollDownButton from "@/components/ui/ScrollDownButton/ScrollDownButton";
 
 const HeroSection = () => {
@@ -16,13 +18,18 @@ const HeroSection = () => {
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed diam nonummy nibhed euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
         </p>
         <div>
-          <a href="/auth?mode=signup" className="btn btn-primary hero-btn">
-            Start
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </a>
+          <Link href="/auth?mode=signup">
+            <Button
+              iconRight={
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              }
+            >
+              Start
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -39,20 +46,20 @@ const HeroSection = () => {
 
       <div className={styles.statsContainer}>
         <div className={styles.statItem}>
-          <div className="stat-value">120</div>
-          <div className="stat-label">courses</div>
+          <div className={styles.statValue}>120</div>
+          <div className={styles.statLabel}>courses</div>
         </div>
         <div className={styles.statItem}>
-          <div className="stat-value">285</div>
-          <div className="stat-label">happy users</div>
+          <div className={styles.statValue}>285</div>
+          <div className={styles.statLabel}>happy users</div>
         </div>
         <div className={styles.statItem}>
-          <div className="stat-value">24.7</div>
-          <div className="stat-label">hours</div>
+          <div className={styles.statValue}>24.7</div>
+          <div className={styles.statLabel}>hours</div>
         </div>
         <div className={styles.statItem}>
-          <div className="stat-value">10</div>
-          <div className="stat-label">countries</div>
+          <div className={styles.statValue}>10</div>
+          <div className={styles.statLabel}>countries</div>
         </div>
       </div>
 
