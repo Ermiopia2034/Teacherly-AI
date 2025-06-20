@@ -86,3 +86,10 @@
   border-color: #38a169;
   box-shadow: 0 0 0 3px rgba(56, 161, 105, 0.25);
 }
+.formSelect.placeholder {
+  color: var(--text-muted, #888);
+}
+
+.formSelect option:first-child {
+  color: var(--text-muted, #888);
+}

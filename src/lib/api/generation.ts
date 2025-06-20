@@ -1,17 +1,24 @@
-// import apiClient from './client'; // Commented out until used
+import apiClient from './client';
 
-// This file will contain API service functions related to content generation.
-// For example, functions to:
-// - Initiate a generation task
-// - Check the status of a generation task
-// - Retrieve generated content
+/**
+ * Defines the structure for the request payload when generating teaching material.
+ * This corresponds to the `MaterialGenerationRequest` Pydantic schema on the backend.
+ */
+export interface MaterialGenerationRequest {
+  subject: string;
+  grade: string;
+  unit: string;
+  topic: string;
+  contentType: string;
+  additionalInfo: string;
+}
 
-// Example placeholder structure:
-/*
-export const generateExam = async (params: any): Promise<any> => {
-  const response = await apiClient.post('/generation/exam', params);
+/**
+ * Calls the backend API to generate teaching material.
+ * @param data - The material generation request payload.
+ * @returns The backend response, which includes the generated content.
+ */
+export const generateMaterial = async (data: MaterialGenerationRequest): Promise<{ content: string }> => {
+  const response = await apiClient.post('/content/generate/material', data);
   return response.data;
 };
-*/
-
-// Add your generation-specific API functions here as they are developed.

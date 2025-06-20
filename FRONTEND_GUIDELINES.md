@@ -80,7 +80,23 @@ The application uses Redux Toolkit for robust and scalable state management.
     -   [`src/app/auth/page.tsx`](./src/app/auth/page.tsx): Contains the login/signup form UI. Uses `useDispatch` to dispatch `loginUser` or `signupUser` thunks and `useSelector` to access `isLoading` and `error` state from the `authSlice`.
     -   **Redirects:** Navigation after login/logout is typically handled within components based on the user state from Redux (e.g., using `useRouter` from `next/navigation` after a successful login, or when `user` state changes).
 5.  **Route Protection:** Authenticated routes (like the dashboard) are protected by checking the user state from the `authSlice` (via `useSelector`) within their layout ([`src/app/dashboard/layout.tsx`](./src/app/dashboard/layout.tsx)) or page components. Unauthenticated users are redirected to the login page.
-    -   **Guideline:** Use `useSelector` to access `user`, `isLoadingAuth` from the `authSlice` and `useDispatch` to call authentication thunks (like `logoutUser`) within components.
+    -   **Guideline:** Use `useSelector` to access `user`, `isLoadingAuth` from the `authSlice` and `useDispatch` to call authentication thunks (like `logoutUser`) within components.
+    
+    ## Application Workflows
+    
+    ### Create-Then-Redirect Pattern (for Forms)
+    
+    A standard workflow for creating new resources (e.g., generating content, adding a student) has been established to provide a consistent user experience.
+    
+    1.  **Form Submission:** The user fills out a form in a client component (e.g., [`MaterialForm.tsx`](./src/components/features/generation-hub/MaterialForm/MaterialForm.tsx)). The `onSubmit` handler is an `async` function.
+    2.  **Dispatch Thunk & Await Result:** Inside the handler, the component dispatches the appropriate Redux async thunk (e.g., `generateMaterialThunk`). The component uses `await` on the dispatched thunk and calls `.unwrap()` on the result.
+        -   The `.unwrap()` function, when called on the promise returned by `dispatch(thunk)`, will either return the `fulfilled` action's payload or throw the `rejected` action's payload.
+    3.  **Handle Success/Error:**
+        -   **On Success:** If the promise resolves, it means the backend operation was successful. The component then uses the `useRouter` hook from `next/navigation` to redirect the user to a relevant page (e.g., a list view of the newly created resources like `/dashboard/my-contents`).
+        -   **On Error:** The component wraps the `await dispatch(...).unwrap()` call in a `try...catch` block. If the promise is rejected, the `catch` block executes, and the error payload from the thunk can be used to set a local error state and display a message to the user.
+    4.  **UI Feedback:** The component uses `useSelector` to get the `isLoading` state from the relevant slice to provide feedback, such as disabling the submit button while the operation is in progress.
+    
+    This pattern ensures that the UI provides clear feedback and a logical flow without needing to display the created resource on the same page as the form.
 
 ## Component Structure and Reusability
 
@@ -211,7 +227,10 @@ By following these patterns, you can prevent hydration errors and ensure a smoot
 ## Development Guidelines (General)
 
 -   **Import Paths:** Strictly use `@/` path aliases for all imports within the `src/` directory.
--   **API Interaction:** Use the `apiClient` from [`src/lib/api/client.ts`](./src/lib/api/client.ts) for all backend communication. Define new API functions within `src/lib/api/` (e.g., `src/lib/api/content.ts` for content-related endpoints).
+-   **API Interaction & Typing:**
+- Use the `apiClient` from [`src/lib/api/client.ts`](./src/lib/api/client.ts) for all backend communication.
+- Define new API functions within `src/lib/api/` (e.g., `src/lib/api/generation.ts`).
+- **Guideline:** For consistency, TypeScript `interface` or `type` definitions for API request/response payloads should be co-located within the same `src/lib/api/[feature].ts` file where they are used.
 -   **State Management:**
     -   Use Redux Toolkit for global and feature-specific state.
     -   Create new slices in `src/lib/features/` for new state domains.
@@ -220,6 +239,8 @@ By following these patterns, you can prevent hydration errors and ensure a smoot
 -   **Component Creation:** Follow the `ui/`, `features/`, and `common/` structure outlined above. Always use CSS Modules for styling, with each component in its own folder with an `index.ts`.
 -   **Environment:** Ensure `NEXT_PUBLIC_API_URL` is configured in `.env.local` (and other environment files as needed) pointing to the correct backend URL. Remember to add `.env*.local` to `.gitignore`.
 -   **Error Handling:** Implement user-friendly error handling for API request failures. Thunks should `rejectWithValue` with error messages, which can then be selected and displayed in components.
--   **Dependencies:** Add new frontend dependencies using `npm install` or `yarn add`. Keep dependencies up-to-date where feasible.
+-   **Dependencies:**
+- Add new frontend dependencies using `npm install`.
+- The `react-markdown` library has been added to the project. **Guideline:** Use this library to render any markdown content received from the backend to ensure it is displayed correctly and safely.
 
 Adhering to these patterns will help maintain consistency and ensure that authentication, backend communication, state management, and component architecture work reliably as new features are added.

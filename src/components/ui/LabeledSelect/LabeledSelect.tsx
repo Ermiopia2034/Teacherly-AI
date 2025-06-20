@@ -4,9 +4,9 @@ import styles from './LabeledSelect.module.css';
 interface SelectOption {
   value: string | number;
   label: string;
-}
-
-interface LabeledSelectProps {
+   }
+   
+   interface LabeledSelectProps {
   label: string;
   id: string;
   name: string;
@@ -18,7 +18,8 @@ interface LabeledSelectProps {
   labelClassName?: string;
   selectClassName?: string;
   disabled?: boolean;
-}
+    placeholder?: string;
+   }
 
 const LabeledSelect: React.FC<LabeledSelectProps> = ({
   label,
@@ -32,29 +33,35 @@ const LabeledSelect: React.FC<LabeledSelectProps> = ({
   labelClassName = '',
   selectClassName = '',
   disabled = false,
-}) => {
+    placeholder,
+   }) => {
   return (
-    <div className={`${styles.formGroup} ${className}`}>
-      <label htmlFor={id} className={`${styles.formLabel} ${labelClassName}`}>
-        {label}
-        {required && <span className={styles.requiredIndicator}>*</span>}
-      </label>
-      <div className={styles.selectWrapper}>
-        <select
-          id={id}
-          name={name}
-          value={value}
-          onChange={onChange}
-          required={required}
-          className={`${styles.formSelect} ${selectClassName}`}
-          disabled={disabled}
-        >
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+  <div className={`${styles.formGroup} ${className}`}>
+  <label htmlFor={id} className={`${styles.formLabel} ${labelClassName}`}>
+  {label}
+  {required && <span className={styles.requiredIndicator}>*</span>}
+  </label>
+  <div className={styles.selectWrapper}>
+  <select
+  id={id}
+  name={name}
+  value={value}
+  onChange={onChange}
+  required={required}
+  className={`${styles.formSelect} ${selectClassName} ${!value ? styles.placeholder : ''}`}
+  disabled={disabled}
+  >
+  {placeholder && (
+                <option value="" disabled>
+                  {placeholder}
+                </option>
+              )}
+  {options.map((option) => (
+  <option key={option.value} value={option.value}>
+  {option.label}
+  </option>
+  ))}
+  </select>
         <span className={styles.selectArrow}>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="6 9 12 15 18 9"></polyline>
