@@ -17,18 +17,28 @@ const initialState: GenerationState = {
 };
 
 // 2. Create the Async Thunk
-export const generateMaterialThunk = createAsyncThunk(
-  'generation/generateMaterial',
-  async (data: MaterialGenerationRequest, { rejectWithValue }) => {
-    try {
-      const response = await generateMaterial(data);
-      return response.content;
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.detail || error.message || 'An unknown error occurred';
-      return rejectWithValue(errorMessage);
-    }
-  }
-);
+export const generateMaterialThunk = createAsyncThunk<
+string,
+MaterialGenerationRequest,
+{ rejectValue: string }
+>('generation/generateMaterial', async (data, { rejectWithValue }) => {
+try {
+const response = await generateMaterial(data);
+return response.content;
+} catch (error) {
+let errorMessage = 'An unknown error occurred';
+if (typeof error === 'object' && error !== null && 'response' in error) {
+const response = (error as { response?: { data?: { detail?: string } } })
+.response;
+if (response?.data?.detail) {
+errorMessage = response.data.detail;
+}
+} else if (error instanceof Error) {
+errorMessage = error.message;
+}
+return rejectWithValue(errorMessage);
+}
+});
 
 // 3. Create the Slice
 const generationSlice = createSlice({
@@ -53,8 +63,8 @@ const generationSlice = createSlice({
         state.generatedContent = action.payload;
       })
       .addCase(generateMaterialThunk.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
+      state.isLoading = false;
+      state.error = action.payload ?? 'An unknown error occurred';
       });
   },
 });
