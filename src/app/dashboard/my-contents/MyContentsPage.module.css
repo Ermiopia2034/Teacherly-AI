@@ -19,16 +19,12 @@
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
-.contentCard:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-}
 
 .cardTitle {
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: #333;
+  color: var(--foreground);
 }
 
 .cardLink {
@@ -37,17 +33,21 @@
   display: block; /* Ensures the link takes up the full card space */
 }
 
+.cardLink:hover {
+  text-decoration: none;
+}
+
 .cardType {
   font-size: 0.875rem;
   font-weight: 500;
   text-transform: uppercase;
-  color: #666;
+  color: var(--text-muted);
   margin-bottom: 1rem;
 }
 
 .cardDescription {
   font-size: 1rem;
-  color: #555;
+  color: var(--text-muted);
   flex-grow: 1;
 }
 

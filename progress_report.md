@@ -1,4 +1,4 @@
-# Frontend Progress Report - June 24, 2025
+# Frontend Progress Report - June 25, 2025
 
 This document summarizes the recent development work on the Teacherly AI frontend and provides guidance for future development.
 
@@ -27,6 +27,21 @@ This document summarizes the recent development work on the Teacherly AI fronten
 - **Clickable Content Cards:** The cards on the "My Contents" list page are now interactive, implemented as links that navigate the user to the corresponding detail page.
 - **Styling:** Custom styling was added for both the list page and the new detail page using CSS Modules to ensure component-level scope and prevent style conflicts.
 
+### 5. Markdown Rendering and Theme Refactor
+- **Markdown Rendering Engine:**
+  - The `react-markdown` implementation was significantly upgraded to handle complex notations.
+  - A new, reusable `MarkdownRenderer` component was created in `src/components/common/MarkdownRenderer`.
+  - Added and configured essential plugins: `remark-gfm` (for tables, etc.), `rehype-highlight` (for code blocks), `rehype-slug`, and `rehype-autolink-headings`.
+- **Dark Theme Consistency:**
+  - The "My Contents" list and detail pages were refactored to align with the application's global dark theme.
+  - The reusable `Card` component (`src/components/ui/Card`) was updated to use CSS variables from `globals.css`, removing its hardcoded light theme.
+  - All text visibility issues on dark backgrounds were resolved.
+- **Styling Enhancements:**
+  - The visual presentation of code blocks and tables was improved to ensure they are distinct and readable on the dark background, with enhanced borders and contrast.
+- **Bug Fixes and Cleanup:**
+  - Fixed a `react/no-unescaped-entities` compilation error.
+  - Resolved a CSS linting error by removing an empty ruleset.
+
 ## Guidance for Future Development
 
 - **Redux Pattern for Data Fetching:** When adding features that require data from the backend, follow the established pattern:
@@ -43,4 +58,6 @@ This document summarizes the recent development work on the Teacherly AI fronten
 
 - **API Client:** Use the pre-configured Axios instance (`apiClient` from `src/lib/api/client.ts`) for all backend requests. It is set up with `withCredentials: true`, which is essential for sending the authentication cookie to the backend.
 
-- **Rendering Markdown:** The backend frequently returns content in Markdown format. Always use the `ReactMarkdown` component to render this content to ensure it is displayed correctly and safely.
+- **Rendering Markdown:** The backend frequently returns content in Markdown format. Always use the new **`MarkdownRenderer`** component (`src/components/common/MarkdownRenderer`) to render this content. This ensures consistent styling, security, and full support for complex notations like tables and highlighted code blocks.
+
+- **Theme Consistency:** When creating new components or pages, strictly adhere to the CSS variables defined in `src/app/globals.css` for all colors, fonts, and backgrounds. Avoid hardcoding style values to ensure the application maintains a consistent look and feel.

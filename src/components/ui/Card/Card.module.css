@@ -1,13 +1,19 @@
 .card {
-  background-color: white;
+  background-color: var(--card-bg);
   border-radius: 0.5rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--secondary);
   overflow: hidden;
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  background-color: var(--card-hover);
+  transform: translateY(-4px);
 }
 
 .header {
   padding: 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--secondary);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -25,7 +31,7 @@
 
 .description {
   margin-top: 0.25rem;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .headerActions {
@@ -38,6 +44,6 @@
 
 .footer {
   padding: 1rem 1.5rem;
-  background-color: #f9fafb;
-  border-top: 1px solid #e5e7eb;
+  background-color: transparent;
+  border-top: 1px solid var(--secondary);
 }
