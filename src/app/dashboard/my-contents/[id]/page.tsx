@@ -3,7 +3,6 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import ReactMarkdown from 'react-markdown';
 import { AppDispatch } from '@/lib/store';
 import {
   fetchContentByIdThunk,
@@ -13,6 +12,7 @@ import {
 } from '@/lib/features/content/contentSlice';
 import Breadcrumb from '@/components/ui/Breadcrumb/Breadcrumb';
 import PageHeader from '@/components/ui/PageHeader/PageHeader';
+import MarkdownRenderer from '@/components/common/MarkdownRenderer';
 import styles from './ContentDetailPage.module.css';
 
 export default function ContentDetailPage() {
@@ -54,8 +54,8 @@ export default function ContentDetailPage() {
 
     return (
       <div className={styles.contentContainer}>
-        <div className={styles.markdownWrapper}>
-          <ReactMarkdown>{markdownContent}</ReactMarkdown>
+        <div className={`${styles.contentContainer} ${styles.prose}`}>
+          <MarkdownRenderer markdownContent={markdownContent} />
         </div>
       </div>
     );

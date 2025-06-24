@@ -32,7 +32,7 @@ export default function MyContentsPage() {
 
   const renderContent = () => {
     if (isLoading) {
-      return <p>Loading your content...</p>;
+      return <p>Please wait, Loading your content...</p>;
     }
 
     if (error) {
