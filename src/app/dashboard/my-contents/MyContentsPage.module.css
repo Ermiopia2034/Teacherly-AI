@@ -1,0 +1,57 @@
+.pageContainer {
+  padding: 1rem;
+}
+
+.contentSection {
+  margin-top: 2rem;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.contentCard {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.contentCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+  display: block; /* Ensures the link takes up the full card space */
+}
+
+.cardType {
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.cardDescription {
+  font-size: 1rem;
+  color: #555;
+  flex-grow: 1;
+}
+
+.errorText {
+  color: #d9534f;
+  font-weight: 500;
+}

@@ -33,7 +33,7 @@ export default function RootLayout({
   // However, best practice is to keep RootLayout as server component if possible.
   // For this case, placing provider and initializer makes this structure fine.
   return (
-    <html lang="en" className={`${merriweather.variable} ${lato.variable}`}>
+    <html lang="en" className={`${merriweather.variable} ${lato.variable}`} suppressHydrationWarning>
       <body>
         <ClientProviders>
           {children}

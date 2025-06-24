@@ -23,16 +23,12 @@ function AuthContent() {
   const user = useSelector(selectUser);
   
   // Initialize loading state to false for client-side rendering to prevent hydration mismatch
-  const [clientSideLoaded, setClientSideLoaded] = useState(false);
   const isLoading = useSelector(selectIsAuthLoading);
   
   const authError = useSelector(selectAuthError);
   const [localError, setLocalError] = useState<string | null>(null); // For UI feedback, separate from Redux error for more control
 
   // Mark component as client-side loaded after initial render
-  useEffect(() => {
-    setClientSideLoaded(true);
-  }, []);
 
   // Set initial mode based on URL parameter
   useEffect(() => {
@@ -184,9 +180,9 @@ function AuthContent() {
             <button 
               type="submit" 
               className={styles.submitButton} 
-              disabled={clientSideLoaded && isLoading}
+              disabled={isLoading}
             >
-              {clientSideLoaded && isLoading ? "Processing..." : (isLogin ? "Sign In" : "Create Account")}
+              {isLoading ? "Processing..." : (isLogin ? "Sign In" : "Create Account")}
               <span className={styles.buttonIcon}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
