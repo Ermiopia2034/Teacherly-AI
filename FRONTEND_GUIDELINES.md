@@ -97,6 +97,12 @@ The application uses Redux Toolkit for robust and scalable state management.
     4.  **UI Feedback:** The component uses `useSelector` to get the `isLoading` state from the relevant slice to provide feedback, such as disabling the submit button while the operation is in progress.
     
     This pattern ensures that the UI provides clear feedback and a logical flow without needing to display the created resource on the same page as the form.
+    
+    ### Dynamic Form Population
+    - The Material Generation Form now dynamically fetches its dropdown options (subjects, grades, chapters, topics) from the backend's `/api/curriculum` endpoints.
+    - It uses a cascading `useEffect` pattern to fetch the next level of data as the user makes selections (e.g., fetching grades after a subject is chosen).
+    - A new API client, `src/lib/api/curriculum.ts`, was created to handle these requests.
+    - The form now supports multi-selection of topics.
 
 ## Component Structure and Reusability
 
@@ -214,7 +220,8 @@ By following these patterns, you can prevent hydration errors and ensure a smoot
 ## Key Files Summary (Post Refactor)
 
 -   [`src/lib/api/client.ts`](./src/lib/api/client.ts): Axios instance configuration.
--   [`src/lib/api/auth.ts`](./src/lib/api/auth.ts): Raw API call functions for authentication.
+-   [`src/lib/api/auth.ts`](./src/lib/api/auth.ts): Raw API call functions for authentication.
+-   [`src/lib/api/curriculum.ts`](./src/lib/api/curriculum.ts): API call functions for fetching curriculum data.
 -   [`src/lib/store.ts`](./src/lib/store.ts): Redux store configuration.
 -   [`src/lib/features/auth/authSlice.ts`](./src/lib/features/auth/authSlice.ts): Redux slice for authentication state and actions.
 -   [`src/app/layout.tsx`](./src/app/layout.tsx): Root layout (Server Component), uses `ClientProviders` to wrap children.
@@ -229,7 +236,7 @@ By following these patterns, you can prevent hydration errors and ensure a smoot
 -   **Import Paths:** Strictly use `@/` path aliases for all imports within the `src/` directory.
 -   **API Interaction & Typing:**
 - Use the `apiClient` from [`src/lib/api/client.ts`](./src/lib/api/client.ts) for all backend communication.
-- Define new API functions within `src/lib/api/` (e.g., `src/lib/api/generation.ts`).
+- Define new API functions within `src/lib/api/` (e.g., `src/lib/api/generation.ts`, `src/lib/api/curriculum.ts`).
 - **Guideline:** For consistency, TypeScript `interface` or `type` definitions for API request/response payloads should be co-located within the same `src/lib/api/[feature].ts` file where they are used.
 -   **State Management:**
     -   Use Redux Toolkit for global and feature-specific state.

@@ -8,7 +8,7 @@ export interface MaterialGenerationRequest {
   subject: string;
   grade: string;
   unit: string;
-  topic: string;
+  topics: string[];
   contentType: string;
   additionalInfo: string;
 }

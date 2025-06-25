@@ -42,19 +42,27 @@ This document summarizes the recent development work on the Teacherly AI fronten
   - Fixed a `react/no-unescaped-entities` compilation error.
   - Resolved a CSS linting error by removing an empty ruleset.
 
+### 6. Dynamic Content Generation Form
+- **Dynamic Data Fetching:** The Material Generation Form (`/dashboard/generation-hub/material`) was refactored to be fully dynamic. It no longer uses hardcoded curriculum data.
+- **New Curriculum API:** A new API client (`src/lib/api/curriculum.ts`) was created to communicate with the backend's new curriculum endpoints. The form now fetches subjects, grades, chapters, and topics sequentially and dynamically populates the dropdown menus.
+- **Multi-Topic Selection:** The form was updated to allow teachers to select multiple topics simultaneously using a multi-select input. This enables the generation of more comprehensive materials that span several topics.
+- **State and API Logic:** The component's state management and the Redux thunk (`generateMaterialThunk`) were updated to handle the new data structure (sending an array of topics to the backend).
+
 ## Guidance for Future Development
 
+- **Improve Multi-Select UX:** The current multi-topic selector is a standard HTML `<select multiple>`. For a better user experience, consider upgrading this to a more modern component from a library like `react-select`, which offers features like search, tagging, and a more intuitive UI.
+
 - **Redux Pattern for Data Fetching:** When adding features that require data from the backend, follow the established pattern:
-  1.  Add a new function to the relevant API service file in `src/lib/api/`.
-  2.  Create a new `async thunk` in the appropriate Redux slice (`src/lib/features/`).
-  3.  Add cases to the `extraReducers` in the slice to handle the thunk's `pending`, `fulfilled`, and `rejected` states.
-  4.  In the component, use `useDispatch` to dispatch the thunk and `useSelector` to get the data and loading states from the store.
+1.  Add a new function to the relevant API service file in `src/lib/api/`.
+2.  Create a new `async thunk` in the appropriate Redux slice (`src/lib/features/`).
+3.  Add cases to the `extraReducers` in the slice to handle the thunk's `pending`, `fulfilled`, and `rejected` states.
+4.  In the component, use `useDispatch` to dispatch the thunk and `useSelector` to get the data and loading states from the store.
 
 - **Component Structure:** Continue to adhere to the existing component architecture:
-  - **`src/components/ui/`:** For small, reusable, presentational components (e.g., `Button`, `Card`).
-  - **`src/components/features/`:** For components tied to a specific application domain.
-  - **`src/components/common/`:** For shared utility components.
-  - Always use CSS Modules for component-specific styling.
+- **`src/components/ui/`:** For small, reusable, presentational components (e.g., `Button`, `Card`).
+- **`src/components/features/`:** For components tied to a specific application domain.
+- **`src/components/common/`:** For shared utility components.
+- Always use CSS Modules for component-specific styling.
 
 - **API Client:** Use the pre-configured Axios instance (`apiClient` from `src/lib/api/client.ts`) for all backend requests. It is set up with `withCredentials: true`, which is essential for sending the authentication cookie to the backend.
 

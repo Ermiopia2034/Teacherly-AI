@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'; // Import useRouter for navigation
+import { useRouter } from 'next/navigation';
 import styles from './MaterialForm.module.css';
 import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
 import LabeledTextarea from '@/components/ui/LabeledTextarea/LabeledTextarea';
@@ -13,95 +13,142 @@ import {
   selectGenerationIsLoading,
   resetGenerationState,
 } from '@/lib/features/generation/generationSlice';
-
-// Data for the curriculum
-const curriculum = {
-  "Biology": {
-    "Grade 12": {
-      "Unit 1: Micro-organisms": ["1.1 Bacteria", "1.2 The ecology and uses of bacteria", "1.3 What are viruses?"],
-      "Unit 2: Ecology": ["2.1 Cycling matter through ecosystems", "2.2 Ecological succession", "2.3 Biomes", "2.4 Biodiversity", "2.5 Populations"],
-      "Unit 3: Genetics": ["3.1 Genetic crosses", "3.2 Molecular genetics", "3.3 Protein synthesis", "3.4 Mutations"],
-      "Unit 4: Evolution": ["4.1 The origin of life", "4.2 Theories of evolution", "4.3 The evidence for evolution", "4.4 The processes of evolution", "4.5 The evolution of humans"],
-      "Unit 5: Behaviour": ["5.1 An introduction to behaviour", "5.2 Innate behaviour", "5.3 Learned behaviour", "5.4 Examples of behaviour patterns"],
-    },
-  },
-};
+import {
+  fetchSubjects,
+  fetchGrades,
+  fetchChapters,
+  fetchTopics,
+} from '@/lib/api/curriculum';
 
 export default function MaterialForm() {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
   const isLoading = useSelector(selectGenerationIsLoading);
-  
-  // Local state for the form inputs
+
   const [formData, setFormData] = useState({
     subject: '',
     grade: '',
     unit: '',
-    topic: '',
+    topics: [] as string[],
     contentType: 'note',
     additionalInfo: '',
   });
 
-  // Local state for handling submission error
+  const [subjects, setSubjects] = useState<string[]>([]);
+  const [grades, setGrades] = useState<string[]>([]);
+  const [chapters, setChapters] = useState<string[]>([]);
+  const [topics, setTopics] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadSubjects = async () => {
+      try {
+        const subjectData = await fetchSubjects();
+        setSubjects(subjectData);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (err) {
+      setError('Failed to load subjects.');
+      }
+    };
+    loadSubjects();
+  }, []);
+
+  useEffect(() => {
+    if (formData.subject) {
+      const loadGrades = async () => {
+        try {
+          const gradeData = await fetchGrades(formData.subject);
+          setGrades(gradeData);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (err) {
+        setError('Failed to load grades.');
+        }
+      };
+      loadGrades();
+    }
+  }, [formData.subject]);
+
+  useEffect(() => {
+    if (formData.subject && formData.grade) {
+      const loadChapters = async () => {
+        try {
+          const chapterData = await fetchChapters(formData.subject, formData.grade);
+          setChapters(chapterData);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (err) {
+        setError('Failed to load chapters.');
+        }
+      };
+      loadChapters();
+    }
+  }, [formData.subject, formData.grade]);
+
+  useEffect(() => {
+    if (formData.subject && formData.grade && formData.unit) {
+      const loadTopics = async () => {
+        try {
+          const topicData = await fetchTopics(formData.subject, formData.grade, formData.unit);
+          setTopics(topicData);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (err) {
+        setError('Failed to load topics.');
+        }
+      };
+      loadTopics();
+    }
+  }, [formData.subject, formData.grade, formData.unit]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => {
       const newState = { ...prev, [name]: value };
-      if (name === 'subject' || name === 'grade') {
+      if (name === 'subject') {
+        newState.grade = '';
         newState.unit = '';
-        newState.topic = '';
+        newState.topics = [];
+        setGrades([]);
+        setChapters([]);
+        setTopics([]);
+      }
+      if (name === 'grade') {
+        newState.unit = '';
+        newState.topics = [];
+        setChapters([]);
+        setTopics([]);
       }
       if (name === 'unit') {
-        newState.topic = '';
+        newState.topics = [];
+        setTopics([]);
       }
       return newState;
     });
   };
 
+  const handleTopicChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { options } = e.target;
+    const value: string[] = [];
+    for (let i = 0, l = options.length; i < l; i += 1) {
+      if (options[i].selected) {
+        value.push(options[i].value);
+      }
+    }
+    setFormData(prev => ({ ...prev, topics: value }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); // Reset error on new submission
-    dispatch(resetGenerationState()); // Reset redux state
+    setError(null);
+    dispatch(resetGenerationState());
 
     try {
-      // unwrap() will return the payload on success or throw the error on failure
       await dispatch(generateMaterialThunk(formData)).unwrap();
-      
-      // On success, navigate to the My Contents page
       router.push('/dashboard/my-contents');
-
     } catch (rejectedValue) {
-      // The `rejectWithValue` from the thunk will be caught here
       setError(rejectedValue as string);
     }
   };
 
-  // Memoized options for the select dropdowns
-  const subjectOptions = useMemo(() => Object.keys(curriculum).map(subject => ({ value: subject, label: subject })), []);
-  const gradeOptions = [
-    { value: 'Grade 9', label: 'Grade 9' },
-    { value: 'Grade 10', label: 'Grade 10' },
-    { value: 'Grade 11', label: 'Grade 11' },
-    { value: 'Grade 12', label: 'Grade 12' },
-  ];
-  const unitOptions = useMemo(() => {
-    if (!formData.subject || !formData.grade) return [];
-    const units = curriculum[formData.subject as keyof typeof curriculum]?.[formData.grade as keyof typeof curriculum[keyof typeof curriculum]];
-    return Object.keys(units || {}).map(unit => ({ value: unit, label: unit }));
-  }, [formData.subject, formData.grade]);
-
-  const topicOptions = useMemo(() => {
-    if (!formData.unit) return [];
-    const topics = curriculum[formData.subject as keyof typeof curriculum]?.[formData.grade as keyof typeof curriculum[keyof typeof curriculum]]?.[formData.unit as keyof typeof curriculum[keyof typeof curriculum][keyof typeof curriculum[keyof typeof curriculum]]];
-    return (topics || []).map(topic => ({ value: topic, label: topic }));
-  }, [formData.unit, formData.subject, formData.grade]);
-  
-  const contentTypeOptions = [
-    { value: 'note', label: 'Teaching Note' },
-    { value: 'homework', label: 'Homework Assignment' },
-  ];
+  const toOptions = (items: string[]) => items.map(item => ({ value: item, label: item }));
 
   return (
     <div className={styles.card}>
@@ -113,12 +160,27 @@ export default function MaterialForm() {
       </div>
       <div className={styles.cardContent}>
         <form onSubmit={handleSubmit} className={styles.form}>
-          {/* Form Inputs */}
-          <LabeledSelect label="Subject" id="subject" name="subject" value={formData.subject} onChange={handleChange} options={subjectOptions} placeholder="Select a subject" required />
-          <LabeledSelect label="Grade Level" id="grade" name="grade" value={formData.grade} onChange={handleChange} options={gradeOptions} placeholder="Select a grade level" required disabled={!formData.subject} />
-          <LabeledSelect label="Unit" id="unit" name="unit" value={formData.unit} onChange={handleChange} options={unitOptions} placeholder="Select a unit" required disabled={!formData.grade} />
-          <LabeledSelect label="Topic" id="topic" name="topic" value={formData.topic} onChange={handleChange} options={topicOptions} placeholder="Select a topic" required disabled={!formData.unit} />
-          <LabeledSelect label="Content Type" id="contentType" name="contentType" value={formData.contentType} onChange={handleChange} options={contentTypeOptions} required />
+          <LabeledSelect label="Subject" id="subject" name="subject" value={formData.subject} onChange={handleChange} options={toOptions(subjects)} placeholder="Select a subject" required />
+          <LabeledSelect label="Grade Level" id="grade" name="grade" value={formData.grade} onChange={handleChange} options={toOptions(grades)} placeholder="Select a grade level" required disabled={!formData.subject} />
+          <LabeledSelect label="Unit" id="unit" name="unit" value={formData.unit} onChange={handleChange} options={toOptions(chapters)} placeholder="Select a unit" required disabled={!formData.grade} />
+          <div className={styles.formGroup}>
+            <label htmlFor="topics" className={styles.label}>Topics (multi-select)</label>
+            <select
+              id="topics"
+              name="topics"
+              multiple
+              value={formData.topics}
+              onChange={handleTopicChange}
+              className={styles.multiSelect}
+              required
+              disabled={!formData.unit}
+            >
+              {topics.map(topic => (
+                <option key={topic} value={topic}>{topic}</option>
+              ))}
+            </select>
+          </div>
+          <LabeledSelect label="Content Type" id="contentType" name="contentType" value={formData.contentType} onChange={handleChange} options={[{ value: 'note', label: 'Teaching Note' }, { value: 'homework', label: 'Homework Assignment' }]} required />
           <LabeledTextarea label="Additional Information" id="additionalInfo" name="additionalInfo" value={formData.additionalInfo} onChange={handleChange} placeholder="Any specific requirements..." rows={4} />
           
           {error && <div className={styles.errorText}>Error: {error}</div>}
