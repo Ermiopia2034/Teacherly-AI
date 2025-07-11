@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { generateMaterial } from '@/lib/api/generation';
-import { MaterialGenerationRequest } from '@/lib/api/generation'; // Corrected import
+import { generateMaterial, generateExam } from '@/lib/api/generation';
+import { MaterialGenerationRequest, ExamGenerationRequest } from '@/lib/api/generation'; // Corrected import
 import { RootState } from '@/lib/store';
 
 // 1. Define the Slice's State
@@ -40,6 +40,29 @@ return rejectWithValue(errorMessage);
 }
 });
 
+export const generateExamThunk = createAsyncThunk<
+  string,
+  ExamGenerationRequest,
+  { rejectValue: string }
+>('generation/generateExam', async (data, { rejectWithValue }) => {
+  try {
+    const response = await generateExam(data);
+    return response.content;
+  } catch (error) {
+    let errorMessage = 'An unknown error occurred';
+    if (typeof error === 'object' && error !== null && 'response' in error) {
+      const response = (error as { response?: { data?: { detail?: string } } })
+        .response;
+      if (response?.data?.detail) {
+        errorMessage = response.data.detail;
+      }
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return rejectWithValue(errorMessage);
+  }
+});
+
 // 3. Create the Slice
 const generationSlice = createSlice({
   name: 'generation',
@@ -65,8 +88,21 @@ const generationSlice = createSlice({
       .addCase(generateMaterialThunk.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload ?? 'An unknown error occurred';
-      });
-  },
+    })
+    .addCase(generateExamThunk.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+      state.generatedContent = null;
+    })
+    .addCase(generateExamThunk.fulfilled, (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+      state.generatedContent = action.payload;
+    })
+    .addCase(generateExamThunk.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload ?? 'An unknown error occurred';
+    });
+},
 });
 
 // 4. Export Actions and Selectors

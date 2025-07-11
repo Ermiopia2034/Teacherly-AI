@@ -22,3 +22,27 @@ export const generateMaterial = async (data: MaterialGenerationRequest): Promise
   const response = await apiClient.post('/content/generate/material', data);
   return response.data;
 };
+
+/**
+ * Defines the structure for the request payload when generating an exam.
+ */
+export interface ExamGenerationRequest {
+  subject: string;
+  grade: string;
+  unit: string;
+  topics: string[];
+  examType: string;
+  difficulty: string;
+  questionCount: string;
+  additionalInfo: string;
+}
+
+/**
+ * Calls the backend API to generate an exam.
+ * @param data - The exam generation request payload.
+ * @returns The backend response, which includes the generated content.
+ */
+export const generateExam = async (data: ExamGenerationRequest): Promise<{ content: string }> => {
+  const response = await apiClient.post('/content/generate/exam', data);
+  return response.data;
+};
