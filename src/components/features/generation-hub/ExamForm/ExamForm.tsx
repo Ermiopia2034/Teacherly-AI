@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import styles from './ExamForm.module.css';
-import Button from '@/components/ui/Button/Button';
 import LabeledInput from '@/components/ui/LabeledInput/LabeledInput';
 import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
 import LabeledTextarea from '@/components/ui/LabeledTextarea/LabeledTextarea';
@@ -49,7 +48,7 @@ export default function ExamForm() {
   try {
   const subjectData = await fetchSubjects();
   setSubjects(subjectData);
-  } catch (err) {
+  } catch {
   setError('Failed to load subjects.');
   }
   };
@@ -62,7 +61,7 @@ export default function ExamForm() {
   try {
   const gradeData = await fetchGrades(formData.subject);
   setGrades(gradeData);
-  } catch (err) {
+  } catch {
   setError('Failed to load grades.');
   }
   };
@@ -76,7 +75,7 @@ export default function ExamForm() {
   try {
   const chapterData = await fetchChapters(formData.subject, formData.grade);
   setChapters(chapterData);
-  } catch (err) {
+  } catch {
   setError('Failed to load chapters.');
   }
   };
@@ -90,7 +89,7 @@ export default function ExamForm() {
   try {
   const topicData = await fetchTopics(formData.subject, formData.grade, formData.unit);
   setTopics(topicData);
-  } catch (err) {
+  } catch {
   setError('Failed to load topics.');
   }
   };
