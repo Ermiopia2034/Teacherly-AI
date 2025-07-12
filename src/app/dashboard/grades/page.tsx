@@ -1,24 +1,19 @@
 'use client';
 
 import { useState } from 'react';
+import GradeStats from '@/components/features/grades/GradeStats/GradeStats';
+import GradesList from '@/components/features/grades/GradesList/GradesList';
+import AttendanceStats from '@/components/features/attendance/AttendanceStats/AttendanceStats';
+import AttendanceForm from '@/components/features/attendance/AttendanceForm/AttendanceForm';
+import AttendanceCalendar from '@/components/features/attendance/AttendanceCalendar/AttendanceCalendar';
+import AttendanceList from '@/components/features/attendance/AttendanceList/AttendanceList';
 import styles from './grades.module.css';
 
-// Placeholder components - these would be implemented similar to StudentsList
 function GradesManagement() {
   return (
     <div className={styles.section}>
-      <h2>Grades Management</h2>
-      <p>Grade recording and management features coming soon...</p>
-      <div className={styles.placeholder}>
-        <div className={styles.placeholderCard}>
-          <h3>Recent Grades</h3>
-          <p>View and manage student grades</p>
-        </div>
-        <div className={styles.placeholderCard}>
-          <h3>Grade Statistics</h3>
-          <p>Track class performance</p>
-        </div>
-      </div>
+      <GradeStats />
+      <GradesList />
     </div>
   );
 }
@@ -26,18 +21,10 @@ function GradesManagement() {
 function AttendanceManagement() {
   return (
     <div className={styles.section}>
-      <h2>Attendance Management</h2>
-      <p>Attendance tracking features coming soon...</p>
-      <div className={styles.placeholder}>
-        <div className={styles.placeholderCard}>
-          <h3>Daily Attendance</h3>
-          <p>Mark student attendance</p>
-        </div>
-        <div className={styles.placeholderCard}>
-          <h3>Attendance Reports</h3>
-          <p>View attendance statistics</p>
-        </div>
-      </div>
+      <AttendanceStats />
+      <AttendanceForm />
+      <AttendanceCalendar />
+      <AttendanceList />
     </div>
   );
 }
