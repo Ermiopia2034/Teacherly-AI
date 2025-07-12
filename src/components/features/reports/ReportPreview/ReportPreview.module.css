@@ -1,0 +1,464 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.headerCard {
+  background: var(--surface-primary);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.headerContent h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.reportInfo {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.generatedAt {
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+}
+
+.headerActions {
+  display: flex;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--surface-primary);
+  border-radius: 0.5rem 0.5rem 0 0;
+  overflow: hidden;
+}
+
+.tab {
+  flex: 1;
+  padding: 1rem 2rem;
+  background: var(--surface-secondary);
+  color: var(--text-secondary);
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.tab:hover {
+  background: var(--surface-primary);
+  color: var(--text-primary);
+}
+
+.activeTab {
+  background: var(--surface-primary);
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.summarySection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.statsCard {
+  background: var(--surface-primary);
+}
+
+.statsCard h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.5rem;
+}
+
+.statItem {
+  text-align: center;
+  padding: 1rem;
+  background: var(--surface-secondary);
+  border-radius: 0.5rem;
+}
+
+.statNumber {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 0.25rem;
+}
+
+.statLabel {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.topPerformersCard,
+.attentionCard {
+  background: var(--surface-primary);
+}
+
+.topPerformersCard h3,
+.attentionCard h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.studentList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.studentItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--surface-secondary);
+  border-radius: 0.375rem;
+}
+
+.studentRank {
+  width: 2rem;
+  height: 2rem;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.attentionIndicator {
+  width: 2rem;
+  height: 2rem;
+  background: var(--warning-color, #f59e0b);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.studentInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.studentName {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.studentScore,
+.studentIssues {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.studentsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.studentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.studentCard {
+  background: var(--surface-primary);
+  overflow: hidden;
+}
+
+.studentHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.studentHeader:hover {
+  background: var(--surface-secondary);
+}
+
+.studentBasicInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.studentBasicInfo h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.gradeLevel {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.studentMetrics {
+  display: flex;
+  gap: 2rem;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.metricValue {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.metricLabel {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+}
+
+.expandIcon {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-left: 1rem;
+}
+
+.studentDetails {
+  padding: 1.5rem;
+  background: var(--surface-secondary);
+  border-top: 1px solid var(--border-color);
+}
+
+.detailSection {
+  margin-bottom: 2rem;
+}
+
+.detailSection:last-child {
+  margin-bottom: 0;
+}
+
+.detailSection h5 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.detailSection h6 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  margin-top: 1rem;
+}
+
+.gradeStats,
+.attendanceStats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.gradeStat,
+.attendanceStat {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  background: var(--surface-primary);
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.gradeStat span:first-child,
+.attendanceStat span:first-child {
+  color: var(--text-secondary);
+}
+
+.gradeStat span:last-child,
+.attendanceStat span:last-child {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.trendInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.trendUp {
+  color: var(--success-color, #10b981);
+}
+
+.trendDown {
+  color: var(--error-color);
+}
+
+.trendStable {
+  color: var(--text-secondary);
+}
+
+.recentGrades {
+  margin-top: 1rem;
+}
+
+.gradesList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.gradeItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: var(--surface-primary);
+  border-radius: 0.25rem;
+  border: 1px solid var(--border-color);
+}
+
+.gradeInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.contentTitle {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.gradeDate {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+}
+
+.gradeScore {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.presentCount {
+  color: var(--success-color, #10b981);
+}
+
+.absentCount {
+  color: var(--error-color);
+}
+
+.lateCount {
+  color: var(--warning-color, #f59e0b);
+}
+
+.excusedCount {
+  color: var(--text-secondary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    max-width: 100%;
+    margin: 0;
+    gap: 1rem;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .headerActions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .headerActions > * {
+    flex: 1;
+  }
+
+  .tab {
+    padding: 0.75rem 1rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+  }
+
+  .studentMetrics {
+    gap: 1rem;
+  }
+
+  .gradeStats,
+  .attendanceStats {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .headerContent h2 {
+    font-size: 1.5rem;
+  }
+
+  .studentHeader {
+    padding: 1rem;
+  }
+
+  .studentMetrics {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .statNumber {
+    font-size: 1.5rem;
+  }
+}

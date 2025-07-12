@@ -1,0 +1,337 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.headerContent h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.headerContent p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.statsCard {
+  background: var(--surface-primary);
+}
+
+.statsHeader {
+  margin-bottom: 1.5rem;
+}
+
+.statsHeader h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.statsHeader p {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.statItem {
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--surface-secondary);
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.statItem:hover {
+  background: var(--surface-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.statNumber {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+  text-transform: capitalize;
+}
+
+.statLabel {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--surface-primary);
+  border-radius: 0.5rem 0.5rem 0 0;
+  overflow: hidden;
+}
+
+.tab {
+  flex: 1;
+  padding: 1rem 2rem;
+  background: var(--surface-secondary);
+  color: var(--text-secondary);
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.tab:hover:not(:disabled) {
+  background: var(--surface-primary);
+  color: var(--text-primary);
+}
+
+.tab:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.activeTab {
+  background: var(--surface-primary);
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.tabIndicator {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  line-height: 0;
+}
+
+.errorMessage {
+  background-color: var(--error-bg);
+  border: 1px solid var(--error-color);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.errorContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.errorContent p {
+  color: var(--error-color);
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.content {
+  min-height: 400px;
+}
+
+.generateSection,
+.previewSection,
+.historySection {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.noReportState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.noReportCard {
+  max-width: 500px;
+  text-align: center;
+  background: var(--surface-primary);
+}
+
+.noReportContent {
+  padding: 2rem;
+}
+
+.noReportIcon {
+  color: var(--text-tertiary);
+  margin-bottom: 1.5rem;
+}
+
+.noReportContent h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.noReportContent p {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.noReportActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .headerContent h1 {
+    font-size: 1.75rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .statItem {
+    padding: 1rem;
+  }
+
+  .statNumber {
+    font-size: 1.5rem;
+  }
+
+  .tab {
+    padding: 0.75rem 1rem;
+    font-size: 0.8125rem;
+  }
+
+  .noReportContent {
+    padding: 1.5rem;
+  }
+
+  .noReportActions {
+    flex-direction: column;
+  }
+
+  .errorContent {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 0.5rem;
+  }
+
+  .headerContent h1 {
+    font-size: 1.5rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .statItem {
+    padding: 0.75rem;
+  }
+
+  .statNumber {
+    font-size: 1.25rem;
+  }
+
+  .statLabel {
+    font-size: 0.75rem;
+  }
+
+  .tab {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .tabIndicator {
+    font-size: 1.25rem;
+  }
+
+  .noReportContent {
+    padding: 1rem;
+  }
+
+  .noReportIcon svg {
+    width: 48px;
+    height: 48px;
+  }
+
+  .noReportContent h3 {
+    font-size: 1.125rem;
+  }
+}
+
+/* Tab focus styles for accessibility */
+.tab:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: -2px;
+}
+
+/* Loading states */
+.content[data-loading="true"] {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+  .statItem:hover {
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+  }
+  
+  .tabs {
+    border-bottom-color: var(--border-color);
+  }
+  
+  .errorMessage {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+  }
+}

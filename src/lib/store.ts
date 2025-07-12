@@ -5,6 +5,7 @@ import contentReducer from './features/content/contentSlice';
 import studentsReducer from './features/students/studentsSlice';
 import gradesReducer from './features/grades/gradesSlice';
 import attendanceReducer from './features/attendance/attendanceSlice';
+import reportsReducer from './features/reports/reportsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     students: studentsReducer,
     grades: gradesReducer,
     attendance: attendanceReducer,
+    reports: reportsReducer,
   },
 });
 
