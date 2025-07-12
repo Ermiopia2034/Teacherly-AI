@@ -1,9 +1,6 @@
 // src/app/dashboard/students/page.tsx
+import StudentsList from '@/components/features/students/StudentsList';
+
 export default function StudentsPage() {
-  return (
-    <div>
-      <h1>Students Management</h1>
-      <p>Content coming soon...</p>
-    </div>
-  );
+  return <StudentsList />;
 }

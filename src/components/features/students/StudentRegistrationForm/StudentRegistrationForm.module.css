@@ -1,0 +1,85 @@
+.formCard {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.formHeader {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+}
+
+.formHeader h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.formHeader p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.form {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.fieldError {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.errorMessage {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  margin: 0.5rem 0;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.buttonGroup button {
+  min-width: 120px;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .formCard {
+    max-width: 100%;
+    margin: 0;
+  }
+  
+  .formHeader {
+    padding: 1rem;
+  }
+  
+  .form {
+    padding: 1rem;
+  }
+  
+  .buttonGroup {
+    flex-direction: column-reverse;
+  }
+  
+  .buttonGroup button {
+    width: 100%;
+    min-width: auto;
+  }
+}
