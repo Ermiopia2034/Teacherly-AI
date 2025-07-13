@@ -355,6 +355,41 @@ export const uploadBatchSubmissions = async (
   return results;
 };
 
+// Unified batch upload for both manual assessments and AI exams
+export const uploadBatchUnifiedSubmissions = async (
+  itemId: number,
+  sourceType: 'manual_assessment' | 'ai_exam',
+  submissions: { studentId: number; file: File; fileName?: string }[],
+  onProgress?: (fileIndex: number, progress: number) => void,
+  onComplete?: (fileIndex: number, result: FileUploadResponse) => void,
+  onError?: (fileIndex: number, error: Error) => void
+): Promise<{ successful: FileUploadResponse[]; failed: Error[] }> => {
+  const results: { successful: FileUploadResponse[]; failed: Error[] } = { successful: [], failed: [] };
+  
+  for (let i = 0; i < submissions.length; i++) {
+    try {
+      const { studentId, file } = submissions[i];
+      const result = await uploadUnifiedSubmissionWithProgress(
+        {
+          item_id: itemId,
+          source_type: sourceType,
+          student_id: studentId,
+          file: file
+        },
+        (progress) => onProgress?.(i, progress)
+      );
+      
+      results.successful.push(result);
+      onComplete?.(i, result);
+    } catch (error) {
+      results.failed.push(error as Error);
+      onError?.(i, error as Error);
+    }
+  }
+  
+  return results;
+};
+
 // Polling function for submission status updates
 export const pollSubmissionStatus = async (
   submissionIds: number[],

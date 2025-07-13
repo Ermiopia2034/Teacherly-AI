@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
 import {
@@ -59,13 +59,13 @@ export default function AssessmentDetailPage() {
   });
   const [itemSourceType, setItemSourceType] = useState<'manual_assessment' | 'ai_exam' | null>(null);
 
-  const breadcrumbItems = [
+  const breadcrumbItems = useMemo(() => [
     { label: 'Dashboard', href: '/dashboard' },
     { label: 'OCR Grading', href: '/dashboard/grading' },
     { label: currentAssessment?.title || 'Assessment', href: `/dashboard/grading/${assessmentId}` }
-  ];
+  ], [currentAssessment?.title, assessmentId]);
 
-  const tabs: TabConfig[] = [
+  const tabs: TabConfig[] = useMemo(() => [
     {
       id: 'overview',
       label: 'Overview',
@@ -121,7 +121,7 @@ export default function AssessmentDetailPage() {
       ),
       count: submissions.length
     }
-  ];
+  ], [submissions]);
 
   useEffect(() => {
     if (assessmentId) {
@@ -141,10 +141,19 @@ export default function AssessmentDetailPage() {
         })
         .catch(() => {
           // If unified fetch fails, try as manual assessment for backward compatibility
-          dispatch(fetchAssessmentByIdThunk(assessmentId));
-          dispatch(fetchAssessmentStatsThunk(assessmentId));
-          dispatch(fetchAssessmentSubmissionsThunk({ assessmentId }));
-          setItemSourceType('manual_assessment');
+          // Only call manual assessment APIs if the item might actually exist there
+          dispatch(fetchAssessmentByIdThunk(assessmentId))
+            .unwrap()
+            .then(() => {
+              // Success - it's a manual assessment
+              setItemSourceType('manual_assessment');
+              dispatch(fetchAssessmentStatsThunk(assessmentId));
+              dispatch(fetchAssessmentSubmissionsThunk({ assessmentId }));
+            })
+            .catch(() => {
+              // Complete failure - item not found in either system
+              console.error(`Assessment ${assessmentId} not found in either manual assessments or AI exams`);
+            });
         });
       
       dispatch(fetchStudentsThunk({}));
@@ -164,7 +173,7 @@ export default function AssessmentDetailPage() {
     }));
   }, [submissions]);
 
-  const handleUploadComplete = () => {
+  const handleUploadComplete = useCallback(() => {
     setShowUploadModal(false);
     // Refresh submissions and stats based on source type
     if (itemSourceType) {
@@ -184,14 +193,14 @@ export default function AssessmentDetailPage() {
     
     // Switch to progress tab to show upload results
     setActiveTab('progress');
-  };
+  }, [itemSourceType, assessmentId, dispatch]);
 
-  const handleUploadStart = () => {
+  const handleUploadStart = useCallback(() => {
     // Switch to progress tab when upload starts
     setActiveTab('progress');
-  };
+  }, []);
 
-  const formatDate = (dateString: string) => {
+  const formatDate = useCallback((dateString: string) => {
     return new Date(dateString).toLocaleDateString(undefined, {
       year: 'numeric',
       month: 'short',
@@ -199,9 +208,9 @@ export default function AssessmentDetailPage() {
       hour: '2-digit',
       minute: '2-digit'
     });
-  };
+  }, []);
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = useCallback((status: string) => {
     const statusConfig = {
       pending: { label: 'Pending', className: styles.statusPending },
       processing: { label: 'Processing', className: styles.statusProcessing },
@@ -216,9 +225,9 @@ export default function AssessmentDetailPage() {
         {config.label}
       </span>
     );
-  };
+  }, []);
 
-  const submissionColumns: Column<Submission>[] = [
+  const submissionColumns: Column<Submission>[] = useMemo(() => [
     {
       key: 'student_name',
       title: 'Student',
@@ -257,7 +266,11 @@ export default function AssessmentDetailPage() {
       key: 'score',
       title: 'Score',
       render: (_, record) => {
-        if (record.grading_result) {
+        if (record.grading_result &&
+            typeof record.grading_result.percentage === 'number' &&
+            !isNaN(record.grading_result.percentage) &&
+            typeof record.grading_result.total_score === 'number' &&
+            typeof record.grading_result.max_score === 'number') {
           return (
             <div className={styles.scoreCell}>
               <div className={styles.score}>
@@ -282,15 +295,37 @@ export default function AssessmentDetailPage() {
       render: (value) => formatDate(String(value)),
       width: 150
     }
-  ];
+  ], [formatDate, getStatusBadge]);
 
-  const handleSubmissionsPaginationChange = (page: number, pageSize: number) => {
+  const handleSubmissionsPaginationChange = useCallback((page: number, pageSize: number) => {
     setSubmissionsPagination(prev => ({
       ...prev,
       current: page,
       pageSize
     }));
-  };
+  }, []);
+
+  // Memoize submission IDs to prevent infinite re-renders
+  const submissionIds = useMemo(() => submissions.map(s => s.id), [submissions]);
+
+  // Memoize the onAllCompleted callback to prevent infinite re-renders
+  const handleAllCompleted = useCallback(() => {
+    // Refresh data when all completed based on source type
+    if (itemSourceType) {
+      dispatch(fetchUnifiedItemSubmissionsThunk({
+        itemId: assessmentId,
+        sourceType: itemSourceType
+      }));
+      dispatch(fetchUnifiedItemStatsThunk({
+        itemId: assessmentId,
+        sourceType: itemSourceType
+      }));
+    } else {
+      // Fallback to manual assessment APIs
+      dispatch(fetchAssessmentSubmissionsThunk({ assessmentId }));
+      dispatch(fetchAssessmentStatsThunk(assessmentId));
+    }
+  }, [itemSourceType, assessmentId, dispatch]);
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -302,6 +337,7 @@ export default function AssessmentDetailPage() {
           <div className={styles.uploadTab}>
             <FileUploadZone
               assessmentId={assessmentId}
+              sourceType={itemSourceType || undefined}
               onUploadComplete={handleUploadComplete}
               onUploadStart={handleUploadStart}
             />
@@ -309,28 +345,11 @@ export default function AssessmentDetailPage() {
         );
       
       case 'progress':
-        const submissionIds = submissions.map(s => s.id);
         return (
           <div className={styles.progressTab}>
             <GradingProgress
               submissionIds={submissionIds}
-              onAllCompleted={() => {
-                // Refresh data when all completed based on source type
-                if (itemSourceType) {
-                  dispatch(fetchUnifiedItemSubmissionsThunk({
-                    itemId: assessmentId,
-                    sourceType: itemSourceType
-                  }));
-                  dispatch(fetchUnifiedItemStatsThunk({
-                    itemId: assessmentId,
-                    sourceType: itemSourceType
-                  }));
-                } else {
-                  // Fallback to manual assessment APIs
-                  dispatch(fetchAssessmentSubmissionsThunk({ assessmentId }));
-                  dispatch(fetchAssessmentStatsThunk(assessmentId));
-                }
-              }}
+              onAllCompleted={handleAllCompleted}
               showIndividualProgress={true}
               autoRefresh={true}
             />
@@ -347,8 +366,8 @@ export default function AssessmentDetailPage() {
               <div className={styles.submissionsHeader}>
                 <h4>All Submissions</h4>
                 <div className={styles.submissionsStats}>
-                  Total: {submissions.length} | 
-                  Completed: {submissions.filter(s => s.grading_result).length} | 
+                  Total: {submissions.length} |
+                  Completed: {submissions.filter(s => s.grading_result).length} |
                   Pending: {submissions.filter(s => !s.grading_result && s.status !== 'failed').length}
                 </div>
               </div>
@@ -507,6 +526,7 @@ export default function AssessmentDetailPage() {
       >
         <FileUploadZone
           assessmentId={assessmentId}
+          sourceType={itemSourceType || undefined}
           onUploadComplete={handleUploadComplete}
           onUploadStart={handleUploadStart}
         />

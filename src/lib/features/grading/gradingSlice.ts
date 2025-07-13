@@ -19,6 +19,7 @@ import {
   deleteAssessment as apiDeleteAssessment,
   uploadSubmission as apiUploadSubmission,
   uploadBatchSubmissions as apiUploadBatchSubmissions,
+  uploadBatchUnifiedSubmissions as apiUploadBatchUnifiedSubmissions,
   getSubmissionStatus as apiGetSubmissionStatus,
   getAssessmentSubmissions as apiGetAssessmentSubmissions,
   getAssessmentStats as apiGetAssessmentStats,
@@ -306,6 +307,61 @@ export const uploadBatchSubmissionsThunk = createAsyncThunk(
     }
   }
 );
+export const uploadBatchUnifiedSubmissionsThunk = createAsyncThunk(
+  'grading/uploadBatchUnifiedSubmissions',
+  async (
+    { 
+      itemId, 
+      sourceType, 
+      submissions 
+    }: { 
+      itemId: number; 
+      sourceType: 'manual_assessment' | 'ai_exam';
+      submissions: { studentId: number; file: File; fileName?: string }[] 
+    },
+    { dispatch, rejectWithValue }
+  ) => {
+    try {
+      const batchId = `batch_${Date.now()}`;
+      
+      // Initialize batch upload
+      dispatch(initializeBatchUpload({
+        id: batchId,
+        assessmentId: itemId, // Use itemId as assessmentId for tracking
+        files: submissions.map((sub, index) => ({
+          fileIndex: index,
+          fileName: sub.fileName || sub.file.name,
+          progress: 0,
+          status: 'pending'
+        }))
+      }));
+
+      const result = await apiUploadBatchUnifiedSubmissions(
+        itemId,
+        sourceType,
+        submissions,
+        (fileIndex, progress) => {
+          dispatch(updateUploadProgress({ batchId, fileIndex, progress }));
+        },
+        (fileIndex, result) => {
+          dispatch(updateUploadComplete({ batchId, fileIndex, submissionId: result.submission_id }));
+        },
+        (fileIndex, error) => {
+          dispatch(updateUploadError({ batchId, fileIndex, error: String(error) }));
+        }
+      );
+
+      dispatch(completeBatchUpload(batchId));
+      return result;
+    } catch (error) {
+      const message = error instanceof Error 
+        ? error.message 
+        : (error as { response?: { data?: { detail?: string } } }).response?.data?.detail || 'Failed to upload batch unified submissions';
+      return rejectWithValue(message);
+    }
+  }
+);
+
 
 export const fetchSubmissionStatusThunk = createAsyncThunk(
   'grading/fetchSubmissionStatus',
@@ -393,11 +449,17 @@ export const fetchUnifiedGradingItemByIdThunk = createAsyncThunk(
         { skip: 0, limit: 1000 }
       );
       
+      // Preserve source_type in the answer_key for the component to access
+      const answerKeyWithSourceType = {
+        ...item.answer_key,
+        source_type: item.source_type
+      };
+      
       const assessment: AssessmentWithSubmissions = {
         id: item.id,
         title: item.title,
         description: item.description || '',
-        answer_key: JSON.stringify(item.answer_key),
+        answer_key: JSON.stringify(answerKeyWithSourceType),
         max_score: item.max_score || 0,
         teacher_id: item.teacher_id,
         status: item.status as 'draft' | 'active' | 'completed' | 'archived',

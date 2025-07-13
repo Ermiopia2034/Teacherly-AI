@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
 import {
@@ -52,10 +52,11 @@ export function GradingProgress({
 
   const [refreshTimer, setRefreshTimer] = useState<NodeJS.Timeout | null>(null);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
+  const hasCalledOnAllCompleted = useRef(false);
 
-  // Calculate progress statistics
-  useEffect(() => {
-    const newStats = submissionIds.reduce((acc, id) => {
+  // Memoize the stats calculation to prevent unnecessary recalculations
+  const calculatedStats = useMemo(() => {
+    return submissionIds.reduce((acc, id) => {
       const tracking = submissionTracking[id];
       if (!tracking) {
         acc.pending++;
@@ -83,11 +84,21 @@ export function GradingProgress({
       completed: 0,
       failed: 0
     });
+  }, [submissionTracking, submissionIds]);
 
-    setStats(newStats);
+  // Update stats when calculated stats change
+  useEffect(() => {
+    setStats(calculatedStats);
+  }, [calculatedStats]);
 
+  // Separate effect for handling completion callback
+  useEffect(() => {
     // Check if all submissions are completed
-    if (newStats.completed + newStats.failed === newStats.total && newStats.total > 0) {
+    const isCompleted = calculatedStats.completed + calculatedStats.failed === calculatedStats.total && calculatedStats.total > 0;
+    
+    if (isCompleted && !hasCalledOnAllCompleted.current && onAllCompleted) {
+      hasCalledOnAllCompleted.current = true;
+      
       const results = submissionIds.reduce((acc, id) => {
         const tracking = submissionTracking[id];
         if (tracking) {
@@ -96,66 +107,14 @@ export function GradingProgress({
         return acc;
       }, {} as Record<number, SubmissionStatusResponse>);
 
-      onAllCompleted?.(results);
+      onAllCompleted(results);
+    } else if (!isCompleted) {
+      hasCalledOnAllCompleted.current = false;
     }
-  }, [submissionTracking, submissionIds, onAllCompleted]);
+  }, [calculatedStats, submissionIds, submissionTracking, onAllCompleted]);
 
-  // Auto refresh functionality
-  useEffect(() => {
-    const refreshAll = async () => {
-      setLastRefresh(new Date());
-      
-      // Fetch status for all submissions
-      const promises = submissionIds.map(id =>
-        dispatch(fetchSubmissionStatusThunk(id))
-      );
-
-      try {
-        await Promise.all(promises);
-      } catch (error) {
-        console.error('Failed to refresh submission statuses:', error);
-      }
-    };
-
-    if (autoRefresh && !isPolling && stats.completed + stats.failed < stats.total) {
-      const timer = setInterval(() => {
-        refreshAll();
-      }, refreshInterval);
-
-      setRefreshTimer(timer);
-      return () => {
-        clearInterval(timer);
-        setRefreshTimer(null);
-      };
-    } else if (refreshTimer) {
-      clearInterval(refreshTimer);
-      setRefreshTimer(null);
-    }
-  }, [autoRefresh, isPolling, stats, refreshInterval, submissionIds, dispatch, refreshTimer]);
-
-  // Initial data fetch
-  useEffect(() => {
-    const refreshAll = async () => {
-      setLastRefresh(new Date());
-      
-      // Fetch status for all submissions
-      const promises = submissionIds.map(id =>
-        dispatch(fetchSubmissionStatusThunk(id))
-      );
-
-      try {
-        await Promise.all(promises);
-      } catch (error) {
-        console.error('Failed to refresh submission statuses:', error);
-      }
-    };
-
-    if (submissionIds.length > 0) {
-      refreshAll();
-    }
-  }, [submissionIds, dispatch]);
-
-  const handleRefreshAll = async () => {
+  // Memoize the refresh function to prevent recreating it on every render
+  const refreshAll = useCallback(async () => {
     setLastRefresh(new Date());
     
     // Fetch status for all submissions
@@ -168,23 +127,55 @@ export function GradingProgress({
     } catch (error) {
       console.error('Failed to refresh submission statuses:', error);
     }
-  };
+  }, [submissionIds, dispatch]);
 
-  const handleStartPolling = () => {
+  // Auto refresh functionality
+  useEffect(() => {
+    // Clear existing timer if conditions change
+    if (refreshTimer) {
+      clearInterval(refreshTimer);
+      setRefreshTimer(null);
+    }
+
+    if (autoRefresh && !isPolling && stats.completed + stats.failed < stats.total) {
+      const timer = setInterval(() => {
+        refreshAll();
+      }, refreshInterval);
+
+      setRefreshTimer(timer);
+      return () => {
+        clearInterval(timer);
+        setRefreshTimer(null);
+      };
+    }
+  }, [autoRefresh, isPolling, stats, refreshInterval, refreshAll, refreshTimer]);
+
+  // Initial data fetch
+  useEffect(() => {
+    if (submissionIds.length > 0) {
+      refreshAll();
+    }
+  }, [submissionIds, refreshAll]);
+
+  const handleRefreshAll = useCallback(async () => {
+    refreshAll();
+  }, [refreshAll]);
+
+  const handleStartPolling = useCallback(() => {
     if (submissionIds.length > 0) {
       dispatch(startPollingSubmissionsThunk(submissionIds));
     }
-  };
+  }, [submissionIds, dispatch]);
 
-  const getOverallProgress = (): number => {
+  const getOverallProgress = useCallback((): number => {
     if (stats.total === 0) return 0;
     return Math.round(((stats.completed + stats.failed) / stats.total) * 100);
-  };
+  }, [stats]);
 
-  const getProcessingProgress = (): number => {
+  const getProcessingProgress = useCallback((): number => {
     if (stats.total === 0) return 0;
     return Math.round(((stats.processing + stats.completed + stats.failed) / stats.total) * 100);
-  };
+  }, [stats]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -398,7 +389,11 @@ export function GradingProgress({
                         </div>
                       )}
                       
-                      {tracking?.status.grading_result && (
+                      {tracking?.status.grading_result &&
+                       typeof tracking.status.grading_result.percentage === 'number' &&
+                       !isNaN(tracking.status.grading_result.percentage) &&
+                       typeof tracking.status.grading_result.total_score === 'number' &&
+                       typeof tracking.status.grading_result.max_score === 'number' && (
                         <div className={styles.gradingResult}>
                           <div className={styles.score}>
                             Score: {tracking.status.grading_result.total_score} / {tracking.status.grading_result.max_score}

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
 import {
   uploadBatchSubmissionsThunk,
+  uploadBatchUnifiedSubmissionsThunk,
   selectActiveUpload,
   selectUploadError,
   clearUploadError
@@ -20,6 +21,7 @@ import styles from './FileUploadZone.module.css';
 
 interface FileUploadZoneProps {
   assessmentId: number;
+  sourceType?: 'manual_assessment' | 'ai_exam';
   onUploadComplete?: () => void;
   onUploadStart?: () => void;
 }
@@ -34,7 +36,7 @@ interface FileWithStudent {
   error?: string;
 }
 
-export function FileUploadZone({ assessmentId, onUploadComplete, onUploadStart }: FileUploadZoneProps) {
+export function FileUploadZone({ assessmentId, sourceType, onUploadComplete, onUploadStart }: FileUploadZoneProps) {
   const dispatch = useDispatch<AppDispatch>();
   const activeUpload = useSelector(selectActiveUpload);
   const uploadError = useSelector(selectUploadError);
@@ -127,10 +129,20 @@ export function FileUploadZone({ assessmentId, onUploadComplete, onUploadStart }
         fileName: f.file.name
       }));
 
-      await dispatch(uploadBatchSubmissionsThunk({
-        assessmentId,
-        submissions
-      })).unwrap();
+      if (sourceType) {
+        // Use unified upload for both manual assessments and AI exams
+        await dispatch(uploadBatchUnifiedSubmissionsThunk({
+          itemId: assessmentId,
+          sourceType,
+          submissions
+        })).unwrap();
+      } else {
+        // Fallback to old manual assessment upload for backward compatibility
+        await dispatch(uploadBatchSubmissionsThunk({
+          assessmentId,
+          submissions
+        })).unwrap();
+      }
 
       onUploadComplete?.();
       setFiles([]);
