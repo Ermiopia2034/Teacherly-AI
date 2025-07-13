@@ -41,7 +41,7 @@ export function ResultsOverview({ className }: ResultsOverviewProps) {
 
   const analytics = useMemo((): AnalyticsData => {
     const gradedSubmissions = submissions.filter(s => s.grading_result);
-    const scores = gradedSubmissions.map(s => s.grading_result!.percentage);
+    const scores = gradedSubmissions.map(s => s.grading_result!.percentage).filter(score => typeof score === 'number' && !isNaN(score));
     
     // Basic statistics
     const totalSubmissions = submissions.length;
@@ -77,7 +77,7 @@ export function ResultsOverview({ className }: ResultsOverviewProps) {
     const scoreDistribution = ranges.map(range => {
       const submissionsInRange = gradedSubmissions.filter(s => {
         const score = s.grading_result!.percentage;
-        return score >= range.min && score <= range.max;
+        return typeof score === 'number' && !isNaN(score) && score >= range.min && score <= range.max;
       });
       
       return {
@@ -91,14 +91,14 @@ export function ResultsOverview({ className }: ResultsOverviewProps) {
     return {
       totalSubmissions,
       gradedSubmissions: gradedCount,
-      averageScore,
-      medianScore,
-      standardDeviation,
-      highestScore,
-      lowestScore,
-      passRate,
+      averageScore: isNaN(averageScore) ? 0 : averageScore,
+      medianScore: isNaN(medianScore) ? 0 : medianScore,
+      standardDeviation: isNaN(standardDeviation) ? 0 : standardDeviation,
+      highestScore: isNaN(highestScore) ? 0 : highestScore,
+      lowestScore: isNaN(lowestScore) ? 0 : lowestScore,
+      passRate: isNaN(passRate) ? 0 : passRate,
       scoreDistribution,
-      completionRate
+      completionRate: isNaN(completionRate) ? 0 : completionRate
     };
   }, [submissions]);
 
@@ -150,9 +150,9 @@ export function ResultsOverview({ className }: ResultsOverviewProps) {
               </svg>
             </div>
           </div>
-          <div className={styles.statValue}>{analytics.averageScore.toFixed(1)}%</div>
+          <div className={styles.statValue}>{(analytics.averageScore || 0).toFixed(1)}%</div>
           <div className={styles.statSubtext}>
-            Median: {analytics.medianScore.toFixed(1)}% • σ: {analytics.standardDeviation.toFixed(1)}
+            Median: {(analytics.medianScore || 0).toFixed(1)}% • σ: {(analytics.standardDeviation || 0).toFixed(1)}
           </div>
         </Card>
 
@@ -165,9 +165,9 @@ export function ResultsOverview({ className }: ResultsOverviewProps) {
               </svg>
             </div>
           </div>
-          <div className={styles.statValue}>{analytics.passRate.toFixed(1)}%</div>
+          <div className={styles.statValue}>{(analytics.passRate || 0).toFixed(1)}%</div>
           <div className={styles.statSubtext}>
-            {Math.round((analytics.passRate / 100) * analytics.gradedSubmissions)} of {analytics.gradedSubmissions} students
+            {Math.round(((analytics.passRate || 0) / 100) * analytics.gradedSubmissions)} of {analytics.gradedSubmissions} students
           </div>
         </Card>
 
@@ -181,7 +181,7 @@ export function ResultsOverview({ className }: ResultsOverviewProps) {
               </svg>
             </div>
           </div>
-          <div className={styles.statValue}>{analytics.completionRate.toFixed(1)}%</div>
+          <div className={styles.statValue}>{(analytics.completionRate || 0).toFixed(1)}%</div>
           <div className={styles.statSubtext}>
             {analytics.gradedSubmissions} of {analytics.totalSubmissions} processed
           </div>
@@ -212,8 +212,8 @@ export function ResultsOverview({ className }: ResultsOverviewProps) {
           <div className={styles.distributionHeader}>
             <h4>Score Distribution</h4>
             <div className={styles.distributionStats}>
-              <span>Highest: {analytics.highestScore.toFixed(1)}%</span>
-              <span>Lowest: {analytics.lowestScore.toFixed(1)}%</span>
+              <span>Highest: {(analytics.highestScore || 0).toFixed(1)}%</span>
+              <span>Lowest: {(analytics.lowestScore || 0).toFixed(1)}%</span>
             </div>
           </div>
           
@@ -223,7 +223,7 @@ export function ResultsOverview({ className }: ResultsOverviewProps) {
                 <div className={styles.rangeHeader}>
                   <span className={styles.rangeLabel}>{range.range}</span>
                   <span className={styles.rangeCount}>
-                    {range.count} ({range.percentage.toFixed(1)}%)
+                    {range.count} ({(range.percentage || 0).toFixed(1)}%)
                   </span>
                 </div>
                 

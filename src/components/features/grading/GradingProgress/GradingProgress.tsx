@@ -129,9 +129,9 @@ export function GradingProgress({
     }
   }, [submissionIds, dispatch]);
 
-  // Auto refresh functionality
+  // Auto-refresh timer effect
   useEffect(() => {
-    // Clear existing timer if conditions change
+    // Clear any existing timer first
     if (refreshTimer) {
       clearInterval(refreshTimer);
       setRefreshTimer(null);
@@ -148,7 +148,16 @@ export function GradingProgress({
         setRefreshTimer(null);
       };
     }
-  }, [autoRefresh, isPolling, stats, refreshInterval, refreshAll, refreshTimer]);
+  }, [autoRefresh, isPolling, stats, refreshInterval, refreshAll]);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (refreshTimer) {
+        clearInterval(refreshTimer);
+      }
+    };
+  }, [refreshTimer]);
 
   // Initial data fetch
   useEffect(() => {
