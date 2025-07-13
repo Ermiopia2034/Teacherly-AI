@@ -1,0 +1,116 @@
+.container {
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary, #fafafa);
+}
+
+.percentage {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted, #a1a1aa);
+}
+
+.progressBar {
+  background-color: var(--background-subtle, #27272a);
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Sizes */
+.sm {
+  height: 4px;
+}
+
+.md {
+  height: 8px;
+}
+
+.lg {
+  height: 12px;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: inherit;
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+/* Variants */
+.primary .progressFill {
+  background-color: var(--primary-color, #3b82f6);
+}
+
+.success .progressFill {
+  background-color: var(--success-color, #10b981);
+}
+
+.warning .progressFill {
+  background-color: var(--warning-color, #f59e0b);
+}
+
+.error .progressFill {
+  background-color: var(--error-color, #ef4444);
+}
+
+/* Striped effect */
+.striped .progressFill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+}
+
+/* Animation */
+.animated .progressFill::before {
+  animation: progress-bar-stripes 1s linear infinite;
+}
+
+@keyframes progress-bar-stripes {
+  0% {
+    background-position: 1rem 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .header {
+    margin-bottom: 0.25rem;
+  }
+
+  .label {
+    font-size: 0.8rem;
+  }
+
+  .percentage {
+    font-size: 0.7rem;
+  }
+}

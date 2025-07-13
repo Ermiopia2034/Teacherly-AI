@@ -4,6 +4,7 @@ import generationReducer from './features/generation/generationSlice';
 import contentReducer from './features/content/contentSlice';
 import studentsReducer from './features/students/studentsSlice';
 import gradesReducer from './features/grades/gradesSlice';
+import gradingReducer from './features/grading/gradingSlice';
 import attendanceReducer from './features/attendance/attendanceSlice';
 import reportsReducer from './features/reports/reportsSlice';
 
@@ -14,6 +15,7 @@ export const store = configureStore({
     content: contentReducer,
     students: studentsReducer,
     grades: gradesReducer,
+    grading: gradingReducer,
     attendance: attendanceReducer,
     reports: reportsReducer,
   },

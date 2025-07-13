@@ -1,0 +1,410 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
+  gap: 1rem;
+}
+
+.emptyIcon {
+  color: var(--text-muted, #71717a);
+  opacity: 0.5;
+}
+
+.emptyState h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary, #fafafa);
+  margin: 0;
+}
+
+.emptyState p {
+  color: var(--text-muted, #a1a1aa);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.overviewGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.statCard {
+  padding: 1.5rem;
+  background: var(--background-primary, #09090b);
+  border: 1px solid var(--border-color, #27272a);
+  transition: all 0.2s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  border-color: var(--border-hover, #3f3f46);
+}
+
+.statHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.statHeader h4 {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-muted, #a1a1aa);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.statIcon {
+  color: var(--text-muted, #71717a);
+  opacity: 0.6;
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary, #fafafa);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.statSubtext {
+  font-size: 0.75rem;
+  color: var(--text-muted, #71717a);
+  line-height: 1.4;
+}
+
+.progressCard {
+  padding: 1.5rem;
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.progressHeader h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary, #fafafa);
+  margin: 0;
+}
+
+.progressText {
+  font-size: 0.875rem;
+  color: var(--text-muted, #a1a1aa);
+  font-weight: 500;
+}
+
+.distributionCard {
+  padding: 1.5rem;
+}
+
+.distributionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.distributionHeader h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary, #fafafa);
+  margin: 0;
+}
+
+.distributionStats {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: var(--text-muted, #a1a1aa);
+}
+
+.distributionChart {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.distributionRange {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rangeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rangeLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary, #fafafa);
+}
+
+.rangeCount {
+  font-size: 0.75rem;
+  color: var(--text-muted, #a1a1aa);
+  font-weight: 500;
+}
+
+.rangeBar {
+  width: 100%;
+  height: 8px;
+  background: var(--background-subtle, #27272a);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.rangeProgress {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+.rangeStudents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.studentName {
+  font-size: 0.75rem;
+  color: var(--text-muted, #71717a);
+  padding: 0.25rem 0.5rem;
+  background: var(--background-subtle, #18181b);
+  border: 1px solid var(--border-color, #27272a);
+  border-radius: 12px;
+}
+
+.moreStudents {
+  font-size: 0.75rem;
+  color: var(--text-muted, #71717a);
+  font-style: italic;
+  padding: 0.25rem 0.5rem;
+}
+
+.assessmentCard {
+  padding: 1.5rem;
+}
+
+.assessmentHeader {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color, #27272a);
+}
+
+.assessmentHeader h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary, #fafafa);
+  margin: 0;
+}
+
+.assessmentInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.assessmentField {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.fieldLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-muted, #a1a1aa);
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.fieldValue {
+  font-size: 0.875rem;
+  color: var(--text-primary, #fafafa);
+  flex: 1;
+  line-height: 1.4;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status.draft {
+  background: rgba(161, 161, 170, 0.1);
+  color: #a1a1aa;
+  border: 1px solid rgba(161, 161, 170, 0.2);
+}
+
+.status.active {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.status.completed {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.status.archived {
+  background: rgba(107, 114, 128, 0.1);
+  color: #6b7280;
+  border: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    gap: 1rem;
+  }
+
+  .overviewGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .statCard {
+    padding: 1rem;
+  }
+
+  .statValue {
+    font-size: 1.5rem;
+  }
+
+  .statHeader h4 {
+    font-size: 0.8rem;
+  }
+
+  .statSubtext {
+    font-size: 0.7rem;
+  }
+
+  .progressCard,
+  .distributionCard,
+  .assessmentCard {
+    padding: 1rem;
+  }
+
+  .distributionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .distributionStats {
+    gap: 0.75rem;
+  }
+
+  .rangeHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .assessmentField {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .fieldLabel {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .overviewGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .statCard:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .progressHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .rangeStudents {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .studentName {
+    align-self: flex-start;
+  }
+}
+
+/* Animation for progress bars */
+.rangeProgress {
+  animation: fillProgress 1s ease-out;
+}
+
+@keyframes fillProgress {
+  from {
+    width: 0;
+  }
+  to {
+    width: var(--final-width, 0);
+  }
+}
+
+/* Custom scrollbar for mobile */
+@media (max-width: 640px) {
+  .distributionChart {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+  }
+
+  .distributionChart::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .distributionChart::-webkit-scrollbar-track {
+    background: var(--background-subtle, #18181b);
+    border-radius: 2px;
+  }
+
+  .distributionChart::-webkit-scrollbar-thumb {
+    background: var(--border-color, #27272a);
+    border-radius: 2px;
+  }
+
+  .distributionChart::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted, #71717a);
+  }
+}

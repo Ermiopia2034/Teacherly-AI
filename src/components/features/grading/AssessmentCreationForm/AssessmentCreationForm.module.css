@@ -1,0 +1,238 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.header {
+  padding: 1.5rem 1.5rem 0 1.5rem;
+  border-bottom: 1px solid var(--border-color, #27272a);
+  margin-bottom: 1.5rem;
+}
+
+.header h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary, #fafafa);
+  margin: 0 0 0.5rem 0;
+}
+
+.header p {
+  color: var(--text-muted, #a1a1aa);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.form {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.section h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary, #fafafa);
+  margin: 0;
+}
+
+.sectionDescription {
+  font-size: 0.875rem;
+  color: var(--text-muted, #a1a1aa);
+  margin: 0;
+}
+
+.answerKeySection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.answerKeyUpload {
+  min-height: 150px;
+}
+
+.uploadPrompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: center;
+}
+
+.uploadIcon {
+  color: var(--text-muted, #71717a);
+}
+
+.uploadPrompt p {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary, #fafafa);
+  margin: 0;
+}
+
+.uploadPrompt span {
+  font-size: 0.75rem;
+  color: var(--text-muted, #71717a);
+}
+
+.fileInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: var(--background-subtle, #18181b);
+  border: 1px solid var(--border-color, #27272a);
+  border-radius: 6px;
+}
+
+.fileName {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-primary, #fafafa);
+}
+
+.fileName svg {
+  color: var(--text-muted, #71717a);
+}
+
+.orDivider {
+  position: relative;
+  text-align: center;
+  margin: 0.5rem 0;
+}
+
+.orDivider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border-color, #27272a);
+}
+
+.orDivider span {
+  background: var(--background-primary, #09090b);
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  color: var(--text-muted, #a1a1aa);
+  font-weight: 500;
+}
+
+.fieldError {
+  color: var(--error-color, #ef4444);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.errorMessage {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 6px;
+  color: var(--error-color, #ef4444);
+}
+
+.errorMessage svg {
+  flex-shrink: 0;
+}
+
+.errorMessage p {
+  flex: 1;
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color, #27272a);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    max-width: 100%;
+  }
+
+  .header {
+    padding: 1rem 1rem 0 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .header h3 {
+    font-size: 1.25rem;
+  }
+
+  .form {
+    padding: 0 1rem 1rem 1rem;
+    gap: 1.5rem;
+  }
+
+  .section {
+    gap: 0.75rem;
+  }
+
+  .section h4 {
+    font-size: 1rem;
+  }
+
+  .answerKeySection {
+    gap: 1rem;
+  }
+
+  .answerKeyUpload {
+    min-height: 120px;
+  }
+
+  .uploadPrompt {
+    gap: 0.5rem;
+  }
+
+  .uploadPrompt p {
+    font-size: 0.875rem;
+  }
+
+  .uploadPrompt span {
+    font-size: 0.7rem;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+  }
+
+  .actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .fileInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .errorMessage {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
