@@ -1,0 +1,204 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.header {
+  margin-bottom: 3rem;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.header p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--background-secondary);
+  border-radius: 8px;
+  max-width: fit-content;
+}
+
+.userName {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.userRole {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  background: var(--accent-light);
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  text-transform: capitalize;
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.settingsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.settingLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.settingLink:hover {
+  transform: translateY(-2px);
+}
+
+.settingCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  height: 100%;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.settingCard:hover {
+  border-color: var(--accent-primary);
+  background: var(--background-secondary);
+}
+
+.settingIcon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.settingContent {
+  flex: 1;
+}
+
+.settingTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.settingDescription {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.settingArrow {
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.settingCard:hover .settingArrow {
+  transform: translateX(4px);
+  color: var(--accent-primary);
+}
+
+.quickInfo {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: var(--background-secondary);
+  border-radius: 12px;
+}
+
+.quickInfo h2 {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+
+.quickInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.quickInfoItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: var(--background-primary);
+  border-radius: 8px;
+}
+
+.quickInfoLabel {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.quickInfoValue {
+  font-weight: 600;
+  color: var(--text-primary);
+  text-transform: capitalize;
+}
+
+.quickInfoValue.enabled {
+  color: var(--success-color, #10b981);
+}
+
+.quickInfoValue.disabled {
+  color: var(--warning-color, #f59e0b);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+  }
+
+  .settingsGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .settingCard {
+    padding: 1rem;
+  }
+
+  .settingIcon {
+    font-size: 1.5rem;
+  }
+
+  .settingTitle {
+    font-size: 1.1rem;
+  }
+
+  .quickInfoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .userInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

@@ -1,0 +1,193 @@
+.securityCard {
+  padding: 2rem;
+  max-width: 600px;
+  width: 100%;
+}
+
+.cardHeader {
+  margin-bottom: 2rem;
+}
+
+.cardHeader h3 {
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.cardHeader p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.securityOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.securityOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  background: var(--background-secondary);
+}
+
+.optionInfo {
+  flex: 1;
+}
+
+.optionInfo h4 {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.optionInfo p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: 1rem;
+}
+
+.currentStatus {
+  margin-top: 0.75rem;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.statusBadge.enabled {
+  background: var(--success-light, #f0fdf4);
+  color: var(--success-color, #10b981);
+  border: 1px solid var(--success-color, #10b981);
+}
+
+.statusBadge.disabled {
+  background: var(--warning-light, #fffbeb);
+  color: var(--warning-color, #f59e0b);
+  border: 1px solid var(--warning-color, #f59e0b);
+}
+
+.optionControls {
+  flex-shrink: 0;
+}
+
+/* Confirmation Dialog */
+.confirmDialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialogOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.dialogContent {
+  position: relative;
+  background: var(--background-primary);
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.dialogContent h4 {
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.dialogContent p {
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.dialogButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.dialogButtons button {
+  min-width: 80px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .securityCard {
+    padding: 1.5rem;
+  }
+
+  .securityOption {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .optionControls {
+    align-self: flex-start;
+  }
+
+  .dialogContent {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .dialogButtons {
+    flex-direction: column;
+  }
+
+  .dialogButtons button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .securityCard {
+    padding: 1rem;
+  }
+
+  .securityOption {
+    padding: 0.75rem;
+  }
+
+  .cardHeader h3 {
+    font-size: 1.2rem;
+  }
+
+  .optionInfo h4 {
+    font-size: 1rem;
+  }
+
+  .optionInfo p {
+    font-size: 0.85rem;
+  }
+}

@@ -1,0 +1,110 @@
+.formCard {
+  padding: 2rem;
+  max-width: 600px;
+  width: 100%;
+}
+
+.formHeader {
+  margin-bottom: 2rem;
+}
+
+.formHeader h3 {
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.formHeader p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.fieldError {
+  color: var(--error-color, #ef4444);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+.errorMessage {
+  padding: 1rem;
+  background: var(--error-light, #fef2f2);
+  border: 1px solid var(--error-color, #ef4444);
+  border-radius: 6px;
+  color: var(--error-color, #ef4444);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.successMessage {
+  padding: 1rem;
+  background: var(--success-light, #f0fdf4);
+  border: 1px solid var(--success-color, #10b981);
+  border-radius: 6px;
+  color: var(--success-color, #10b981);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.formNote {
+  padding: 1rem;
+  background: var(--background-secondary);
+  border-radius: 6px;
+  border-left: 4px solid var(--accent-primary);
+}
+
+.formNote p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.formNote strong {
+  color: var(--text-primary);
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.buttonGroup button {
+  flex: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .formCard {
+    padding: 1.5rem;
+  }
+
+  .formHeader h3 {
+    font-size: 1.2rem;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+  }
+
+  .buttonGroup button {
+    flex: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .formCard {
+    padding: 1rem;
+  }
+
+  .form {
+    gap: 1rem;
+  }
+}

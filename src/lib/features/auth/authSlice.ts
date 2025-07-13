@@ -124,6 +124,13 @@ const authSlice = createSlice({
         state.user = action.payload;
         state.isLoading = false;
         state.error = null;
+    },
+    // Update user profile data in auth state
+    updateUserProfile: (state, action: PayloadAction<{ email?: string; full_name?: string }>) => {
+      if (state.user) {
+        if (action.payload.email) state.user.email = action.payload.email;
+        if (action.payload.full_name !== undefined) state.user.full_name = action.payload.full_name;
+      }
     }
   },
   extraReducers: (builder) => {
@@ -219,7 +226,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearAuthError, setUser } = authSlice.actions;
+export const { clearAuthError, setUser, updateUserProfile } = authSlice.actions;
 
 // Selectors
 export const selectUser = (state: RootState) => state.auth.user;

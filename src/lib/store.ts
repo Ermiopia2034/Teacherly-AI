@@ -7,6 +7,7 @@ import gradesReducer from './features/grades/gradesSlice';
 import gradingReducer from './features/grading/gradingSlice';
 import attendanceReducer from './features/attendance/attendanceSlice';
 import reportsReducer from './features/reports/reportsSlice';
+import settingsReducer from './features/settings/settingsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     grading: gradingReducer,
     attendance: attendanceReducer,
     reports: reportsReducer,
+    settings: settingsReducer,
   },
 });
 
