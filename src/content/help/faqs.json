@@ -1,0 +1,104 @@
+{
+  "categories": {
+    "getting-started": {
+      "title": "Getting Started",
+      "faqs": [
+        {
+          "id": "what-is-teacherly-ai",
+          "question": "What is Teacherly AI?",
+          "answer": "Teacherly AI is a comprehensive educational platform that helps teachers manage students, grades, attendance, and generate educational content using artificial intelligence. It streamlines administrative tasks and enhances the teaching experience."
+        },
+        {
+          "id": "how-to-get-started",
+          "question": "How do I get started with Teacherly AI?",
+          "answer": "After creating your account, start by setting up your profile in Settings, then add your students through the Students section. You can then begin tracking attendance, managing grades, and exploring our AI-powered content generation tools."
+        },
+        {
+          "id": "system-requirements",
+          "question": "What are the system requirements?",
+          "answer": "Teacherly AI works on any modern web browser including Chrome, Firefox, Safari, and Edge. For the best experience, we recommend using the latest version of your browser with JavaScript enabled."
+        }
+      ]
+    },
+    "grades-management": {
+      "title": "Grades Management",
+      "faqs": [
+        {
+          "id": "add-grades",
+          "question": "How do I add grades for my students?",
+          "answer": "Navigate to the Grades section and click 'Add Grade'. Select the student, enter the subject, assignment name, grade value, and any notes. You can also import grades in bulk using our CSV import feature."
+        },
+        {
+          "id": "grade-categories",
+          "question": "Can I organize grades by categories?",
+          "answer": "Yes! You can categorize grades by subject, assignment type (homework, exam, project), or create custom categories. This helps with better organization and automatic grade calculations."
+        },
+        {
+          "id": "grade-calculations",
+          "question": "How are final grades calculated?",
+          "answer": "Final grades are calculated based on your weighting preferences set in the Grades settings. You can assign different weights to categories like homework (30%), exams (50%), and participation (20%)."
+        }
+      ]
+    },
+    "attendance": {
+      "title": "Attendance Tracking",
+      "faqs": [
+        {
+          "id": "mark-attendance",
+          "question": "How do I mark attendance?",
+          "answer": "Go to the Attendance section, select the date and class, then mark each student as Present, Absent, or Late. You can also add notes for specific attendance entries."
+        },
+        {
+          "id": "attendance-reports",
+          "question": "Can I generate attendance reports?",
+          "answer": "Yes! The Reports section allows you to generate detailed attendance reports for individual students or entire classes over specific date ranges."
+        },
+        {
+          "id": "late-attendance",
+          "question": "How do I handle late arrivals?",
+          "answer": "When marking attendance, select 'Late' for students who arrive after class starts. You can also add notes explaining the reason for tardiness."
+        }
+      ]
+    },
+    "grading": {
+      "title": "AI Grading System",
+      "faqs": [
+        {
+          "id": "ai-grading-how",
+          "question": "How does AI grading work?",
+          "answer": "Our AI grading system uses advanced image recognition and natural language processing to evaluate handwritten assignments, essays, and multiple-choice tests. Simply upload scanned documents or photos of student work."
+        },
+        {
+          "id": "grading-accuracy",
+          "question": "How accurate is the AI grading?",
+          "answer": "Our AI grading system achieves high accuracy rates, but we always recommend reviewing and adjusting grades as needed. The system provides confidence scores and allows for easy manual corrections."
+        },
+        {
+          "id": "supported-formats",
+          "question": "What file formats are supported for grading?",
+          "answer": "We support JPG, PNG, PDF, and DOCX files. For best results with handwritten work, ensure images are clear and well-lit with minimal shadows."
+        }
+      ]
+    },
+    "troubleshooting": {
+      "title": "Troubleshooting",
+      "faqs": [
+        {
+          "id": "login-issues",
+          "question": "I can't log into my account",
+          "answer": "First, check that you're using the correct email and password. If you've forgotten your password, use the 'Forgot Password' link. If issues persist, clear your browser cache or try a different browser."
+        },
+        {
+          "id": "data-not-saving",
+          "question": "My data isn't saving properly",
+          "answer": "Ensure you have a stable internet connection and click the 'Save' button after making changes. If the problem continues, try refreshing the page or logging out and back in."
+        },
+        {
+          "id": "performance-issues",
+          "question": "The platform is running slowly",
+          "answer": "Slow performance can be caused by poor internet connection, browser cache issues, or running too many browser tabs. Try closing other tabs, clearing your browser cache, or switching to a faster internet connection."
+        }
+      ]
+    }
+  }
+}

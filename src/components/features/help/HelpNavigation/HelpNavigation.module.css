@@ -1,0 +1,246 @@
+.navigation {
+  position: relative;
+  background: #fff;
+  border-right: 1px solid #e5e7eb;
+  min-height: 100vh;
+}
+
+.mobileToggle {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 1rem;
+  background: #f9fafb;
+  border: none;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.mobileToggle:hover {
+  background: #f3f4f6;
+}
+
+.hamburger {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #374151;
+  position: relative;
+}
+
+.hamburger::before,
+.hamburger::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: #374151;
+  transition: transform 0.2s;
+}
+
+.hamburger::before {
+  top: -6px;
+}
+
+.hamburger::after {
+  top: 6px;
+}
+
+.menu {
+  position: relative;
+  background: #fff;
+  height: 100%;
+}
+
+.menuHeader {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.menuHeader h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+}
+
+.closeButton:hover {
+  color: #374151;
+}
+
+.categoryList {
+  list-style: none;
+  margin: 0;
+  padding: 1rem 0;
+}
+
+.categoryButton {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.categoryButton:hover {
+  background: #f9fafb;
+  border-left-color: #e5e7eb;
+}
+
+.categoryButton.active {
+  background: #eff6ff;
+  border-left-color: #3b82f6;
+  color: #1d4ed8;
+}
+
+.categoryIcon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.categoryInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.categoryTitle {
+  display: block;
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.categoryButton.active .categoryTitle {
+  color: #1d4ed8;
+}
+
+.categoryDescription {
+  display: block;
+  font-size: 0.75rem;
+  line-height: 1.33;
+  color: #6b7280;
+}
+
+.categoryButton.active .categoryDescription {
+  color: #3b82f6;
+}
+
+.overlay {
+  display: none;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .navigation {
+    border-right: none;
+    min-height: auto;
+  }
+
+  .mobileToggle {
+    display: flex;
+  }
+
+  .menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 85%;
+    max-width: 320px;
+    height: 100vh;
+    background: #fff;
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
+  }
+
+  .menuOpen {
+    transform: translateX(0);
+  }
+
+  .menuHeader {
+    display: flex;
+  }
+
+  .overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+
+  .categoryButton {
+    padding: 1rem;
+  }
+
+  .categoryTitle {
+    font-size: 1rem;
+  }
+
+  .categoryDescription {
+    font-size: 0.875rem;
+  }
+}
+
+/* Tablet Styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .categoryButton {
+    padding: 0.875rem 1.25rem;
+  }
+
+  .categoryTitle {
+    font-size: 0.9rem;
+  }
+}
+
+/* Focus Styles for Accessibility */
+.categoryButton:focus,
+.mobileToggle:focus,
+.closeButton:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .categoryButton,
+  .mobileToggle,
+  .menu,
+  .hamburger::before,
+  .hamburger::after {
+    transition: none;
+  }
+}

@@ -1,0 +1,405 @@
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.inputContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 2px solid #d1d5db;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+  overflow: hidden;
+}
+
+.inputContainer:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.searchIcon {
+  padding: 0 1rem;
+  color: #6b7280;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+.input {
+  flex: 1;
+  padding: 0.875rem 0;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background: transparent;
+  color: #111827;
+}
+
+.input::placeholder {
+  color: #9ca3af;
+}
+
+.clearButton {
+  padding: 0 1rem;
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.clearButton:hover {
+  color: #374151;
+}
+
+.clearButton:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 0.25rem;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  color: #6b7280;
+}
+
+.loadingSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #f3f4f6;
+  border-top: 2px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.resultsHeader {
+  padding: 0.75rem 1rem 0.5rem 1rem;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+  background: #f9fafb;
+}
+
+.resultItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1rem;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #f3f4f6;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.resultItem:hover,
+.resultItem.selected {
+  background: #f9fafb;
+}
+
+.resultItem:last-child {
+  border-bottom: none;
+}
+
+.resultIcon {
+  font-size: 1.125rem;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.resultContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.resultTitle {
+  font-weight: 600;
+  color: #111827;
+  line-height: 1.4;
+  margin-bottom: 0.25rem;
+}
+
+.resultTitle :global(mark) {
+  background: #fef3c7;
+  color: #92400e;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-weight: 700;
+}
+
+.resultMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.resultCategory {
+  font-size: 0.75rem;
+  color: #3b82f6;
+  background: #eff6ff;
+  padding: 0.125rem 0.5rem;
+  border-radius: 1rem;
+  font-weight: 500;
+}
+
+.resultType {
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+}
+
+.resultSnippet {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.4;
+  margin-top: 0.5rem;
+}
+
+.resultSnippet :global(mark) {
+  background: #fef3c7;
+  color: #92400e;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+}
+
+.noResults {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.noResults p {
+  margin: 0 0 0.5rem 0;
+}
+
+.noResults p:first-child {
+  font-weight: 500;
+  color: #374151;
+}
+
+.noResultsSubtext {
+  font-size: 0.875rem;
+}
+
+.recentSearches {
+  padding: 0.5rem 0;
+}
+
+.recentHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.clearRecent {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.clearRecent:hover {
+  background: #eff6ff;
+}
+
+.clearRecent:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.recentItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.recentItem:hover {
+  background: #f9fafb;
+}
+
+.recentIcon {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.recentText {
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .container {
+    max-width: 100%;
+  }
+
+  .inputContainer {
+    border-radius: 0.375rem;
+  }
+
+  .input {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 0.75rem 0;
+  }
+
+  .dropdown {
+    max-height: 300px;
+    border-radius: 0.375rem;
+  }
+
+  .resultItem {
+    padding: 0.75rem;
+  }
+
+  .resultTitle {
+    font-size: 0.9rem;
+  }
+
+  .resultSnippet {
+    font-size: 0.8rem;
+  }
+
+  .resultMeta {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .resultCategory,
+  .resultType {
+    font-size: 0.7rem;
+  }
+
+  .noResults {
+    padding: 1.5rem 1rem;
+  }
+}
+
+/* Tablet Styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .container {
+    max-width: 500px;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .inputContainer {
+    border-color: #000;
+  }
+
+  .inputContainer:focus-within {
+    border-color: #000;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+  }
+
+  .dropdown {
+    border-color: #000;
+  }
+
+  .resultItem.selected {
+    background: #000;
+    color: #fff;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .inputContainer,
+  .resultItem,
+  .clearButton,
+  .clearRecent,
+  .recentItem {
+    transition: none;
+  }
+
+  .loadingSpinner {
+    animation: none;
+  }
+}
+
+/* Focus Styles for Better Accessibility */
+.resultItem:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: -2px;
+  background: #eff6ff;
+}
+
+.recentItem:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: -2px;
+  background: #eff6ff;
+}
+
+/* Print Styles */
+@media print {
+  .container {
+    display: none;
+  }
+}
+
+/* Custom Scrollbar for Dropdown */
+.dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dropdown::-webkit-scrollbar-track {
+  background: #f3f4f6;
+}
+
+.dropdown::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.dropdown::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
