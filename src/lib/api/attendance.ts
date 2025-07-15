@@ -7,8 +7,23 @@ export interface Attendance {
   status: 'present' | 'absent' | 'late' | 'excused';
   notes?: string;
   student_id: number;
+  semester_id?: number;
+  section_id?: number;
   created_at: string;
   student_name?: string;
+  semester?: {
+    id: number;
+    name: string;
+    academic_year?: {
+      id: number;
+      name: string;
+    };
+  };
+  section?: {
+    id: number;
+    name: string;
+    subject: string;
+  };
 }
 
 export interface AttendanceCreatePayload {
@@ -55,6 +70,8 @@ export interface AttendanceListParams {
   limit?: number;
   start_date?: string;
   end_date?: string;
+  semester_id?: number;
+  section_id?: number;
 }
 
 // API functions for attendance operations
@@ -69,10 +86,26 @@ export const createBulkAttendance = async (payload: AttendanceBulkCreatePayload)
 };
 
 export const getAttendance = async (params: AttendanceListParams = {}): Promise<Attendance[]> => {
-  const { skip = 0, limit = 100, start_date, end_date } = params;
+  const { skip = 0, limit = 100, start_date, end_date, semester_id, section_id } = params;
+  const queryParams: Record<string, string | number> = { skip, limit };
+  if (start_date) queryParams.start_date = start_date;
+  if (end_date) queryParams.end_date = end_date;
+  if (semester_id) queryParams.semester_id = semester_id;
+  if (section_id) queryParams.section_id = section_id;
+  
   const response = await apiClient.get('/attendance/', {
-    params: { skip, limit, start_date, end_date }
+    params: queryParams
   });
+  return response.data;
+};
+
+export const getAttendanceBySemester = async (semesterId: number): Promise<Attendance[]> => {
+  const response = await apiClient.get(`/attendance/by-semester/${semesterId}`);
+  return response.data;
+};
+
+export const getAttendanceBySection = async (sectionId: number): Promise<Attendance[]> => {
+  const response = await apiClient.get(`/attendance/by-section/${sectionId}`);
   return response.data;
 };
 

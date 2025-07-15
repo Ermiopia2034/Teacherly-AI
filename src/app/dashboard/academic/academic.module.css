@@ -1,0 +1,173 @@
+.pageContainer {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+}
+
+.contentContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sectionHeader h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.sectionHeader p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.component {
+  width: 100%;
+}
+
+.summaryCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.summaryContent {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.summaryItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.summaryItem h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.summaryItem p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.summaryItem strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.dates {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.subject {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.notSet {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .contentContainer {
+    padding: 1rem;
+    gap: 2rem;
+  }
+
+  .summaryContent {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .sectionHeader h2 {
+    font-size: 1.25rem;
+  }
+
+  .section {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contentContainer {
+    padding: 0.75rem;
+    gap: 1.5rem;
+  }
+
+  .summaryContent {
+    gap: 1rem;
+  }
+
+  .summaryCard {
+    padding: 1rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .pageContainer {
+    background-color: var(--bg-primary-dark, #0f172a);
+  }
+
+  .summaryCard {
+    background: var(--bg-surface-dark, #1e293b);
+    border-color: var(--border-color-dark, #334155);
+  }
+
+  .sectionHeader h2 {
+    color: var(--text-primary-dark, #f8fafc);
+  }
+
+  .sectionHeader p {
+    color: var(--text-secondary-dark, #cbd5e1);
+  }
+
+  .summaryItem h4 {
+    color: var(--text-primary-dark, #f8fafc);
+  }
+
+  .summaryItem strong {
+    color: var(--text-primary-dark, #f8fafc);
+  }
+
+  .dates {
+    color: var(--text-secondary-dark, #cbd5e1);
+  }
+
+  .subject {
+    color: var(--text-secondary-dark, #cbd5e1);
+  }
+
+  .notSet {
+    color: var(--text-muted-dark, #64748b);
+  }
+}

@@ -13,6 +13,14 @@ import {
   clearError
 } from '@/lib/features/grades/gradesSlice';
 import { fetchStudentsThunk, selectStudents } from '@/lib/features/students/studentsSlice';
+import {
+  fetchSemestersThunk,
+  selectSemesters
+} from '@/lib/features/academic/semestersSlice';
+import {
+  fetchSectionsThunk,
+  selectSections
+} from '@/lib/features/academic/sectionsSlice';
 import { fetchMyContent } from '@/lib/api/content';
 import GradeForm from '@/components/features/grades/GradeForm';
 import GradeCard from '@/components/features/grades/GradeCard/GradeCard';
@@ -30,20 +38,26 @@ export function GradesList() {
   const isLoading = useSelector(selectGradesLoading);
   const error = useSelector(selectGradesError);
   const students = useSelector(selectStudents);
+  const semesters = useSelector(selectSemesters);
+  const sections = useSelector(selectSections);
 
   const [contentItems, setContentItems] = useState<ContentRead[]>([]);
   const [showGradeForm, setShowGradeForm] = useState(false);
   const [editingGrade, setEditingGrade] = useState<Grade | null>(null);
   const [filters, setFilters] = useState({
     student_id: 0,
-    content_id: 0
+    content_id: 0,
+    semester_id: 0,
+    section_id: 0
   });
 
   useEffect(() => {
-    // Fetch grades, stats, students, and content
+    // Fetch grades, stats, students, semesters, sections, and content
     dispatch(fetchGradesThunk({}));
     dispatch(fetchGradeStatsThunk());
     dispatch(fetchStudentsThunk({}));
+    dispatch(fetchSemestersThunk({}));
+    dispatch(fetchSectionsThunk({}));
     fetchContentItems();
   }, [dispatch]);
 
@@ -93,6 +107,12 @@ export function GradesList() {
     if (filters.content_id && grade.content_id !== filters.content_id) {
       return false;
     }
+    if (filters.semester_id && grade.semester_id !== filters.semester_id) {
+      return false;
+    }
+    if (filters.section_id && grade.section_id !== filters.section_id) {
+      return false;
+    }
     return true;
   });
 
@@ -109,6 +129,22 @@ export function GradesList() {
     ...contentItems.map(content => ({
       value: content.id,
       label: `${content.title} (${content.content_type})`
+    }))
+  ];
+
+  const semesterOptions = [
+    { value: 0, label: 'All Semesters' },
+    ...semesters.map(semester => ({
+      value: semester.id,
+      label: `${semester.name}${semester.academic_year ? ` (${semester.academic_year.name})` : ''}`
+    }))
+  ];
+
+  const sectionOptions = [
+    { value: 0, label: 'All Sections' },
+    ...sections.map(section => ({
+      value: section.id,
+      label: `${section.name} - ${section.subject}${section.semester ? ` (${section.semester.name})` : ''}`
     }))
   ];
 
@@ -182,6 +218,22 @@ export function GradesList() {
               value={filters.content_id}
               onChange={handleFilterChange}
               options={contentOptions}
+            />
+            <LabeledSelect
+              label="Filter by Semester"
+              id="semester_filter"
+              name="semester_id"
+              value={filters.semester_id}
+              onChange={handleFilterChange}
+              options={semesterOptions}
+            />
+            <LabeledSelect
+              label="Filter by Section"
+              id="section_filter"
+              name="section_id"
+              value={filters.section_id}
+              onChange={handleFilterChange}
+              options={sectionOptions}
             />
           </div>
         </div>

@@ -10,6 +10,7 @@ import {
   selectStudentsDeleting 
 } from '@/lib/features/students/studentsSlice';
 import { Student, StudentUpdatePayload } from '@/lib/api/students';
+import { StudentEnrollment } from '@/lib/api/enrollments';
 import Card from '@/components/ui/Card/Card';
 import Button from '@/components/ui/Button/Button';
 import LabeledInput from '@/components/ui/LabeledInput/LabeledInput';
@@ -17,11 +18,12 @@ import styles from './StudentCard.module.css';
 
 interface StudentCardProps {
   student: Student;
+  enrollments?: StudentEnrollment[];
   onUpdate?: (student: Student) => void;
   onDelete?: (studentId: number) => void;
 }
 
-export function StudentCard({ student, onUpdate, onDelete }: StudentCardProps) {
+export function StudentCard({ student, enrollments = [], onUpdate, onDelete }: StudentCardProps) {
   const dispatch = useDispatch<AppDispatch>();
   const isUpdating = useSelector(selectStudentsUpdating);
   const isDeleting = useSelector(selectStudentsDeleting);
@@ -181,6 +183,39 @@ export function StudentCard({ student, onUpdate, onDelete }: StudentCardProps) {
               <span className={styles.metaValue}>{formatDate(student.created_at)}</span>
             </div>
           </div>
+          
+          {/* Enrollment Information */}
+          {enrollments.length > 0 && (
+            <div className={styles.enrollmentSection}>
+              <div className={styles.enrollmentHeader}>
+                <span className={styles.enrollmentLabel}>Enrolled Sections ({enrollments.length})</span>
+              </div>
+              <div className={styles.enrollmentList}>
+                {enrollments.map((enrollment) => (
+                  <div key={enrollment.id} className={styles.enrollmentItem}>
+                    <div className={styles.enrollmentInfo}>
+                      <span className={styles.sectionName}>
+                        {enrollment.section?.name || 'Unknown Section'}
+                      </span>
+                      <span className={styles.sectionSubject}>
+                        {enrollment.section?.subject || 'Unknown Subject'}
+                      </span>
+                    </div>
+                    {enrollment.section?.semester && (
+                      <div className={styles.semesterInfo}>
+                        {enrollment.section.semester.name}
+                        {enrollment.section.semester.academic_year && (
+                          <span className={styles.academicYear}>
+                            ({enrollment.section.semester.academic_year.name})
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           
           <div className={styles.studentActions}>
             <Button

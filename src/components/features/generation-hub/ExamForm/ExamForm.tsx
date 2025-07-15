@@ -15,16 +15,24 @@ import {
   resetGenerationState,
 } from '@/lib/features/generation/generationSlice';
 import {
+  fetchCurrentSemesterThunk,
+  selectCurrentSemester,
+  selectSemestersLoading
+} from '@/lib/features/academic/semestersSlice';
+import {
   fetchSubjects,
   fetchGrades,
   fetchChapters,
   fetchTopics,
 } from '@/lib/api/curriculum';
+import MarkAllocationProgress from '@/components/features/academic/MarkAllocationProgress/MarkAllocationProgress';
 
 export default function ExamForm() {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
   const isLoading = useSelector(selectGenerationIsLoading);
+  const currentSemester = useSelector(selectCurrentSemester);
+  const semestersLoading = useSelector(selectSemestersLoading);
   
   const [formData, setFormData] = useState({
   subject: '',
@@ -34,7 +42,13 @@ export default function ExamForm() {
   examType: 'quiz',
   difficulty: 'medium',
   questionCount: '10',
+  marks: '10',
   additionalInfo: '',
+  });
+  
+  const [markValidation, setMarkValidation] = useState({
+    isValid: true,
+    remainingMarks: 0
   });
   
   const [subjects, setSubjects] = useState<string[]>([]);
@@ -42,6 +56,11 @@ export default function ExamForm() {
   const [chapters, setChapters] = useState<string[]>([]);
   const [topics, setTopics] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  
+  useEffect(() => {
+    // Fetch current semester when component mounts
+    dispatch(fetchCurrentSemesterThunk());
+  }, [dispatch]);
   
   useEffect(() => {
   const loadSubjects = async () => {
@@ -134,16 +153,40 @@ export default function ExamForm() {
   setFormData(prev => ({ ...prev, topics: value }));
   };
   
+  const handleMarkValidationChange = (isValid: boolean, remainingMarks: number) => {
+    setMarkValidation({ isValid, remainingMarks });
+  };
+  
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   setError(null);
+  
+  // Check mark validation before submitting
+  if (!markValidation.isValid) {
+    setError('The allocated marks exceed the semester limit. Please adjust the marks.');
+    return;
+  }
+  
+  // Check if semester is available
+  if (!currentSemester) {
+    setError('No current semester found. Please set up a semester first.');
+    return;
+  }
+  
   dispatch(resetGenerationState());
   
   try {
-  await dispatch(generateExamThunk(formData)).unwrap();
-  router.push('/dashboard/my-contents');
+    // Include semester context and marks in the form data
+    const examPayload = {
+      ...formData,
+      semester_id: currentSemester.id,
+      marks: Number(formData.marks)
+    };
+    
+    await dispatch(generateExamThunk(examPayload)).unwrap();
+    router.push('/dashboard/my-contents');
   } catch (rejectedValue) {
-  setError(rejectedValue as string);
+    setError(rejectedValue as string);
   }
   };
   
@@ -222,6 +265,37 @@ export default function ExamForm() {
             max="50"
             required
           />
+
+          <LabeledInput
+            label="Total Marks"
+            id="marks"
+            name="marks"
+            type="number"
+            value={formData.marks}
+            onChange={handleChange}
+            min="1"
+            max="100"
+            required
+          />
+
+          {/* Mark Allocation Progress */}
+          {currentSemester && (
+            <div className={styles.markAllocationSection}>
+              <MarkAllocationProgress
+                showValidation={true}
+                validationMarks={Number(formData.marks)}
+                contentType={formData.examType}
+                onValidationChange={handleMarkValidationChange}
+                className={styles.markAllocationProgress}
+              />
+            </div>
+          )}
+
+          {!currentSemester && !semestersLoading && (
+            <div className={styles.warningMessage}>
+              <p>⚠️ No current semester found. Marks allocation tracking is disabled. Please set up a semester in the academic management section.</p>
+            </div>
+          )}
 
           <LabeledTextarea
             label="Additional Information"

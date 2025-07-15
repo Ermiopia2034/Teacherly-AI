@@ -13,6 +13,14 @@ import {
   clearError
 } from '@/lib/features/attendance/attendanceSlice';
 import { fetchStudentsThunk, selectStudents } from '@/lib/features/students/studentsSlice';
+import {
+  fetchSemestersThunk,
+  selectSemesters
+} from '@/lib/features/academic/semestersSlice';
+import {
+  fetchSectionsThunk,
+  selectSections
+} from '@/lib/features/academic/sectionsSlice';
 import Button from '@/components/ui/Button/Button';
 import Card from '@/components/ui/Card/Card';
 import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
@@ -26,12 +34,16 @@ export function AttendanceList() {
   const isLoading = useSelector(selectAttendanceLoading);
   const error = useSelector(selectAttendanceError);
   const students = useSelector(selectStudents);
+  const semesters = useSelector(selectSemesters);
+  const sections = useSelector(selectSections);
 
   const [filters, setFilters] = useState({
     student_id: 0,
     status: '',
     start_date: '',
-    end_date: ''
+    end_date: '',
+    semester_id: 0,
+    section_id: 0
   });
 
   const [editingRecord, setEditingRecord] = useState<number | null>(null);
@@ -45,6 +57,8 @@ export function AttendanceList() {
 
   useEffect(() => {
     dispatch(fetchStudentsThunk({}));
+    dispatch(fetchSemestersThunk({}));
+    dispatch(fetchSectionsThunk({}));
     dispatch(fetchAttendanceThunk({}));
   }, [dispatch]);
 
@@ -128,6 +142,12 @@ export function AttendanceList() {
       if (filters.end_date && record.attendance_date > filters.end_date) {
         return false;
       }
+      if (filters.semester_id && record.semester_id !== filters.semester_id) {
+        return false;
+      }
+      if (filters.section_id && record.section_id !== filters.section_id) {
+        return false;
+      }
       return true;
     });
   };
@@ -171,6 +191,22 @@ export function AttendanceList() {
     { value: 'absent', label: 'Absent' },
     { value: 'late', label: 'Late' },
     { value: 'excused', label: 'Excused' }
+  ];
+
+  const semesterOptions = [
+    { value: 0, label: 'All Semesters' },
+    ...semesters.map(semester => ({
+      value: semester.id,
+      label: `${semester.name}${semester.academic_year ? ` (${semester.academic_year.name})` : ''}`
+    }))
+  ];
+
+  const sectionOptions = [
+    { value: 0, label: 'All Sections' },
+    ...sections.map(section => ({
+      value: section.id,
+      label: `${section.name} - ${section.subject}${section.semester ? ` (${section.semester.name})` : ''}`
+    }))
   ];
 
   const filteredAttendance = getFilteredAttendance();
@@ -234,6 +270,24 @@ export function AttendanceList() {
             value={filters.end_date}
             onChange={handleFilterChange}
           />
+          
+          <LabeledSelect
+            label="Semester"
+            id="semester_filter"
+            name="semester_id"
+            value={filters.semester_id}
+            onChange={handleFilterChange}
+            options={semesterOptions}
+          />
+          
+          <LabeledSelect
+            label="Section"
+            id="section_filter"
+            name="section_id"
+            value={filters.section_id}
+            onChange={handleFilterChange}
+            options={sectionOptions}
+          />
         </div>
       </div>
 
@@ -275,6 +329,8 @@ export function AttendanceList() {
             <div className={styles.tableHeader}>
               <div className={styles.headerCell}>Date</div>
               <div className={styles.headerCell}>Student</div>
+              <div className={styles.headerCell}>Semester</div>
+              <div className={styles.headerCell}>Section</div>
               <div className={styles.headerCell}>Status</div>
               <div className={styles.headerCell}>Notes</div>
               <div className={styles.headerCell}>Actions</div>
@@ -292,6 +348,38 @@ export function AttendanceList() {
                       <span className={styles.studentName}>
                         {record.student_name || 'Unknown Student'}
                       </span>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.tableCell}>
+                    <div className={styles.semesterInfo}>
+                      {record.semester ? (
+                        <span className={styles.semesterName}>
+                          {record.semester.name}
+                          {record.semester.academic_year && (
+                            <span className={styles.academicYearName}>
+                              ({record.semester.academic_year.name})
+                            </span>
+                          )}
+                        </span>
+                      ) : (
+                        <span className={styles.noData}>-</span>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className={styles.tableCell}>
+                    <div className={styles.sectionInfo}>
+                      {record.section ? (
+                        <span className={styles.sectionName}>
+                          {record.section.name}
+                          <span className={styles.sectionSubject}>
+                            ({record.section.subject})
+                          </span>
+                        </span>
+                      ) : (
+                        <span className={styles.noData}>-</span>
+                      )}
                     </div>
                   </div>
                   

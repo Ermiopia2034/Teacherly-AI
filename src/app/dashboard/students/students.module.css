@@ -1,0 +1,193 @@
+.pageContainer {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  padding: 1rem;
+}
+
+.contentContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.contextCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.contextHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.contextHeader h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.contextInfo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.contextItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.contextLabel {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.contextValue {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.warningMessage {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: #fef3c7;
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  color: #92400e;
+}
+
+.warningMessage svg {
+  flex-shrink: 0;
+  color: #f59e0b;
+}
+
+.warningLink {
+  color: #1d4ed8;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.warningLink:hover {
+  color: #1e40af;
+}
+
+.sectionManagerCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.studentsSection {
+  width: 100%;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .pageContainer {
+    padding: 0.75rem;
+  }
+
+  .contentContainer {
+    gap: 1rem;
+  }
+
+  .contextCard {
+    padding: 1rem;
+  }
+
+  .contextHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .contextInfo {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .warningMessage {
+    padding: 0.75rem;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .sectionManagerCard {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .pageContainer {
+    padding: 0.5rem;
+  }
+
+  .contextCard {
+    padding: 0.75rem;
+  }
+
+  .sectionManagerCard {
+    padding: 0.75rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .pageContainer {
+    background-color: var(--bg-primary-dark, #0f172a);
+  }
+
+  .contextCard {
+    background: var(--bg-surface-dark, #1e293b);
+    border-color: var(--border-color-dark, #334155);
+  }
+
+  .sectionManagerCard {
+    background: var(--bg-surface-dark, #1e293b);
+    border-color: var(--border-color-dark, #334155);
+  }
+
+  .contextHeader h3 {
+    color: var(--text-primary-dark, #f8fafc);
+  }
+
+  .contextLabel {
+    color: var(--text-secondary-dark, #cbd5e1);
+  }
+
+  .contextValue {
+    color: var(--text-primary-dark, #f8fafc);
+  }
+
+  .warningMessage {
+    background-color: #451a03;
+    border-color: #92400e;
+    color: #fbbf24;
+  }
+
+  .warningMessage svg {
+    color: #fbbf24;
+  }
+
+  .warningLink {
+    color: #60a5fa;
+  }
+
+  .warningLink:hover {
+    color: #93c5fd;
+  }
+}

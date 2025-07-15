@@ -148,6 +148,7 @@ export function GradingProgress({
         setRefreshTimer(null);
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoRefresh, isPolling, stats, refreshInterval, refreshAll]);
 
   // Cleanup timer on unmount

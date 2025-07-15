@@ -111,3 +111,112 @@
   color: var(--foreground);
   background-color: rgba(255, 255, 255, 0.05);
 }
+
+.markAllocationSection {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.markAllocationProgress {
+  margin: 0;
+}
+
+.warningMessage {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 6px;
+}
+
+.warningMessage p {
+  margin: 0;
+  color: #f59e0b;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.errorText {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin: 1rem 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--foreground);
+  font-size: 0.875rem;
+}
+
+.multiSelect {
+  width: 100%;
+  min-height: 120px;
+  padding: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+}
+
+.multiSelect:focus {
+  outline: none;
+  border-color: rgba(0, 200, 150, 0.5);
+  box-shadow: 0 0 0 3px rgba(0, 200, 150, 0.1);
+}
+
+.multiSelect:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.multiSelect option {
+  padding: 0.5rem;
+  background-color: var(--card-bg);
+  color: var(--foreground);
+}
+
+.multiSelect option:checked {
+  background-color: rgba(0, 200, 150, 0.2);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .formActions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .submitButton,
+  .cancelButton {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .markAllocationSection {
+    margin: 1rem 0;
+    padding: 0.75rem;
+  }
+  
+  .warningMessage {
+    margin: 0.75rem 0;
+    padding: 0.75rem;
+  }
+}

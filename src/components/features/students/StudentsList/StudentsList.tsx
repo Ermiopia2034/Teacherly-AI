@@ -12,25 +12,42 @@ import {
   selectStudentsError,
   clearError
 } from '@/lib/features/students/studentsSlice';
+import {
+  fetchSectionsThunk,
+  selectSections
+} from '@/lib/features/academic/sectionsSlice';
+import {
+  fetchEnrollmentsThunk,
+  selectEnrollments
+} from '@/lib/features/academic/enrollmentsSlice';
 import StudentCard from '@/components/features/students/StudentCard';
 import StudentRegistrationForm from '@/components/features/students/StudentRegistrationForm';
 import Button from '@/components/ui/Button/Button';
 import Card from '@/components/ui/Card/Card';
+import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
 import styles from './StudentsList.module.css';
 
 export function StudentsList() {
   const dispatch = useDispatch<AppDispatch>();
   const students = useSelector(selectStudents);
   const stats = useSelector(selectStudentStats);
+  const sections = useSelector(selectSections);
+  const enrollments = useSelector(selectEnrollments);
   const isLoading = useSelector(selectStudentsLoading);
   const error = useSelector(selectStudentsError);
 
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+  const [filters, setFilters] = useState({
+    section_id: 0,
+    enrollment_status: 'all'
+  });
 
   useEffect(() => {
-    // Fetch students and stats when component mounts
+    // Fetch students, stats, sections, and enrollments when component mounts
     dispatch(fetchStudentsThunk({}));
     dispatch(fetchStudentStatsThunk());
+    dispatch(fetchSectionsThunk({}));
+    dispatch(fetchEnrollmentsThunk({}));
   }, [dispatch]);
 
   useEffect(() => {
@@ -44,6 +61,56 @@ export function StudentsList() {
     dispatch(fetchStudentsThunk({}));
     dispatch(fetchStudentStatsThunk());
   };
+
+  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFilters(prev => ({
+      ...prev,
+      [name]: name === 'section_id' ? Number(value) : value
+    }));
+  };
+
+  // Get students enrolled in sections
+  const getStudentEnrollments = (studentId: number) => {
+    return enrollments.filter(enrollment => enrollment.student_id === studentId);
+  };
+
+  // Filter students based on selected filters
+  const filteredStudents = students.filter(student => {
+    const studentEnrollments = getStudentEnrollments(student.id);
+    
+    // Filter by section
+    if (filters.section_id !== 0) {
+      const isEnrolledInSection = studentEnrollments.some(
+        enrollment => enrollment.section_id === filters.section_id
+      );
+      if (!isEnrolledInSection) return false;
+    }
+    
+    // Filter by enrollment status
+    if (filters.enrollment_status === 'enrolled') {
+      if (studentEnrollments.length === 0) return false;
+    } else if (filters.enrollment_status === 'not_enrolled') {
+      if (studentEnrollments.length > 0) return false;
+    }
+    
+    return true;
+  });
+
+  // Create options for filters
+  const sectionOptions = [
+    { value: 0, label: 'All Sections' },
+    ...sections.map(section => ({
+      value: section.id,
+      label: `${section.name} - ${section.subject}${section.semester ? ` (${section.semester.name})` : ''}`
+    }))
+  ];
+
+  const enrollmentStatusOptions = [
+    { value: 'all', label: 'All Students' },
+    { value: 'enrolled', label: 'Enrolled in Sections' },
+    { value: 'not_enrolled', label: 'Not Enrolled' }
+  ];
 
   const handleStudentUpdated = () => {
     // Refresh stats in case they changed
@@ -99,6 +166,31 @@ export function StudentsList() {
         </Card>
       )}
 
+      {/* Filters */}
+      <Card className={styles.filtersCard}>
+        <div className={styles.filtersContent}>
+          <h3>Filter Students</h3>
+          <div className={styles.filters}>
+            <LabeledSelect
+              label="Filter by Section"
+              id="section_filter"
+              name="section_id"
+              value={filters.section_id}
+              onChange={handleFilterChange}
+              options={sectionOptions}
+            />
+            <LabeledSelect
+              label="Filter by Enrollment Status"
+              id="enrollment_filter"
+              name="enrollment_status"
+              value={filters.enrollment_status}
+              onChange={handleFilterChange}
+              options={enrollmentStatusOptions}
+            />
+          </div>
+        </div>
+      </Card>
+
       {/* Registration Form */}
       {showRegistrationForm && (
         <div className={styles.formSection}>
@@ -124,7 +216,7 @@ export function StudentsList() {
 
       {/* Students Grid */}
       <div className={styles.studentsSection}>
-        {students.length === 0 ? (
+        {filteredStudents.length === 0 ? (
           <div className={styles.emptyState}>
             <div className={styles.emptyStateIcon}>
               <svg 
@@ -141,9 +233,16 @@ export function StudentsList() {
                 <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
               </svg>
             </div>
-            <h3>No students yet</h3>
-            <p>Start building your class by registering your first student.</p>
-            {!showRegistrationForm && (
+            <h3>
+              {students.length === 0 ? 'No students yet' : 'No students match the selected filters'}
+            </h3>
+            <p>
+              {students.length === 0
+                ? 'Start building your class by registering your first student.'
+                : 'Try adjusting your filters or register a new student.'
+              }
+            </p>
+            {!showRegistrationForm && students.length === 0 && (
               <Button onClick={() => setShowRegistrationForm(true)}>
                 Register First Student
               </Button>
@@ -151,17 +250,28 @@ export function StudentsList() {
           </div>
         ) : (
           <div className={styles.studentsGrid}>
-            {students.map((student) => (
-              <StudentCard
-                key={student.id}
-                student={student}
-                onUpdate={handleStudentUpdated}
-                onDelete={handleStudentDeleted}
-              />
-            ))}
+            {filteredStudents.map((student) => {
+              const studentEnrollments = getStudentEnrollments(student.id);
+              return (
+                <StudentCard
+                  key={student.id}
+                  student={student}
+                  enrollments={studentEnrollments}
+                  onUpdate={handleStudentUpdated}
+                  onDelete={handleStudentDeleted}
+                />
+              );
+            })}
           </div>
         )}
       </div>
+
+      {/* Results Summary */}
+      {filteredStudents.length > 0 && filteredStudents.length !== students.length && (
+        <div className={styles.resultsSummary}>
+          <p>Showing {filteredStudents.length} of {students.length} students</p>
+        </div>
+      )}
 
       {/* Loading overlay for refresh operations */}
       {isLoading && students.length > 0 && (

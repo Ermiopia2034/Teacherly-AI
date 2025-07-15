@@ -8,11 +8,26 @@ export interface Grade {
   feedback?: string;
   student_id: number;
   content_id: number;
+  semester_id?: number;
+  section_id?: number;
   grading_date: string;
   created_at: string;
   student_name?: string;
   content_title?: string;
   content_type?: string;
+  semester?: {
+    id: number;
+    name: string;
+    academic_year?: {
+      id: number;
+      name: string;
+    };
+  };
+  section?: {
+    id: number;
+    name: string;
+    subject: string;
+  };
 }
 
 export interface GradeCreatePayload {
@@ -41,6 +56,8 @@ export interface GradeStats {
 export interface GradeListParams {
   skip?: number;
   limit?: number;
+  semester_id?: number;
+  section_id?: number;
 }
 
 // API functions for grade operations
@@ -50,10 +67,27 @@ export const createGrade = async (payload: GradeCreatePayload): Promise<Grade> =
 };
 
 export const getGrades = async (params: GradeListParams = {}): Promise<Grade[]> => {
-  const { skip = 0, limit = 100 } = params;
+  const { skip = 0, limit = 100, semester_id, section_id } = params;
+  const queryParams: Record<string, number> = { skip, limit };
+  if (semester_id) {
+    queryParams.semester_id = semester_id;
+  }
+  if (section_id) {
+    queryParams.section_id = section_id;
+  }
   const response = await apiClient.get('/grades/', {
-    params: { skip, limit }
+    params: queryParams
   });
+  return response.data;
+};
+
+export const getGradesBySemester = async (semesterId: number): Promise<Grade[]> => {
+  const response = await apiClient.get(`/grades/by-semester/${semesterId}`);
+  return response.data;
+};
+
+export const getGradesBySection = async (sectionId: number): Promise<Grade[]> => {
+  const response = await apiClient.get(`/grades/by-section/${sectionId}`);
   return response.data;
 };
 
