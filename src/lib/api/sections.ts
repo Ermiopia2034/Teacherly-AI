@@ -4,7 +4,10 @@ import apiClient from './client';
 export interface Section {
   id: number;
   name: string;
+  code: string;
   subject: string;
+  grade_level: string;
+  capacity: number;
   semester_id: number;
   teacher_id: number;
   created_at: string;
@@ -22,13 +25,19 @@ export interface Section {
 
 export interface SectionCreatePayload {
   name: string;
+  code: string;
   subject: string;
+  grade_level: string;
+  capacity: number;
   semester_id: number;
 }
 
 export interface SectionUpdatePayload {
   name?: string;
+  code?: string;
   subject?: string;
+  grade_level?: string;
+  capacity?: number;
   semester_id?: number;
 }
 

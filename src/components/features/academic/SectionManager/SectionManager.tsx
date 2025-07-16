@@ -53,7 +53,10 @@ export function SectionManager({
   const [selectedSection, setSelectedSection] = useState<Section | null>(null);
   const [formData, setFormData] = useState<SectionCreatePayload>({
     name: '',
+    code: '',
     subject: selectedSubject,
+    grade_level: '',
+    capacity: 30,
     semester_id: selectedSemesterId
   });
 
@@ -122,7 +125,7 @@ export function SectionManager({
     const { name, value } = e.target;
     setFormData(prev => ({ 
       ...prev, 
-      [name]: name === 'semester_id' ? Number(value) : value 
+      [name]: name === 'semester_id' || name === 'capacity' ? Number(value) : value 
     }));
   };
 
@@ -132,7 +135,10 @@ export function SectionManager({
       await dispatch(createSectionThunk(formData)).unwrap();
       setFormData({ 
         name: '', 
+        code: '',
         subject: selectedSubject, 
+        grade_level: '',
+        capacity: 30,
         semester_id: selectedSemesterId 
       });
       setShowForm(false);
@@ -266,7 +272,7 @@ export function SectionManager({
             <h4>Sections ({filteredSections.length})</h4>
             {selectedSection && (
               <div className={styles.selectedInfo}>
-                Selected: {selectedSection.name} - {selectedSection.subject}
+                Selected: {selectedSection.name} ({selectedSection.code}) - {selectedSection.subject} - {selectedSection.grade_level}
               </div>
             )}
           </div>
@@ -280,7 +286,12 @@ export function SectionManager({
               >
                 <div className={styles.sectionHeader}>
                   <div className={styles.sectionName}>{section.name}</div>
+                  <div className={styles.sectionCode}>{section.code}</div>
+                </div>
+                
+                <div className={styles.sectionDetails}>
                   <div className={styles.sectionSubject}>{section.subject}</div>
+                  <div className={styles.sectionGrade}>{section.grade_level}</div>
                 </div>
                 
                 <div className={styles.sectionInfo}>
@@ -291,10 +302,15 @@ export function SectionManager({
                     </div>
                   )}
                   
+                  <div className={styles.capacityInfo}>
+                    <span className={styles.infoLabel}>Capacity:</span>
+                    <span>{section.capacity}</span>
+                  </div>
+                  
                   {section.enrollment_count !== undefined && (
                     <div className={styles.enrollmentInfo}>
-                      <span className={styles.infoLabel}>Students:</span>
-                      <span>{section.enrollment_count}</span>
+                      <span className={styles.infoLabel}>Enrolled:</span>
+                      <span>{section.enrollment_count}/{section.capacity}</span>
                     </div>
                   )}
                 </div>
@@ -359,6 +375,17 @@ export function SectionManager({
             />
             
             <LabeledInput
+              label="Section Code"
+              id="code"
+              name="code"
+              type="text"
+              value={formData.code}
+              onChange={handleFormChange}
+              placeholder="e.g., MATH101A, SCI201B"
+              required
+            />
+            
+            <LabeledInput
               label="Subject"
               id="subject"
               name="subject"
@@ -366,6 +393,30 @@ export function SectionManager({
               value={formData.subject}
               onChange={handleFormChange}
               placeholder="e.g., Mathematics, Science, English"
+              required
+            />
+            
+            <LabeledInput
+              label="Grade Level"
+              id="grade_level"
+              name="grade_level"
+              type="text"
+              value={formData.grade_level}
+              onChange={handleFormChange}
+              placeholder="e.g., Grade 10, Year 12, Level 3"
+              required
+            />
+            
+            <LabeledInput
+              label="Capacity"
+              id="capacity"
+              name="capacity"
+              type="number"
+              value={formData.capacity?.toString() || ''}
+              onChange={handleFormChange}
+              placeholder="Maximum number of students"
+              min="1"
+              max="200"
               required
             />
             
@@ -380,7 +431,10 @@ export function SectionManager({
                   setShowForm(false);
                   setFormData({ 
                     name: '', 
+                    code: '',
                     subject: selectedSubject, 
+                    grade_level: '',
+                    capacity: 30,
                     semester_id: selectedSemesterId 
                   });
                 }}
