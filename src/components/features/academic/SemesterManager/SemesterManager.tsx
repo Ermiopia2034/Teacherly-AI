@@ -21,7 +21,7 @@ import Button from '@/components/ui/Button/Button';
 import Card from '@/components/ui/Card/Card';
 import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
 import LabeledInput from '@/components/ui/LabeledInput/LabeledInput';
-import { Semester, SemesterCreatePayload } from '@/lib/api/semesters';
+import { Semester, SemesterCreatePayload, SemesterType } from '@/lib/api/semesters';
 import styles from './SemesterManager.module.css';
 
 interface SemesterManagerProps {
@@ -51,6 +51,7 @@ export function SemesterManager({
   );
   const [formData, setFormData] = useState<SemesterCreatePayload>({
     name: '',
+    semester_type: SemesterType.FIRST,
     start_date: '',
     end_date: '',
     academic_year_id: selectedAcademicYearId
@@ -122,11 +123,12 @@ export function SemesterManager({
     e.preventDefault();
     try {
       await dispatch(createSemesterThunk(formData)).unwrap();
-      setFormData({ 
-        name: '', 
-        start_date: '', 
-        end_date: '', 
-        academic_year_id: selectedAcademicYearId 
+      setFormData({
+        name: '',
+        semester_type: SemesterType.FIRST,
+        start_date: '',
+        end_date: '',
+        academic_year_id: selectedAcademicYearId
       });
       setShowForm(false);
       // Refresh the semesters list
@@ -317,6 +319,24 @@ export function SemesterManager({
               required
             />
             
+            <LabeledSelect
+              label="Semester Type"
+              id="semester_type"
+              name="semester_type"
+              value={formData.semester_type}
+              onChange={handleFormChange}
+              options={[
+                { value: SemesterType.FIRST, label: 'First Semester' },
+                { value: SemesterType.SECOND, label: 'Second Semester' },
+                { value: SemesterType.THIRD, label: 'Third Semester' },
+                { value: SemesterType.FALL, label: 'Fall Semester' },
+                { value: SemesterType.SPRING, label: 'Spring Semester' },
+                { value: SemesterType.SUMMER, label: 'Summer Semester' }
+              ]}
+              placeholder="Select Semester Type"
+              required
+            />
+            
             <LabeledInput
               label="Semester Name"
               id="name"
@@ -357,11 +377,12 @@ export function SemesterManager({
                 variant="secondary" 
                 onClick={() => {
                   setShowForm(false);
-                  setFormData({ 
-                    name: '', 
-                    start_date: '', 
-                    end_date: '', 
-                    academic_year_id: selectedAcademicYearId 
+                  setFormData({
+                    name: '',
+                    semester_type: SemesterType.FIRST,
+                    start_date: '',
+                    end_date: '',
+                    academic_year_id: selectedAcademicYearId
                   });
                 }}
               >

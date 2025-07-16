@@ -1,12 +1,32 @@
 import apiClient from './client';
 
+// Semester types enum to match backend
+export enum SemesterType {
+  FALL = "fall",
+  SPRING = "spring",
+  SUMMER = "summer",
+  FIRST = "first",
+  SECOND = "second",
+  THIRD = "third"
+}
+
+export enum SemesterStatus {
+  UPCOMING = "upcoming",
+  ACTIVE = "active",
+  COMPLETED = "completed",
+  ARCHIVED = "archived"
+}
+
 // TypeScript interfaces for Semester data structures
 export interface Semester {
   id: number;
   name: string;
+  semester_type: SemesterType;
   start_date: string;
   end_date: string;
+  status: SemesterStatus;
   is_current: boolean;
+  description?: string;
   academic_year_id: number;
   teacher_id: number;
   created_at: string;
@@ -19,6 +39,7 @@ export interface Semester {
 
 export interface SemesterCreatePayload {
   name: string;
+  semester_type: SemesterType;
   start_date: string;
   end_date: string;
   academic_year_id: number;
@@ -26,6 +47,7 @@ export interface SemesterCreatePayload {
 
 export interface SemesterUpdatePayload {
   name?: string;
+  semester_type?: SemesterType;
   start_date?: string;
   end_date?: string;
   academic_year_id?: number;
