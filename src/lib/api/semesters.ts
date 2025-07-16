@@ -2,12 +2,12 @@ import apiClient from './client';
 
 // Semester types enum to match backend
 export enum SemesterType {
-  FALL = "fall",
-  SPRING = "spring",
-  SUMMER = "summer",
-  FIRST = "first",
-  SECOND = "second",
-  THIRD = "third"
+  FALL = "FALL",
+  SPRING = "SPRING",
+  SUMMER = "SUMMER",
+  FIRST = "FIRST",
+  SECOND = "SECOND",
+  THIRD = "THIRD"
 }
 
 export enum SemesterStatus {
