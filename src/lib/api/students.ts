@@ -20,7 +20,7 @@ import apiClient from './client';
 export interface Student {
   id: number;
   full_name: string;
-  grade_level?: string;
+  grade_level: string; // Now required, set from section
   parent_email?: string;
   teacher_id: number;
   created_at: string;
@@ -29,7 +29,8 @@ export interface Student {
 
 export interface StudentCreatePayload {
   full_name: string;
-  grade_level?: string;
+  grade_level: string; // Will be automatically set from selected section
+  section_id: number;
   parent_email?: string;
 }
 

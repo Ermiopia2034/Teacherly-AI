@@ -1,11 +1,13 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
 import { createStudentThunk, selectStudentsCreating, selectStudentsError } from '@/lib/features/students/studentsSlice';
+import { fetchSectionsThunk, selectSections } from '@/lib/features/academic/sectionsSlice';
 import Button from '@/components/ui/Button/Button';
 import LabeledInput from '@/components/ui/LabeledInput/LabeledInput';
+import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
 import Card from '@/components/ui/Card/Card';
 import styles from './StudentRegistrationForm.module.css';
 
@@ -18,18 +20,27 @@ export function StudentRegistrationForm({ onSuccess, onCancel }: StudentRegistra
   const dispatch = useDispatch<AppDispatch>();
   const isCreating = useSelector(selectStudentsCreating);
   const error = useSelector(selectStudentsError);
+  const sections = useSelector(selectSections);
 
   const [formData, setFormData] = useState({
     full_name: '',
-    grade_level: '',
-    parent_email: ''
+    parent_email: '',
+    section_id: 0
   });
 
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Fetch sections when component mounts
+  useEffect(() => {
+    dispatch(fetchSectionsThunk({}));
+  }, [dispatch]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ 
+      ...prev, 
+      [name]: name === 'section_id' ? Number(value) : value 
+    }));
     
     // Clear validation error when user starts typing
     if (validationErrors[name]) {
@@ -44,6 +55,10 @@ export function StudentRegistrationForm({ onSuccess, onCancel }: StudentRegistra
       errors.full_name = 'Student name is required';
     } else if (formData.full_name.trim().length < 2) {
       errors.full_name = 'Student name must be at least 2 characters long';
+    }
+
+    if (formData.section_id === 0) {
+      errors.section_id = 'Please select a section';
     }
 
     if (formData.parent_email && !formData.parent_email.includes('@')) {
@@ -62,10 +77,18 @@ export function StudentRegistrationForm({ onSuccess, onCancel }: StudentRegistra
     }
 
     try {
-      // Create payload, excluding empty optional fields
+      // Get the selected section to extract grade_level
+      const selectedSection = sections.find(section => section.id === formData.section_id);
+      if (!selectedSection) {
+        setValidationErrors({ section_id: 'Selected section not found' });
+        return;
+      }
+
+      // Create payload with grade_level from selected section
       const payload = {
         full_name: formData.full_name.trim(),
-        ...(formData.grade_level.trim() && { grade_level: formData.grade_level.trim() }),
+        grade_level: selectedSection.grade_level,
+        section_id: formData.section_id,
         ...(formData.parent_email.trim() && { parent_email: formData.parent_email.trim() })
       };
 
@@ -74,8 +97,8 @@ export function StudentRegistrationForm({ onSuccess, onCancel }: StudentRegistra
       // Reset form
       setFormData({
         full_name: '',
-        grade_level: '',
-        parent_email: ''
+        parent_email: '',
+        section_id: 0
       });
       setValidationErrors({});
       
@@ -91,8 +114,8 @@ export function StudentRegistrationForm({ onSuccess, onCancel }: StudentRegistra
   const handleCancel = () => {
     setFormData({
       full_name: '',
-      grade_level: '',
-      parent_email: ''
+      parent_email: '',
+      section_id: 0
     });
     setValidationErrors({});
     
@@ -101,11 +124,20 @@ export function StudentRegistrationForm({ onSuccess, onCancel }: StudentRegistra
     }
   };
 
+  // Prepare section options for dropdown
+  const sectionOptions = [
+    { value: 0, label: 'Select a section' },
+    ...sections.map(section => ({
+      value: section.id,
+      label: `${section.name} (${section.subject} - ${section.grade_level})`
+    }))
+  ];
+
   return (
     <Card className={styles.formCard}>
       <div className={styles.formHeader}>
         <h3>Register New Student</h3>
-        <p>Add a new student to your class</p>
+        <p>Add a new student and assign them to a section</p>
       </div>
 
       <form onSubmit={handleSubmit} className={styles.form}>
@@ -123,15 +155,18 @@ export function StudentRegistrationForm({ onSuccess, onCancel }: StudentRegistra
           <div className={styles.fieldError}>{validationErrors.full_name}</div>
         )}
 
-        <LabeledInput
-          label="Grade Level"
-          id="grade_level"
-          name="grade_level"
-          type="text"
-          value={formData.grade_level}
+        <LabeledSelect
+          label="Section"
+          id="section_id"
+          name="section_id"
+          value={formData.section_id}
           onChange={handleInputChange}
-          placeholder="e.g., Grade 10, Year 2 (optional)"
+          options={sectionOptions}
+          required
         />
+        {validationErrors.section_id && (
+          <div className={styles.fieldError}>{validationErrors.section_id}</div>
+        )}
 
         <LabeledInput
           label="Parent Email"
