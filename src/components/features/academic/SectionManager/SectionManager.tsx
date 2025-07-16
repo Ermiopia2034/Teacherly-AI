@@ -57,7 +57,7 @@ export function SectionManager({
     subject: selectedSubject,
     grade_level: '',
     capacity: 30,
-    semester_id: selectedSemesterId
+    semester_id: 0 // Will be updated when semesters load
   });
 
   // Get unique subjects from existing sections
@@ -84,6 +84,14 @@ export function SectionManager({
       setFormData(prev => ({ ...prev, semester_id: newSemesterId }));
     }
   }, [semesterId, currentSemester?.id, selectedSemesterId]);
+
+  useEffect(() => {
+    // Update form semester_id when semesters are loaded and no valid semester is selected
+    if (semesters.length > 0 && formData.semester_id === 0) {
+      const defaultSemesterId = selectedSemesterId || semesters[0].id;
+      setFormData(prev => ({ ...prev, semester_id: defaultSemesterId }));
+    }
+  }, [semesters, formData.semester_id, selectedSemesterId]);
 
   useEffect(() => {
     // Update selected subject when prop changes
@@ -125,12 +133,20 @@ export function SectionManager({
     const { name, value } = e.target;
     setFormData(prev => ({ 
       ...prev, 
-      [name]: name === 'semester_id' || name === 'capacity' ? Number(value) : value 
+      [name]: name === 'semester_id' || name === 'capacity' ? 
+        (value === '' ? 0 : Number(value)) : value 
     }));
   };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate that a valid semester is selected
+    if (formData.semester_id === 0) {
+      alert('Please select a semester before creating the section.');
+      return;
+    }
+    
     try {
       await dispatch(createSectionThunk(formData)).unwrap();
       setFormData({ 
@@ -139,7 +155,7 @@ export function SectionManager({
         subject: selectedSubject, 
         grade_level: '',
         capacity: 30,
-        semester_id: selectedSemesterId 
+        semester_id: selectedSemesterId > 0 ? selectedSemesterId : 0
       });
       setShowForm(false);
       // Refresh the sections list
@@ -353,12 +369,15 @@ export function SectionManager({
               label="Semester"
               id="semester_id"
               name="semester_id"
-              value={formData.semester_id?.toString() || ''}
+              value={formData.semester_id > 0 ? formData.semester_id.toString() : ''}
               onChange={handleFormChange}
-              options={semesters.map(s => ({
-                value: s.id.toString(),
-                label: `${s.name}${s.academic_year ? ` (${s.academic_year.name})` : ''}`
-              }))}
+              options={[
+                { value: '', label: 'Select Semester' },
+                ...semesters.map(s => ({
+                  value: s.id.toString(),
+                  label: `${s.name}${s.academic_year ? ` (${s.academic_year.name})` : ''}`
+                }))
+              ]}
               placeholder="Select Semester"
               required
             />
@@ -435,7 +454,7 @@ export function SectionManager({
                     subject: selectedSubject, 
                     grade_level: '',
                     capacity: 30,
-                    semester_id: selectedSemesterId 
+                    semester_id: selectedSemesterId > 0 ? selectedSemesterId : 0
                   });
                 }}
               >
