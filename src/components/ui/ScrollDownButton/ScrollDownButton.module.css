@@ -7,16 +7,23 @@
   flex-direction: column;
   align-items: center;
   text-decoration: none;
-  color: #fff;
+  color: var(--text-primary);
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 1px;
   cursor: pointer;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, color 0.3s ease;
 }
 
 .scrollDown:hover {
   opacity: 0.8;
+  color: var(--primary);
+}
+
+.scrollDown:focus {
+  outline: 2px solid var(--primary-glow);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
 }
 
 .scrollDownText {

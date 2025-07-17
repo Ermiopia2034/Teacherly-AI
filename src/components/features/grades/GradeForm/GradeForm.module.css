@@ -32,14 +32,14 @@
 }
 
 .fieldError {
-  color: var(--error-color);
+  color: var(--error);
   font-size: 0.875rem;
   margin-top: 0.25rem;
 }
 
 .errorMessage {
-  background-color: var(--error-bg);
-  color: var(--error-color);
+  background-color: var(--error-light);
+  color: var(--error);
   padding: 0.75rem;
   border-radius: 0.375rem;
   font-size: 0.875rem;

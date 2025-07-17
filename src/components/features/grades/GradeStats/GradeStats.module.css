@@ -11,15 +11,15 @@
 .statCard {
   text-align: center;
   padding: 1.5rem;
-  background-color: var(--background-secondary);
+  background-color: var(--surface-secondary);
   border-radius: 0.5rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-primary);
 }
 
 .statValue {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: var(--primary);
   margin-bottom: 0.5rem;
 }
 
@@ -47,8 +47,8 @@
 .spinner {
   width: 2rem;
   height: 2rem;
-  border: 2px solid var(--border-color);
-  border-top: 2px solid var(--primary-color);
+  border: 2px solid var(--border-primary);
+  border-top: 2px solid var(--primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }

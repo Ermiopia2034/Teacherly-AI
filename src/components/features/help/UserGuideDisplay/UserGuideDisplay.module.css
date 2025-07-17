@@ -10,14 +10,14 @@
   justify-content: space-between;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-secondary);
 }
 
 .title {
   margin: 0;
   font-size: 2rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--text-primary);
   line-height: 1.25;
 }
 
@@ -37,8 +37,8 @@
 .loadingSpinner {
   width: 40px;
   height: 40px;
-  border: 3px solid #f3f4f6;
-  border-top: 3px solid #3b82f6;
+  border: 3px solid var(--surface-tertiary);
+  border-top: 3px solid var(--info);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
@@ -59,8 +59,8 @@
 .tableOfContents {
   position: sticky;
   top: 2rem;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-secondary);
   border-radius: 0.5rem;
   padding: 1.5rem;
   max-height: calc(100vh - 4rem);
@@ -71,7 +71,7 @@
   margin: 0 0 1rem 0;
   font-size: 1rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary);
 }
 
 .tocList {
@@ -93,7 +93,7 @@
   text-align: left;
   font-size: 0.875rem;
   line-height: 1.4;
-  color: #6b7280;
+  color: var(--text-secondary);
   cursor: pointer;
   border-radius: 0.375rem;
   transition: all 0.2s;
@@ -101,24 +101,24 @@
 }
 
 .tocLink:hover {
-  background: #e5e7eb;
-  color: #374151;
+  background: var(--surface-hover);
+  color: var(--text-primary);
 }
 
 .tocLink:focus {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--info);
   outline-offset: 2px;
 }
 
 .tocActive {
-  background: #eff6ff !important;
-  color: #1d4ed8 !important;
+  background: var(--info-light) !important;
+  color: var(--info-hover) !important;
   font-weight: 600;
 }
 
 .tocLevel1 {
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary);
 }
 
 .tocLevel2 {
@@ -142,8 +142,8 @@
 }
 
 .guide {
-  background: #fff;
-  border: 1px solid #e5e7eb;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-secondary);
   border-radius: 0.5rem;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -158,13 +158,13 @@
 .guide :global(h6) {
   margin: 2rem 0 1rem 0;
   line-height: 1.3;
-  color: #111827;
+  color: var(--text-primary);
 }
 
 .guide :global(h1) {
   font-size: 2rem;
   font-weight: 700;
-  border-bottom: 2px solid #e5e7eb;
+  border-bottom: 2px solid var(--border-secondary);
   padding-bottom: 0.5rem;
 }
 
@@ -191,7 +191,7 @@
 
 .guide :global(p) {
   margin: 0 0 1.5rem 0;
-  color: #374151;
+  color: var(--text-secondary);
 }
 
 .guide :global(ul),
@@ -202,12 +202,12 @@
 
 .guide :global(li) {
   margin-bottom: 0.5rem;
-  color: #374151;
+  color: var(--text-secondary);
 }
 
 .guide :global(code) {
-  background: #f3f4f6;
-  color: #1f2937;
+  background: var(--surface-tertiary);
+  color: var(--text-primary);
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
   font-size: 0.875rem;
@@ -215,8 +215,8 @@
 }
 
 .guide :global(pre) {
-  background: #1f2937;
-  color: #f9fafb;
+  background: var(--surface-tertiary);
+  color: var(--text-primary);
   padding: 1rem;
   border-radius: 0.375rem;
   overflow-x: auto;
@@ -230,11 +230,11 @@
 }
 
 .guide :global(blockquote) {
-  border-left: 4px solid #3b82f6;
+  border-left: 4px solid var(--info);
   padding-left: 1rem;
   margin: 1.5rem 0;
   font-style: italic;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .guide :global(img) {
@@ -242,23 +242,23 @@
   height: auto;
   border-radius: 0.375rem;
   margin: 1rem 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
 .guide :global(a) {
-  color: #3b82f6;
+  color: var(--info);
   text-decoration: underline;
 }
 
 .guide :global(a:hover) {
-  color: #1d4ed8;
+  color: var(--info-hover);
 }
 
 .guide :global(table) {
   width: 100%;
   border-collapse: collapse;
   margin: 1.5rem 0;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-secondary);
   border-radius: 0.375rem;
   overflow: hidden;
 }
@@ -267,13 +267,13 @@
 .guide :global(td) {
   padding: 0.75rem;
   text-align: left;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-secondary);
 }
 
 .guide :global(th) {
-  background: #f9fafb;
+  background: var(--surface-secondary);
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary);
 }
 
 .guide :global(tr:last-child td) {
@@ -281,8 +281,8 @@
 }
 
 .pagination {
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-secondary);
   border-radius: 0.5rem;
   padding: 1rem;
 }
@@ -296,7 +296,7 @@
 .progressText {
   margin: 0;
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .navigationButtons {
@@ -377,7 +377,7 @@
 /* Print Styles */
 @media print {
   .header {
-    border-bottom: 2px solid #000;
+    border-bottom: 2px solid var(--border-primary);
   }
 
   .printButton {
@@ -430,10 +430,10 @@
   .tableOfContents,
   .guide,
   .pagination {
-    border-color: #000;
+    border-color: var(--border-primary);
   }
 
   .tocLink:focus {
-    outline: 3px solid #000;
+    outline: 3px solid var(--border-focus);
   }
 }

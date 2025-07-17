@@ -1,0 +1,86 @@
+.themeToggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.themeToggle:hover {
+  background-color: var(--surface-hover);
+  transform: scale(1.05);
+}
+
+.themeToggle:focus {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+.toggleContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggleTrack {
+  width: 48px;
+  height: 24px;
+  background-color: var(--surface-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.toggleThumb {
+  position: absolute;
+  top: 1px;
+  width: 20px;
+  height: 20px;
+  background: var(--gradient-primary);
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-inverse);
+  font-size: 10px;
+  box-shadow: var(--shadow-sm);
+}
+
+.toggleThumb.dark {
+  left: 1px;
+  background: var(--gradient-secondary);
+}
+
+.toggleThumb.light {
+  left: 25px;
+  background: var(--gradient-primary);
+}
+
+.themeToggle:hover .toggleTrack {
+  background-color: var(--surface-tertiary);
+  border-color: var(--border-hover);
+}
+
+.themeToggle:hover .toggleThumb {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-md);
+}
+
+/* Animation for theme switching */
+@keyframes themeSwitch {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.toggleThumb:active {
+  animation: themeSwitch 0.2s ease;
+}

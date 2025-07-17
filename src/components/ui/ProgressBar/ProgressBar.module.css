@@ -12,17 +12,17 @@
 .label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
 }
 
 .percentage {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-muted);
 }
 
 .progressBar {
-  background-color: var(--background-subtle, #27272a);
+  background-color: var(--surface-tertiary);
   border-radius: 9999px;
   overflow: hidden;
   position: relative;
@@ -50,19 +50,19 @@
 
 /* Variants */
 .primary .progressFill {
-  background-color: var(--primary-color, #3b82f6);
+  background: var(--gradient-primary);
 }
 
 .success .progressFill {
-  background-color: var(--success-color, #10b981);
+  background-color: var(--success);
 }
 
 .warning .progressFill {
-  background-color: var(--warning-color, #f59e0b);
+  background-color: var(--warning);
 }
 
 .error .progressFill {
-  background-color: var(--error-color, #ef4444);
+  background-color: var(--error);
 }
 
 /* Striped effect */

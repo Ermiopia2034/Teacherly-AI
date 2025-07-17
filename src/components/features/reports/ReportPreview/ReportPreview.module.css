@@ -44,7 +44,7 @@
 
 .tabs {
   display: flex;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-primary);
   background: var(--surface-primary);
   border-radius: 0.5rem 0.5rem 0 0;
   overflow: hidden;
@@ -68,8 +68,8 @@
 
 .activeTab {
   background: var(--surface-primary);
-  color: var(--primary-color);
-  border-bottom: 2px solid var(--primary-color);
+  color: var(--primary);
+  border-bottom: 2px solid var(--primary);
 }
 
 .summarySection {
@@ -106,7 +106,7 @@
   display: block;
   font-size: 2rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: var(--primary);
   margin-bottom: 0.25rem;
 }
 
@@ -147,7 +147,7 @@
 .studentRank {
   width: 2rem;
   height: 2rem;
-  background: var(--primary-color);
+  background: var(--primary);
   color: white;
   border-radius: 50%;
   display: flex;
@@ -160,7 +160,7 @@
 .attentionIndicator {
   width: 2rem;
   height: 2rem;
-  background: var(--warning-color, #f59e0b);
+  background: var(--warning);
   color: white;
   border-radius: 50%;
   display: flex;
@@ -251,7 +251,7 @@
 .metricValue {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--primary-color);
+  color: var(--primary);
 }
 
 .metricLabel {
@@ -268,7 +268,7 @@
 .studentDetails {
   padding: 1.5rem;
   background: var(--surface-secondary);
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-primary);
 }
 
 .detailSection {
@@ -330,11 +330,11 @@
 }
 
 .trendUp {
-  color: var(--success-color, #10b981);
+  color: var(--success);
 }
 
 .trendDown {
-  color: var(--error-color);
+  color: var(--error);
 }
 
 .trendStable {
@@ -358,7 +358,7 @@
   padding: 0.75rem;
   background: var(--surface-primary);
   border-radius: 0.25rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-primary);
 }
 
 .gradeInfo {
@@ -384,15 +384,15 @@
 }
 
 .presentCount {
-  color: var(--success-color, #10b981);
+  color: var(--success);
 }
 
 .absentCount {
-  color: var(--error-color);
+  color: var(--error);
 }
 
 .lateCount {
-  color: var(--warning-color, #f59e0b);
+  color: var(--warning);
 }
 
 .excusedCount {

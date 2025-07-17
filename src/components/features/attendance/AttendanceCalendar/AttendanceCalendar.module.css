@@ -57,7 +57,7 @@
   padding: 1rem;
   background: var(--background-secondary);
   border-radius: 0.5rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-primary);
 }
 
 .legendItem {
@@ -72,11 +72,11 @@
   width: 12px;
   height: 12px;
   border-radius: 2px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-primary);
 }
 
 .calendar {
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-primary);
   border-radius: 0.5rem;
   overflow: hidden;
   background: var(--background-primary);
@@ -86,7 +86,7 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   background: var(--background-tertiary);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-primary);
 }
 
 .dayHeader {
@@ -106,14 +106,14 @@
 
 .emptyCell {
   aspect-ratio: 1;
-  border-right: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
 }
 
 .dateCell {
   aspect-ratio: 1;
-  border-right: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
   padding: 0.5rem;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -126,17 +126,17 @@
 
 .dateCell:hover {
   background: var(--background-secondary);
-  border-color: var(--primary-color);
+  border-color: var(--primary);
 }
 
 .dateCell.selected {
-  background: var(--primary-color);
+  background: var(--primary);
   color: white;
-  border-color: var(--primary-color);
+  border-color: var(--primary);
 }
 
 .dateCell.today {
-  border: 2px solid var(--primary-color);
+  border: 2px solid var(--primary);
   border-radius: 4px;
   margin: 1px;
 }
@@ -158,7 +158,7 @@
 }
 
 .presentCount {
-  color: #10b981;
+  color: var(--success);
 }
 
 .totalCount {
@@ -167,39 +167,39 @@
 
 /* Attendance status colors */
 .allPresent {
-  background: #dcfce7;
-  border-color: #16a34a;
+  background: var(--success-light);
+  border-color: var(--success);
 }
 
 .allPresent .dayNumber {
-  color: #16a34a;
+  color: var(--success);
 }
 
 .mostlyPresent {
-  background: #fef3c7;
-  border-color: #d97706;
+  background: var(--warning-light);
+  border-color: var(--warning);
 }
 
 .mostlyPresent .dayNumber {
-  color: #d97706;
+  color: var(--warning);
 }
 
 .mixedAttendance {
-  background: #fef2f2;
-  border-color: #dc2626;
+  background: var(--error-light);
+  border-color: var(--error);
 }
 
 .mixedAttendance .dayNumber {
-  color: #dc2626;
+  color: var(--error);
 }
 
 .poorAttendance {
-  background: #f3f4f6;
-  border-color: #6b7280;
+  background: var(--background-tertiary);
+  border-color: var(--text-tertiary);
 }
 
 .poorAttendance .dayNumber {
-  color: #6b7280;
+  color: var(--text-tertiary);
 }
 
 .noData {
@@ -208,19 +208,19 @@
 
 /* Legend colors */
 .legend .allPresent {
-  background: #16a34a;
+  background: var(--success);
 }
 
 .legend .mostlyPresent {
-  background: #d97706;
+  background: var(--warning);
 }
 
 .legend .mixedAttendance {
-  background: #dc2626;
+  background: var(--error);
 }
 
 .legend .poorAttendance {
-  background: #6b7280;
+  background: var(--text-tertiary);
 }
 
 .legend .noData {
@@ -232,7 +232,7 @@
   padding: 1.5rem;
   background: var(--background-secondary);
   border-radius: 0.5rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-primary);
 }
 
 .selectedDateInfo h4 {
@@ -257,7 +257,7 @@
   padding: 1rem;
   background: var(--background-primary);
   border-radius: 0.375rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-primary);
 }
 
 .statNumber {
@@ -281,7 +281,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--background-overlay);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -293,8 +293,8 @@
 .spinner {
   width: 32px;
   height: 32px;
-  border: 3px solid var(--border-color);
-  border-top: 3px solid var(--primary-color);
+  border: 3px solid var(--border-primary);
+  border-top: 3px solid var(--primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }

@@ -1,9 +1,10 @@
 .container {
   width: 100%;
-  background: var(--background-primary, #09090b);
-  border: 1px solid var(--border-color, #27272a);
-  border-radius: 8px;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: 0.5rem;
   overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
 .tableWrapper {
@@ -30,21 +31,22 @@
 }
 
 .thead {
-  background: var(--background-subtle, #18181b);
-  border-bottom: 1px solid var(--border-color, #27272a);
+  background: var(--surface-secondary);
+  border-bottom: 1px solid var(--border-primary);
 }
 
 .th {
   padding: 0.75rem 1rem;
   text-align: left;
   font-weight: 600;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   cursor: default;
-  border-bottom: 1px solid var(--border-color, #27272a);
+  border-bottom: 1px solid var(--border-primary);
   position: sticky;
   top: 0;
-  background: var(--background-subtle, #18181b);
+  background: var(--surface-secondary);
   z-index: 10;
+  transition: background-color 0.2s ease;
 }
 
 .th[onclick] {
@@ -53,7 +55,7 @@
 }
 
 .th:hover[onclick] {
-  background: var(--background-hover, #27272a);
+  background: var(--surface-hover);
 }
 
 .thContent {
@@ -64,26 +66,27 @@
 }
 
 .sortIcon {
-  color: var(--text-muted, #71717a);
+  color: var(--text-muted);
   opacity: 0.6;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease, color 0.2s ease;
 }
 
 .th:hover .sortIcon {
   opacity: 1;
+  color: var(--text-secondary);
 }
 
 .tbody {
-  background: var(--background-primary, #09090b);
+  background: var(--surface-primary);
 }
 
 .tr {
-  border-bottom: 1px solid var(--border-color, #27272a);
+  border-bottom: 1px solid var(--border-primary);
   transition: background-color 0.15s ease;
 }
 
 .tr:hover {
-  background: var(--background-hover, #18181b);
+  background: var(--surface-hover);
 }
 
 .clickable {
@@ -91,12 +94,16 @@
 }
 
 .clickable:hover {
-  background: var(--background-active, #3730a3);
+  background: var(--surface-hover);
+}
+
+.clickable:active {
+  background: var(--surface-pressed);
 }
 
 .td {
   padding: 0.75rem 1rem;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   vertical-align: top;
 }
 
@@ -125,16 +132,18 @@
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  color: var(--text-muted, #71717a);
+  color: var(--text-muted);
 }
 
 .emptyIcon {
   opacity: 0.5;
+  color: var(--text-tertiary);
 }
 
 .empty p {
   margin: 0;
   font-size: 0.875rem;
+  color: var(--text-secondary);
 }
 
 /* Loading state */
@@ -145,14 +154,14 @@
   justify-content: center;
   padding: 3rem 1rem;
   gap: 1rem;
-  color: var(--text-muted, #71717a);
+  color: var(--text-muted);
 }
 
 .spinner {
   width: 32px;
   height: 32px;
-  border: 3px solid var(--border-color, #27272a);
-  border-top: 3px solid var(--primary-color, #3b82f6);
+  border: 3px solid var(--border-secondary);
+  border-top: 3px solid var(--primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -168,13 +177,13 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
-  background: var(--background-subtle, #18181b);
-  border-top: 1px solid var(--border-color, #27272a);
+  background: var(--surface-secondary);
+  border-top: 1px solid var(--border-primary);
 }
 
 .paginationInfo {
   font-size: 0.875rem;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-secondary);
 }
 
 .paginationControls {
@@ -185,7 +194,7 @@
 
 .pageInfo {
   font-size: 0.875rem;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   font-weight: 500;
 }
 

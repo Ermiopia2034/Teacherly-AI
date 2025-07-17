@@ -8,6 +8,7 @@ import styles from './dashboard.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
 import { logoutUser, selectUser, selectIsAuthLoading } from '@/lib/features/auth/authSlice';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 
 export default function DashboardLayout({
   children,
@@ -88,16 +89,21 @@ export default function DashboardLayout({
   return (
     <div className={styles.dashboardContainer}>
       <header className={styles.dashboardHeader}>
-        <button className={styles.toggleButton} onClick={toggleSidebar} aria-label="Toggle sidebar">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
-        <Link href="/dashboard" className={styles.logo}>
-          Teacherly
-        </Link>
+        <div className={styles.headerLeft}>
+          <button className={styles.toggleButton} onClick={toggleSidebar} aria-label="Toggle sidebar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <Link href="/dashboard" className={styles.logo}>
+            Teacherly
+          </Link>
+        </div>
+        <div className={styles.headerRight}>
+          <ThemeToggle />
+        </div>
       </header>
 
       <aside className={`${styles.sidebar} ${isSidebarCollapsed ? styles.collapsed : ''}`}>

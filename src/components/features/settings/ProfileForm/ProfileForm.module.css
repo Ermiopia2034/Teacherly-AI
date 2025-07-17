@@ -26,7 +26,7 @@
 }
 
 .fieldError {
-  color: var(--error-color, #ef4444);
+  color: var(--error);
   font-size: 0.875rem;
   margin-top: 0.25rem;
   font-weight: 500;
@@ -34,20 +34,20 @@
 
 .errorMessage {
   padding: 1rem;
-  background: var(--error-light, #fef2f2);
-  border: 1px solid var(--error-color, #ef4444);
+  background: var(--error-light);
+  border: 1px solid var(--error);
   border-radius: 6px;
-  color: var(--error-color, #ef4444);
+  color: var(--error);
   font-weight: 500;
   font-size: 0.9rem;
 }
 
 .successMessage {
   padding: 1rem;
-  background: var(--success-light, #f0fdf4);
-  border: 1px solid var(--success-color, #10b981);
+  background: var(--success-light);
+  border: 1px solid var(--success);
   border-radius: 6px;
-  color: var(--success-color, #10b981);
+  color: var(--success);
   font-weight: 500;
   font-size: 0.9rem;
 }
@@ -56,7 +56,7 @@
   padding: 1rem;
   background: var(--background-secondary);
   border-radius: 6px;
-  border-left: 4px solid var(--accent-primary);
+  border-left: 4px solid var(--primary);
 }
 
 .formNote p {

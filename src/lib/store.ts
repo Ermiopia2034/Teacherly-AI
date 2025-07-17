@@ -13,6 +13,7 @@ import semestersReducer from './features/academic/semestersSlice';
 import sectionsReducer from './features/academic/sectionsSlice';
 import enrollmentsReducer from './features/academic/enrollmentsSlice';
 import markAllocationReducer from './features/academic/markAllocationSlice';
+import themeReducer from './features/theme/themeSlice';
 
 export const store = configureStore({
   reducer: {
@@ -30,6 +31,7 @@ export const store = configureStore({
     sections: sectionsReducer,
     enrollments: enrollmentsReducer,
     markAllocation: markAllocationReducer,
+    theme: themeReducer,
   },
 });
 

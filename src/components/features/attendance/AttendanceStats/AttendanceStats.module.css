@@ -25,7 +25,7 @@
   padding: 1.5rem;
   background: var(--background-secondary);
   border-radius: 0.5rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-primary);
 }
 
 .dateRangeSection h4 {
@@ -60,7 +60,7 @@
   padding: 2rem;
   background: var(--background-secondary);
   border-radius: 0.75rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-primary);
 }
 
 .rateHeader h4 {
@@ -84,23 +84,23 @@
 
 /* Attendance rate colors */
 .excellent {
-  color: #059669;
+  color: var(--success);
 }
 
 .good {
-  color: #0d9488;
+  color: var(--success-hover);
 }
 
 .average {
-  color: #d97706;
+  color: var(--warning);
 }
 
 .belowAverage {
-  color: #dc2626;
+  color: var(--error);
 }
 
 .poor {
-  color: #b91c1c;
+  color: var(--error-hover);
 }
 
 .statsGrid {
@@ -112,7 +112,7 @@
 .statCard {
   padding: 1.5rem;
   background: var(--background-primary);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-primary);
   border-radius: 0.5rem;
   display: flex;
   align-items: center;
@@ -121,8 +121,8 @@
 }
 
 .statCard:hover {
-  border-color: var(--primary-color);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
 }
 
 .statIcon {
@@ -136,23 +136,23 @@
 }
 
 .presentIcon {
-  background: #dcfce7;
-  color: #059669;
+  background: var(--success-light);
+  color: var(--success);
 }
 
 .absentIcon {
-  background: #fef2f2;
-  color: #dc2626;
+  background: var(--error-light);
+  color: var(--error);
 }
 
 .lateIcon {
-  background: #fef3c7;
-  color: #d97706;
+  background: var(--warning-light);
+  color: var(--warning);
 }
 
 .excusedIcon {
-  background: #ede9fe;
-  color: #7c3aed;
+  background: var(--info-light);
+  color: var(--info);
 }
 
 .statContent {
@@ -190,7 +190,7 @@
   padding: 1rem 1.5rem;
   background: var(--background-tertiary);
   border-radius: 0.5rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-primary);
   flex-wrap: wrap;
   gap: 1rem;
 }
@@ -253,7 +253,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--background-overlay);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -266,8 +266,8 @@
 .spinner {
   width: 32px;
   height: 32px;
-  border: 3px solid var(--border-color);
-  border-top: 3px solid var(--primary-color);
+  border: 3px solid var(--border-primary);
+  border-top: 3px solid var(--primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }

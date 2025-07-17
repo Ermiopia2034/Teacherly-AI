@@ -4,7 +4,7 @@
   position: relative;
   overflow: hidden;
   animation: fadeIn 1.2s ease-out;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border-secondary);
 }
 
 .footer::before {
@@ -15,7 +15,7 @@
   width: 300px;
   height: 300px;
   border-radius: 50%;
-  background: rgba(0, 200, 150, 0.05);
+  background: var(--primary-subtle);
   filter: blur(100px);
   z-index: 0;
 }
@@ -40,7 +40,7 @@
 }
 
 .footerAbout {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-size: 0.875rem;
   line-height: 1.6;
   max-width: 300px;
@@ -56,26 +56,26 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--border-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   transition: all 0.3s ease;
 }
 
 .socialIcon:hover {
   background-color: var(--primary);
-  color: #000;
+  color: var(--text-inverse);
   transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 200, 150, 0.3);
+  box-shadow: var(--shadow-glow);
 }
 
 .footerColumn h4 {
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
-  color: var(--foreground);
+  color: var(--text-primary);
   position: relative;
   display: inline-block;
 }
@@ -102,7 +102,7 @@
 }
 
 .footerLink {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-size: 0.875rem;
   transition: all 0.3s ease;
   position: relative;
@@ -121,7 +121,7 @@
 }
 
 .footerLink:hover {
-  color: var(--foreground);
+  color: var(--text-primary);
   transform: translateX(5px);
 }
 
@@ -132,11 +132,11 @@
 .footerBottom {
   margin-top: 3rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border-secondary);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-size: 0.75rem;
   position: relative;
   z-index: 1;
@@ -147,7 +147,7 @@
 }
 
 .footerCopyright:hover {
-  color: var(--foreground);
+  color: var(--text-primary);
 }
 
 .footerBottomLinks {
@@ -156,12 +156,12 @@
 }
 
 .footerBottomLink {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   transition: color 0.3s ease;
 }
 
 .footerBottomLink:hover {
-  color: var(--foreground);
+  color: var(--text-primary);
 }
 
 @media (max-width: 1200px) {
@@ -215,7 +215,7 @@
 
   .footerColumn {
     padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--border-secondary);
   }
 
   .footerColumn:last-child {

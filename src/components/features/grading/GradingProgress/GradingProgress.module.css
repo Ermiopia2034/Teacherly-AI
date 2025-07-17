@@ -11,19 +11,19 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: 1.5rem 1.5rem 0 1.5rem;
-  border-bottom: 1px solid var(--border-color, #27272a);
+  border-bottom: 1px solid var(--border-primary);
   margin-bottom: 1.5rem;
 }
 
 .headerContent h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   margin: 0 0 0.5rem 0;
 }
 
 .headerContent p {
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-secondary);
   font-size: 0.875rem;
   margin: 0;
 }
@@ -58,19 +58,19 @@
 .progressHeader h4 {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   margin: 0;
 }
 
 .progressStats {
   font-size: 0.875rem;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .lastRefresh {
   font-size: 0.75rem;
-  color: var(--text-muted, #71717a);
+  color: var(--text-tertiary);
   font-style: italic;
 }
 
@@ -85,15 +85,15 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1rem;
-  background: var(--background-subtle, #18181b);
-  border: 1px solid var(--border-color, #27272a);
+  background: var(--background-secondary);
+  border: 1px solid var(--border-primary);
   border-radius: 8px;
   transition: all 0.2s ease;
 }
 
 .statCard:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .statIcon {
@@ -127,71 +127,71 @@
 
 /* Status-specific styling */
 .pending {
-  border-color: rgba(161, 161, 170, 0.2);
+  border-color: var(--border-secondary);
 }
 
 .pending .statIcon {
-  background: rgba(161, 161, 170, 0.1);
-  color: #a1a1aa;
+  background: var(--background-tertiary);
+  color: var(--text-secondary);
 }
 
 .pending .statNumber {
-  color: #a1a1aa;
+  color: var(--text-secondary);
 }
 
 .pending .statLabel {
-  color: #71717a;
+  color: var(--text-tertiary);
 }
 
 .processing {
-  border-color: rgba(59, 130, 246, 0.2);
+  border-color: var(--info-border);
 }
 
 .processing .statIcon {
-  background: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
+  background: var(--info-light);
+  color: var(--info);
 }
 
 .processing .statNumber {
-  color: #3b82f6;
+  color: var(--info);
 }
 
 .processing .statLabel {
-  color: #60a5fa;
+  color: var(--info-hover);
 }
 
 .completed {
-  border-color: rgba(16, 185, 129, 0.2);
+  border-color: var(--success-border);
 }
 
 .completed .statIcon {
-  background: rgba(16, 185, 129, 0.1);
-  color: #10b981;
+  background: var(--success-light);
+  color: var(--success);
 }
 
 .completed .statNumber {
-  color: #10b981;
+  color: var(--success);
 }
 
 .completed .statLabel {
-  color: #34d399;
+  color: var(--success-hover);
 }
 
 .failed {
-  border-color: rgba(239, 68, 68, 0.2);
+  border-color: var(--error-border);
 }
 
 .failed .statIcon {
-  background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
+  background: var(--error-light);
+  color: var(--error);
 }
 
 .failed .statNumber {
-  color: #ef4444;
+  color: var(--error);
 }
 
 .failed .statLabel {
-  color: #f87171;
+  color: var(--error-hover);
 }
 
 .submissionsList {
@@ -204,8 +204,8 @@
 
 .submissionItem {
   padding: 1rem;
-  background: var(--background-subtle, #18181b);
-  border: 1px solid var(--border-color, #27272a);
+  background: var(--background-secondary);
+  border: 1px solid var(--border-primary);
   border-radius: 6px;
   display: flex;
   flex-direction: column;
@@ -221,7 +221,7 @@
 .submissionId {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
 }
 
 .submissionStatus {
@@ -240,7 +240,7 @@
 
 .ocrConfidence {
   font-size: 0.75rem;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-secondary);
 }
 
 .gradingResult {
@@ -252,12 +252,12 @@
 .score {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
 }
 
 .percentage {
   font-weight: 500;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-secondary);
   margin-left: 0.5rem;
 }
 
@@ -266,10 +266,10 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.75rem;
-  color: var(--error-color, #ef4444);
+  color: var(--error);
   padding: 0.5rem;
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  background: var(--error-light);
+  border: 1px solid var(--error-border);
   border-radius: 4px;
 }
 
@@ -278,7 +278,7 @@
   justify-content: center;
   gap: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid var(--border-color, #27272a);
+  border-top: 1px solid var(--border-primary);
 }
 
 .pollingIndicator {
@@ -286,7 +286,7 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.875rem;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-secondary);
 }
 
 .completionIndicator {
@@ -294,14 +294,14 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.875rem;
-  color: var(--success-color, #10b981);
+  color: var(--success);
   font-weight: 500;
 }
 
 .pulsingDot {
   width: 8px;
   height: 8px;
-  background: var(--primary-color, #3b82f6);
+  background: var(--primary);
   border-radius: 50%;
   animation: pulse 2s infinite;
 }
@@ -425,15 +425,15 @@
 }
 
 .submissionsList::-webkit-scrollbar-track {
-  background: var(--background-subtle, #18181b);
+  background: var(--background-secondary);
   border-radius: 3px;
 }
 
 .submissionsList::-webkit-scrollbar-thumb {
-  background: var(--border-color, #27272a);
+  background: var(--border-primary);
   border-radius: 3px;
 }
 
 .submissionsList::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted, #71717a);
+  background: var(--text-tertiary);
 }

@@ -1,19 +1,214 @@
-:root {
-  --background: #121212;
-  --foreground: #ffffff;
-  --primary: #00c896;
-  --primary-glow: rgba(0, 200, 150, 0.35);
-  --secondary: #1e1e1e;
-  --text-muted: #a0a0a0;
-  --card-bg: #1a1a1a;
-  --card-hover: #222222;
-  --gradient-1: linear-gradient(45deg, var(--primary) 0%, #00a0ff 100%);
-  --gradient-2: linear-gradient(45deg, #7928ca 0%, #ff0080 100%);
+/* ===================================
+   TEACHERLY AI - COMPREHENSIVE COLOR SYSTEM
+   Single Source of Truth for All Colors
+   ================================= */
 
+:root {
   /* Typography */
   --font-heading: var(--font-merriweather), serif;
   --font-body: var(--font-lato), sans-serif;
-  --text-color: #f5f5f5; /* Light gray for dark mode */
+}
+
+/* DARK THEME (DEFAULT) */
+[data-theme="dark"], :root {
+  /* === BRAND COLORS === */
+  --primary: #00c896;
+  --primary-hover: #00b085;
+  --primary-light: #1dd1a5;
+  --primary-glow: rgba(0, 200, 150, 0.35);
+  --primary-subtle: rgba(0, 200, 150, 0.1);
+  
+  /* === ACCENT COLORS === */
+  --accent-blue: #00a0ff;
+  --accent-blue-hover: #0090e5;
+  --accent-purple: #7928ca;
+  --accent-purple-hover: #6b23b8;
+  --accent-pink: #ff0080;
+  --accent-pink-hover: #e50073;
+  
+  /* === BACKGROUND COLORS === */
+  --background: #121212;
+  --background-secondary: #1a1a1a;
+  --background-tertiary: #1e1e1e;
+  --background-elevated: #222222;
+  --background-overlay: rgba(0, 0, 0, 0.8);
+  --background-glass: rgba(30, 30, 30, 0.8);
+  
+  /* === SURFACE COLORS === */
+  --surface-primary: #1a1a1a;
+  --surface-secondary: #1e1e1e;
+  --surface-tertiary: #222222;
+  --surface-hover: #262626;
+  --surface-pressed: #2a2a2a;
+  
+  /* === TEXT COLORS === */
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --text-tertiary: #707070;
+  --text-muted: #5a5a5a;
+  --text-disabled: #404040;
+  --text-inverse: #121212;
+  
+  /* === BORDER COLORS === */
+  --border-primary: rgba(255, 255, 255, 0.1);
+  --border-secondary: rgba(255, 255, 255, 0.05);
+  --border-tertiary: rgba(255, 255, 255, 0.02);
+  --border-hover: rgba(255, 255, 255, 0.15);
+  --border-focus: var(--primary);
+  
+  /* === SEMANTIC COLORS === */
+  --success: #10b981;
+  --success-hover: #059669;
+  --success-light: rgba(16, 185, 129, 0.1);
+  --success-border: rgba(16, 185, 129, 0.2);
+  
+  --warning: #f59e0b;
+  --warning-hover: #d97706;
+  --warning-light: rgba(245, 158, 11, 0.1);
+  --warning-border: rgba(245, 158, 11, 0.2);
+  
+  --error: #ef4444;
+  --error-hover: #dc2626;
+  --error-light: rgba(239, 68, 68, 0.1);
+  --error-border: rgba(239, 68, 68, 0.2);
+  
+  --info: #3b82f6;
+  --info-hover: #2563eb;
+  --info-light: rgba(59, 130, 246, 0.1);
+  --info-border: rgba(59, 130, 246, 0.2);
+  
+  /* === GRADIENTS === */
+  --gradient-primary: linear-gradient(45deg, var(--primary) 0%, var(--accent-blue) 100%);
+  --gradient-secondary: linear-gradient(45deg, var(--accent-purple) 0%, var(--accent-pink) 100%);
+  --gradient-text: linear-gradient(to right, var(--text-primary), var(--text-secondary));
+  --gradient-background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  
+  /* === SHADOWS === */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px var(--primary-glow);
+  
+  /* === LEGACY ALIASES (for backwards compatibility) === */
+  --foreground: var(--text-primary);
+  --secondary: var(--background-secondary);
+  --card-bg: var(--surface-primary);
+  --card-hover: var(--surface-hover);
+  --text-color: var(--text-primary);
+  --gradient-1: var(--gradient-primary);
+  --gradient-2: var(--gradient-secondary);
+}
+
+/* LIGHT THEME */
+[data-theme="light"] {
+  /* === BRAND COLORS === */
+  --primary: #00a078;
+  --primary-hover: #008f6a;
+  --primary-light: #00b085;
+  --primary-glow: rgba(0, 160, 120, 0.25);
+  --primary-subtle: rgba(0, 160, 120, 0.08);
+  
+  /* === ACCENT COLORS === */
+  --accent-blue: #0080cc;
+  --accent-blue-hover: #0070b8;
+  --accent-purple: #6420a6;
+  --accent-purple-hover: #551c8c;
+  --accent-pink: #cc0066;
+  --accent-pink-hover: #b8005c;
+  
+  /* === BACKGROUND COLORS === */
+  --background: #ffffff;
+  --background-secondary: #f8fafc;
+  --background-tertiary: #f1f5f9;
+  --background-elevated: #ffffff;
+  --background-overlay: rgba(0, 0, 0, 0.5);
+  --background-glass: rgba(255, 255, 255, 0.9);
+  
+  /* === SURFACE COLORS === */
+  --surface-primary: #ffffff;
+  --surface-secondary: #f8fafc;
+  --surface-tertiary: #f1f5f9;
+  --surface-hover: #e2e8f0;
+  --surface-pressed: #cbd5e1;
+  
+  /* === TEXT COLORS === */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --text-muted: #94a3b8;
+  --text-disabled: #cbd5e1;
+  --text-inverse: #ffffff;
+  
+  /* === BORDER COLORS === */
+  --border-primary: #e2e8f0;
+  --border-secondary: #f1f5f9;
+  --border-tertiary: #f8fafc;
+  --border-hover: #cbd5e1;
+  --border-focus: var(--primary);
+  
+  /* === SEMANTIC COLORS === */
+  --success: #059669;
+  --success-hover: #047857;
+  --success-light: rgba(5, 150, 105, 0.08);
+  --success-border: rgba(5, 150, 105, 0.2);
+  
+  --warning: #d97706;
+  --warning-hover: #b45309;
+  --warning-light: rgba(217, 119, 6, 0.08);
+  --warning-border: rgba(217, 119, 6, 0.2);
+  
+  --error: #dc2626;
+  --error-hover: #b91c1c;
+  --error-light: rgba(220, 38, 38, 0.08);
+  --error-border: rgba(220, 38, 38, 0.2);
+  
+  --info: #2563eb;
+  --info-hover: #1d4ed8;
+  --info-light: rgba(37, 99, 235, 0.08);
+  --info-border: rgba(37, 99, 235, 0.2);
+  
+  /* === GRADIENTS === */
+  --gradient-primary: linear-gradient(45deg, var(--primary) 0%, var(--accent-blue) 100%);
+  --gradient-secondary: linear-gradient(45deg, var(--accent-purple) 0%, var(--accent-pink) 100%);
+  --gradient-text: linear-gradient(to right, var(--text-primary), var(--text-secondary));
+  --gradient-background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  
+  /* === SHADOWS === */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+  --shadow-glow: 0 0 20px var(--primary-glow);
+  
+  /* === LEGACY ALIASES (for backwards compatibility) === */
+  --foreground: var(--text-primary);
+  --secondary: var(--background-secondary);
+  --card-bg: var(--surface-primary);
+  --card-hover: var(--surface-hover);
+  --text-color: var(--text-primary);
+  --gradient-1: var(--gradient-primary);
+  --gradient-2: var(--gradient-secondary);
+}
+
+/* ===================================
+   THEME INITIALIZATION
+   ================================= */
+
+/* Default to dark theme */
+html {
+  color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+}
+
+/* Automatic theme detection based on system preference */
+@media (prefers-color-scheme: light) {
+  html:not([data-theme]) {
+    color-scheme: light;
+  }
 }
 
 @keyframes fadeIn {
@@ -89,8 +284,8 @@ body {
 }
 
 body {
-  color: var(--text-color);
-  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  color: var(--text-primary);
+  background: var(--gradient-background);
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.6;
@@ -100,6 +295,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 
@@ -108,7 +304,7 @@ p {
   font-family: var(--font-body);
   font-size: 1rem;
   line-height: 1.6;
-  color: var(--text-color);
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
@@ -120,14 +316,14 @@ a {
 
 a:hover, a:focus {
   text-decoration: underline;
-  color: var(--foreground);
+  color: var(--primary-hover);
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   line-height: 1.3;
   margin-bottom: 1rem;
-  color: var(--foreground);
+  color: var(--text-primary);
 }
 
 h1 {
@@ -233,23 +429,23 @@ button {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: var(--gradient-1);
+  background: var(--gradient-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #000;
-  box-shadow: 0 4px 15px rgba(0, 200, 150, 0.3);
+  color: var(--text-inverse);
+  box-shadow: var(--shadow-md);
   animation: bounce 2s infinite;
   transition: all 0.3s ease;
 }
 
 .scroll-down:hover .scroll-down-text {
-  color: var(--foreground);
+  color: var(--text-primary);
 }
 
 .scroll-down:hover .scroll-down-arrow {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 200, 150, 0.5);
+  box-shadow: var(--shadow-glow);
 }
 
 /* Animation classes */

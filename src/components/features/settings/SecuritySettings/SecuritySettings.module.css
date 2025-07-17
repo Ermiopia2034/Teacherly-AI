@@ -31,7 +31,7 @@
   align-items: flex-start;
   gap: 1.5rem;
   padding: 1.5rem;
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--border-primary);
   border-radius: 8px;
   background: var(--background-secondary);
 }
@@ -69,15 +69,15 @@
 }
 
 .statusBadge.enabled {
-  background: var(--success-light, #f0fdf4);
-  color: var(--success-color, #10b981);
-  border: 1px solid var(--success-color, #10b981);
+  background: var(--success-light);
+  color: var(--success);
+  border: 1px solid var(--success);
 }
 
 .statusBadge.disabled {
-  background: var(--warning-light, #fffbeb);
-  color: var(--warning-color, #f59e0b);
-  border: 1px solid var(--warning-color, #f59e0b);
+  background: var(--warning-light);
+  color: var(--warning);
+  border: 1px solid var(--warning);
 }
 
 .optionControls {
@@ -103,17 +103,17 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--background-overlay);
 }
 
 .dialogContent {
   position: relative;
-  background: var(--background-primary);
+  background: var(--surface-primary);
   border-radius: 12px;
   padding: 2rem;
   max-width: 400px;
   width: 90%;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-xl);
 }
 
 .dialogContent h4 {

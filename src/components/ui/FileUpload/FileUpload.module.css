@@ -3,11 +3,11 @@
 }
 
 .dropzone {
-  border: 2px dashed var(--border-color, #3f3f46);
-  border-radius: 8px;
+  border: 2px dashed var(--border-primary);
+  border-radius: 0.5rem;
   padding: 2rem;
   text-align: center;
-  background: var(--background-subtle, #18181b);
+  background: var(--surface-secondary);
   transition: all 0.2s ease;
   cursor: pointer;
   position: relative;
@@ -18,14 +18,16 @@
 }
 
 .dropzone:hover:not(.disabled) {
-  border-color: var(--primary-color, #3b82f6);
-  background: var(--background-hover, #27272a);
+  border-color: var(--primary);
+  background: var(--surface-hover);
+  box-shadow: var(--shadow-md);
 }
 
 .dragOver {
-  border-color: var(--primary-color, #3b82f6);
-  background: var(--background-active, #3730a3);
+  border-color: var(--primary);
+  background: var(--primary-subtle);
   border-style: solid;
+  box-shadow: 0 0 0 3px var(--primary-glow);
 }
 
 .disabled {
@@ -53,8 +55,13 @@
 }
 
 .uploadIcon {
-  color: var(--text-muted, #71717a);
+  color: var(--text-muted);
   margin-bottom: 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.dropzone:hover:not(.disabled) .uploadIcon {
+  color: var(--primary);
 }
 
 .uploadText {
@@ -66,13 +73,13 @@
 .primaryText {
   font-size: 1.125rem;
   font-weight: 500;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   margin: 0;
 }
 
 .secondaryText {
   font-size: 0.875rem;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-secondary);
   margin: 0;
   display: flex;
   align-items: center;
@@ -82,7 +89,7 @@
 
 .supportText {
   font-size: 0.75rem;
-  color: var(--text-muted, #71717a);
+  color: var(--text-muted);
   margin: 0;
 }
 

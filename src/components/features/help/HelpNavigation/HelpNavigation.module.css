@@ -1,7 +1,7 @@
 .navigation {
   position: relative;
-  background: #fff;
-  border-right: 1px solid #e5e7eb;
+  background: var(--surface-primary);
+  border-right: 1px solid var(--border-secondary);
   min-height: 100vh;
 }
 
@@ -11,25 +11,25 @@
   gap: 0.5rem;
   width: 100%;
   padding: 1rem;
-  background: #f9fafb;
+  background: var(--surface-secondary);
   border: none;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-secondary);
   font-size: 1rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--text-secondary);
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
 .mobileToggle:hover {
-  background: #f3f4f6;
+  background: var(--surface-tertiary);
 }
 
 .hamburger {
   display: block;
   width: 20px;
   height: 2px;
-  background: #374151;
+  background: var(--text-secondary);
   position: relative;
 }
 
@@ -39,7 +39,7 @@
   position: absolute;
   width: 100%;
   height: 2px;
-  background: #374151;
+  background: var(--text-secondary);
   transition: transform 0.2s;
 }
 
@@ -53,7 +53,7 @@
 
 .menu {
   position: relative;
-  background: #fff;
+  background: var(--surface-primary);
   height: 100%;
 }
 
@@ -62,29 +62,29 @@
   align-items: center;
   justify-content: space-between;
   padding: 1rem;
-  border-bottom: 1px solid #e5e7eb;
-  background: #f9fafb;
+  border-bottom: 1px solid var(--border-secondary);
+  background: var(--surface-secondary);
 }
 
 .menuHeader h3 {
   margin: 0;
   font-size: 1.125rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary);
 }
 
 .closeButton {
   background: none;
   border: none;
   font-size: 1.5rem;
-  color: #6b7280;
+  color: var(--text-secondary);
   cursor: pointer;
   padding: 0.25rem;
   line-height: 1;
 }
 
 .closeButton:hover {
-  color: #374151;
+  color: var(--text-primary);
 }
 
 .categoryList {
@@ -108,14 +108,14 @@
 }
 
 .categoryButton:hover {
-  background: #f9fafb;
-  border-left-color: #e5e7eb;
+  background: var(--surface-hover);
+  border-left-color: var(--border-secondary);
 }
 
 .categoryButton.active {
-  background: #eff6ff;
-  border-left-color: #3b82f6;
-  color: #1d4ed8;
+  background: var(--info-light);
+  border-left-color: var(--info);
+  color: var(--info-hover);
 }
 
 .categoryIcon {
@@ -134,23 +134,23 @@
   font-weight: 600;
   font-size: 0.875rem;
   line-height: 1.25;
-  color: #111827;
+  color: var(--text-primary);
   margin-bottom: 0.25rem;
 }
 
 .categoryButton.active .categoryTitle {
-  color: #1d4ed8;
+  color: var(--info-hover);
 }
 
 .categoryDescription {
   display: block;
   font-size: 0.75rem;
   line-height: 1.33;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .categoryButton.active .categoryDescription {
-  color: #3b82f6;
+  color: var(--info);
 }
 
 .overlay {
@@ -175,8 +175,8 @@
     width: 85%;
     max-width: 320px;
     height: 100vh;
-    background: #fff;
-    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+    background: var(--surface-primary);
+    box-shadow: var(--shadow-lg);
     transform: translateX(-100%);
     transition: transform 0.3s ease;
     z-index: 1000;
@@ -198,7 +198,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--background-overlay);
     z-index: 999;
   }
 
@@ -230,7 +230,7 @@
 .categoryButton:focus,
 .mobileToggle:focus,
 .closeButton:focus {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--info);
   outline-offset: 2px;
 }
 

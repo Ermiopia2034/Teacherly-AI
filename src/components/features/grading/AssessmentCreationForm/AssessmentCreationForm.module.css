@@ -5,19 +5,19 @@
 
 .header {
   padding: 1.5rem 1.5rem 0 1.5rem;
-  border-bottom: 1px solid var(--border-color, #27272a);
+  border-bottom: 1px solid var(--border-primary);
   margin-bottom: 1.5rem;
 }
 
 .header h3 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   margin: 0 0 0.5rem 0;
 }
 
 .header p {
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-secondary);
   font-size: 0.875rem;
   margin: 0;
 }
@@ -38,13 +38,13 @@
 .section h4 {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   margin: 0;
 }
 
 .sectionDescription {
   font-size: 0.875rem;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -67,19 +67,19 @@
 }
 
 .uploadIcon {
-  color: var(--text-muted, #71717a);
+  color: var(--text-tertiary);
 }
 
 .uploadPrompt p {
   font-size: 1rem;
   font-weight: 500;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   margin: 0;
 }
 
 .uploadPrompt span {
   font-size: 0.75rem;
-  color: var(--text-muted, #71717a);
+  color: var(--text-tertiary);
 }
 
 .fileInfo {
@@ -87,8 +87,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 1rem;
-  background: var(--background-subtle, #18181b);
-  border: 1px solid var(--border-color, #27272a);
+  background: var(--background-secondary);
+  border: 1px solid var(--border-primary);
   border-radius: 6px;
 }
 
@@ -97,11 +97,11 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.875rem;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
 }
 
 .fileName svg {
-  color: var(--text-muted, #71717a);
+  color: var(--text-tertiary);
 }
 
 .orDivider {
@@ -117,19 +117,19 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: var(--border-color, #27272a);
+  background: var(--border-primary);
 }
 
 .orDivider span {
-  background: var(--background-primary, #09090b);
+  background: var(--background);
   padding: 0 1rem;
   font-size: 0.875rem;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .fieldError {
-  color: var(--error-color, #ef4444);
+  color: var(--error);
   font-size: 0.875rem;
   margin-top: 0.25rem;
   display: flex;
@@ -142,10 +142,10 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1rem;
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  background: var(--error-light);
+  border: 1px solid var(--error-border);
   border-radius: 6px;
-  color: var(--error-color, #ef4444);
+  color: var(--error);
 }
 
 .errorMessage svg {
@@ -163,7 +163,7 @@
   justify-content: flex-end;
   gap: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid var(--border-color, #27272a);
+  border-top: 1px solid var(--border-primary);
 }
 
 /* Responsive design */

@@ -2,11 +2,11 @@
   background-color: var(--card-bg);
   border-radius: 6px;
   padding: 1rem;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-secondary);
   display: flex; /* Added for consistent height in grid */
   flex-direction: column; /* Added for consistent height in grid */
 }
@@ -26,7 +26,7 @@
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-lg);
 }
 
 .card:hover::before {
@@ -42,7 +42,7 @@
   font-size: 1.0rem; /* Slightly smaller for quick action */
   font-weight: 600; /* Slightly less bold */
   font-family: var(--font-heading);
-  color: var(--foreground);
+  color: var(--text-primary);
   line-height: 1.3;
 }
 
@@ -62,7 +62,7 @@
 }
 
 .cardLink:hover {
-  color: var(--foreground);
+  color: var(--text-primary);
   text-decoration: underline;
 }
 

@@ -24,7 +24,7 @@
   padding: 1.5rem;
   background: var(--background-secondary);
   border-radius: 0.5rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-primary);
 }
 
 .filtersSection h4 {
@@ -41,9 +41,9 @@
 }
 
 .errorMessage {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #dc2626;
+  background: var(--error-light);
+  border: 1px solid var(--error-border);
+  color: var(--error);
   padding: 0.75rem;
   border-radius: 0.375rem;
   margin-bottom: 1rem;
@@ -83,7 +83,7 @@
 }
 
 .attendanceTable {
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-primary);
   border-radius: 0.5rem;
   overflow: hidden;
   background: var(--background-primary);
@@ -95,7 +95,7 @@
   gap: 1rem;
   padding: 1rem;
   background: var(--background-tertiary);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-primary);
   font-weight: 600;
   font-size: 0.875rem;
   color: var(--text-secondary);
@@ -118,7 +118,7 @@
   grid-template-columns: 100px 1fr 120px 1fr 140px;
   gap: 1rem;
   padding: 1rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-primary);
   transition: background-color 0.2s ease;
   align-items: center;
 }
@@ -160,23 +160,23 @@
 }
 
 .statusPresent {
-  background: #dcfce7;
-  color: #15803d;
+  background: var(--success-light);
+  color: var(--success);
 }
 
 .statusAbsent {
-  background: #fef2f2;
-  color: #dc2626;
+  background: var(--error-light);
+  color: var(--error);
 }
 
 .statusLate {
-  background: #fef3c7;
-  color: #d97706;
+  background: var(--warning-light);
+  color: var(--warning);
 }
 
 .statusExcused {
-  background: #ede9fe;
-  color: #7c3aed;
+  background: var(--info-light);
+  color: var(--info);
 }
 
 .notes {
@@ -202,13 +202,13 @@
 }
 
 .deleteButton {
-  color: #dc2626;
-  border-color: #dc2626;
+  color: var(--error);
+  border-color: var(--error);
 }
 
 .deleteButton:hover {
-  background: #dc2626;
-  color: white;
+  background: var(--error);
+  color: var(--text-inverse);
 }
 
 .loadingState {
@@ -226,7 +226,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--background-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -236,8 +236,8 @@
 .spinner {
   width: 32px;
   height: 32px;
-  border: 3px solid var(--border-color);
-  border-top: 3px solid var(--primary-color);
+  border: 3px solid var(--border-primary);
+  border-top: 3px solid var(--primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -281,7 +281,7 @@
   }
 
   .tableRow {
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-primary);
     border-radius: 0.5rem;
     margin-bottom: 0.75rem;
     background: var(--background-secondary);
@@ -293,7 +293,7 @@
     gap: 0.5rem;
     align-items: center;
     padding: 0.25rem 0;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-primary);
     min-height: auto;
   }
 

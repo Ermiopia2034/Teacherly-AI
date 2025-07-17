@@ -16,19 +16,19 @@
 }
 
 .emptyIcon {
-  color: var(--text-muted, #71717a);
+  color: var(--text-tertiary);
   opacity: 0.5;
 }
 
 .emptyState h3 {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   margin: 0;
 }
 
 .emptyState p {
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-secondary);
   font-size: 0.875rem;
   margin: 0;
 }
@@ -41,15 +41,15 @@
 
 .statCard {
   padding: 1.5rem;
-  background: var(--background-primary, #09090b);
-  border: 1px solid var(--border-color, #27272a);
+  background: var(--surface-primary);
+  border: 1px solid var(--border-primary);
   transition: all 0.2s ease;
 }
 
 .statCard:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-  border-color: var(--border-hover, #3f3f46);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-hover);
 }
 
 .statHeader {
@@ -62,28 +62,28 @@
 .statHeader h4 {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin: 0;
 }
 
 .statIcon {
-  color: var(--text-muted, #71717a);
+  color: var(--text-tertiary);
   opacity: 0.6;
 }
 
 .statValue {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   line-height: 1;
   margin-bottom: 0.5rem;
 }
 
 .statSubtext {
   font-size: 0.75rem;
-  color: var(--text-muted, #71717a);
+  color: var(--text-tertiary);
   line-height: 1.4;
 }
 
@@ -101,13 +101,13 @@
 .progressHeader h4 {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   margin: 0;
 }
 
 .progressText {
   font-size: 0.875rem;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -125,7 +125,7 @@
 .distributionHeader h4 {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -133,7 +133,7 @@
   display: flex;
   gap: 1rem;
   font-size: 0.75rem;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-secondary);
 }
 
 .distributionChart {
@@ -157,19 +157,19 @@
 .rangeLabel {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
 }
 
 .rangeCount {
   font-size: 0.75rem;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .rangeBar {
   width: 100%;
   height: 8px;
-  background: var(--background-subtle, #27272a);
+  background: var(--background-tertiary);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -189,16 +189,16 @@
 
 .studentName {
   font-size: 0.75rem;
-  color: var(--text-muted, #71717a);
+  color: var(--text-tertiary);
   padding: 0.25rem 0.5rem;
-  background: var(--background-subtle, #18181b);
-  border: 1px solid var(--border-color, #27272a);
+  background: var(--background-secondary);
+  border: 1px solid var(--border-primary);
   border-radius: 12px;
 }
 
 .moreStudents {
   font-size: 0.75rem;
-  color: var(--text-muted, #71717a);
+  color: var(--text-tertiary);
   font-style: italic;
   padding: 0.25rem 0.5rem;
 }
@@ -210,13 +210,13 @@
 .assessmentHeader {
   margin-bottom: 1rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--border-color, #27272a);
+  border-bottom: 1px solid var(--border-primary);
 }
 
 .assessmentHeader h4 {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -235,14 +235,14 @@
 .fieldLabel {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-secondary);
   min-width: 80px;
   flex-shrink: 0;
 }
 
 .fieldValue {
   font-size: 0.875rem;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   flex: 1;
   line-height: 1.4;
 }
@@ -259,27 +259,27 @@
 }
 
 .status.draft {
-  background: rgba(161, 161, 170, 0.1);
-  color: #a1a1aa;
-  border: 1px solid rgba(161, 161, 170, 0.2);
+  background: var(--background-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-primary);
 }
 
 .status.active {
-  background: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  background: var(--info-light);
+  color: var(--info);
+  border: 1px solid var(--info-border);
 }
 
 .status.completed {
-  background: rgba(16, 185, 129, 0.1);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  background: var(--success-light);
+  color: var(--success);
+  border: 1px solid var(--success-border);
 }
 
 .status.archived {
-  background: rgba(107, 114, 128, 0.1);
-  color: #6b7280;
-  border: 1px solid rgba(107, 114, 128, 0.2);
+  background: var(--background-tertiary);
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-secondary);
 }
 
 /* Responsive design */
@@ -395,16 +395,16 @@
   }
 
   .distributionChart::-webkit-scrollbar-track {
-    background: var(--background-subtle, #18181b);
+    background: var(--background-secondary);
     border-radius: 2px;
   }
 
   .distributionChart::-webkit-scrollbar-thumb {
-    background: var(--border-color, #27272a);
+    background: var(--border-primary);
     border-radius: 2px;
   }
 
   .distributionChart::-webkit-scrollbar-thumb:hover {
-    background: var(--text-muted, #71717a);
+    background: var(--text-tertiary);
   }
 }

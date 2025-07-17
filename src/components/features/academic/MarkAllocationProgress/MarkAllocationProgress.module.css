@@ -14,13 +14,13 @@
   margin: 0;
   font-size: 1.125rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary);
 }
 
 .semesterInfo {
   font-size: 0.875rem;
-  color: #6b7280;
-  background-color: #f3f4f6;
+  color: var(--text-secondary);
+  background-color: var(--surface-tertiary);
   padding: 0.25rem 0.75rem;
   border-radius: 0.375rem;
 }
@@ -33,7 +33,7 @@
   position: relative;
   width: 100%;
   height: 1.5rem;
-  background-color: #f3f4f6;
+  background-color: var(--surface-tertiary);
   border-radius: 0.75rem;
   overflow: hidden;
   margin-bottom: 0.5rem;
@@ -58,7 +58,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -75,21 +75,21 @@
   align-items: center;
   text-align: center;
   padding: 1rem;
-  background-color: #f9fafb;
+  background-color: var(--surface-secondary);
   border-radius: 0.5rem;
 }
 
 .statNumber {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--text-primary);
   line-height: 1;
   margin-bottom: 0.25rem;
 }
 
 .statLabel {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -104,15 +104,15 @@
 }
 
 .validationResult.valid {
-  background-color: #f0fdf4;
-  border-color: #bbf7d0;
-  color: #166534;
+  background-color: var(--success-light);
+  border-color: var(--success-border);
+  color: var(--success-hover);
 }
 
 .validationResult.invalid {
-  background-color: #fef2f2;
-  border-color: #fecaca;
-  color: #dc2626;
+  background-color: var(--error-light);
+  border-color: var(--error-border);
+  color: var(--error);
 }
 
 .validationIcon {
@@ -135,7 +135,7 @@
 }
 
 .allocationsSection {
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--border-secondary);
   padding-top: 1rem;
 }
 
@@ -143,7 +143,7 @@
   margin: 0 0 1rem 0;
   font-size: 1rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary);
 }
 
 .allocationsList {
@@ -168,14 +168,14 @@
 
 .allocationTitle {
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary);
   margin-bottom: 0.25rem;
 }
 
 .allocationType {
   font-size: 0.75rem;
-  color: #6b7280;
-  background-color: #e5e7eb;
+  color: var(--text-secondary);
+  background-color: var(--surface-hover);
   padding: 0.125rem 0.375rem;
   border-radius: 0.25rem;
   display: inline-block;
@@ -183,14 +183,14 @@
 
 .allocationMarks {
   font-weight: 600;
-  color: #374151;
+  color: var(--text-secondary);
   font-size: 0.875rem;
 }
 
 .errorMessage {
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #dc2626;
+  background-color: var(--error-light);
+  border: 1px solid var(--error-border);
+  color: var(--error);
   padding: 0.75rem;
   border-radius: 0.375rem;
   margin-top: 1rem;
@@ -209,7 +209,7 @@
 .emptyState {
   text-align: center;
   padding: 2rem 1rem;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .emptyState p {
@@ -224,7 +224,7 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .loadingState p {
@@ -238,7 +238,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--background-glass);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -249,15 +249,15 @@
 
 .loadingOverlay span {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .spinner {
   width: 1.5rem;
   height: 1.5rem;
-  border: 2px solid #e5e7eb;
-  border-top: 2px solid #3b82f6;
+  border: 2px solid var(--border-secondary);
+  border-top: 2px solid var(--info);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }

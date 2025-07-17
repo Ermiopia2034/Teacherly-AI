@@ -1,7 +1,7 @@
 .pageHeader {
   margin-bottom: 1.25rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border-secondary);
 }
 
 .pageTitle {
@@ -9,7 +9,7 @@
   font-weight: 700;
   font-family: var(--font-heading);
   margin-bottom: 0.75rem;
-  background: linear-gradient(to right, var(--foreground), #a0a0a0);
+  background: var(--gradient-text);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

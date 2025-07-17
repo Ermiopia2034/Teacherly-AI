@@ -3,6 +3,7 @@ import { Merriweather, Lato } from "next/font/google";
 import "./globals.css";
 import "./responsive.css";
 import ClientProviders from '@/components/ClientProviders';
+import { themeInitScript } from '@/providers/ThemeProvider';
 
 const merriweather = Merriweather({
   subsets: ["latin"],
@@ -34,6 +35,13 @@ export default function RootLayout({
   // For this case, placing provider and initializer makes this structure fine.
   return (
     <html lang="en" className={`${merriweather.variable} ${lato.variable}`} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: themeInitScript,
+          }}
+        />
+      </head>
       <body>
         <ClientProviders>
           {children}

@@ -24,28 +24,28 @@
 }
 
 .excellent {
-  background-color: var(--success-bg);
-  color: var(--success-color);
+  background-color: var(--success-light);
+  color: var(--success);
 }
 
 .good {
-  background-color: var(--warning-bg);
-  color: var(--warning-color);
+  background-color: var(--warning-light);
+  color: var(--warning);
 }
 
 .average {
-  background-color: var(--info-bg);
-  color: var(--info-color);
+  background-color: var(--info-light);
+  color: var(--info);
 }
 
 .belowAverage {
-  background-color: var(--warning-bg);
-  color: var(--warning-color);
+  background-color: var(--warning-light);
+  color: var(--warning);
 }
 
 .poor {
-  background-color: var(--error-bg);
-  color: var(--error-color);
+  background-color: var(--error-light);
+  color: var(--error);
 }
 
 .gradeDetails {
@@ -100,8 +100,8 @@
 }
 
 .deleteButton {
-  background-color: var(--error-color);
-  color: white;
+  background-color: var(--error);
+  color: var(--text-inverse);
 }
 
 .deleteButton:hover {
@@ -142,7 +142,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--background-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -150,7 +150,7 @@
 }
 
 .confirmContent {
-  background-color: white;
+  background-color: var(--surface-primary);
   padding: 1.5rem;
   border-radius: 0.5rem;
   max-width: 300px;
@@ -177,8 +177,8 @@
 }
 
 .confirmDeleteButton {
-  background-color: var(--error-color);
-  color: white;
+  background-color: var(--error);
+  color: var(--text-inverse);
 }
 
 .confirmDeleteButton:hover {

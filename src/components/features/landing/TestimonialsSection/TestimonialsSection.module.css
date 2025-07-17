@@ -30,7 +30,7 @@
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  background: rgba(121, 40, 202, 0.1);
+  background: var(--accent-purple);
   filter: blur(80px);
   z-index: 0;
 }
@@ -40,7 +40,7 @@
   margin-bottom: 2rem;
   position: relative;
   z-index: 1;
-  background: linear-gradient(to right, var(--foreground), #a0a0a0);
+  background: var(--gradient-text);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -88,15 +88,15 @@
   left: 10px;
   font-size: 6rem;
   font-family: Georgia, serif;
-  color: rgba(255, 255, 255, 0.03);
+  color: var(--border-tertiary);
   line-height: 1;
 }
 
 .testimonialCard:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  border-color: rgba(0, 200, 150, 0.1);
-  background-color: rgba(30, 30, 30, 0.8);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-subtle);
+  background-color: var(--background-glass);
 }
 
 .testimonialHeader {
@@ -113,7 +113,7 @@
   height: 48px;
   border-radius: 50%;
   overflow: hidden;
-  background-color: #333;
+  background-color: var(--background-tertiary);
   border: 2px solid transparent;
   transition: all 0.3s ease;
 }
@@ -139,16 +139,16 @@
 
 .testimonialRole {
   font-size: 0.75rem;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   transition: all 0.3s ease;
 }
 
 .testimonialCard:hover .testimonialRole {
-  color: var(--foreground);
+  color: var(--text-primary);
 }
 
 .testimonialContent {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   line-height: 1.6;
   font-size: 0.875rem;
   position: relative;
@@ -157,5 +157,5 @@
 }
 
 .testimonialCard:hover .testimonialContent {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-primary);
 }

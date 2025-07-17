@@ -37,7 +37,7 @@
   width: 250px;
   height: 250px;
   border-radius: 50%;
-  background: rgba(0, 200, 150, 0.1);
+  background: var(--primary-subtle);
   filter: blur(70px);
   z-index: 0;
 }
@@ -47,7 +47,7 @@
   margin-bottom: 2rem;
   position: relative;
   z-index: 1;
-  background: linear-gradient(to right, var(--foreground), #a0a0a0);
+  background: var(--gradient-text);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -68,7 +68,7 @@
   gap: 1rem;
   padding: 1.5rem;
   border-radius: 8px;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--background-secondary);
   transition: all 0.3s ease;
   border: 1px solid transparent;
 }
@@ -99,9 +99,9 @@
 
 .serviceItem:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  border-color: rgba(0, 200, 150, 0.2);
-  background-color: rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-subtle);
+  background-color: var(--background-tertiary);
 }
 
 .serviceIcon {
@@ -112,7 +112,7 @@
 
 .serviceItem:hover .serviceIcon {
   transform: scale(1.2);
-  color: var(--foreground);
+  color: var(--text-primary);
 }
 
 .serviceContent {
@@ -132,14 +132,14 @@
 }
 
 .serviceDescription {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-size: 0.875rem;
   line-height: 1.6;
   transition: all 0.3s ease;
 }
 
 .serviceItem:hover .serviceDescription {
-  color: var(--foreground);
+  color: var(--text-primary);
 }
 
 .statsGrid {
@@ -153,7 +153,7 @@
 }
 
 .statsGrid .statItem {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--background-secondary);
   padding: 1.5rem;
   border-radius: 8px;
   display: flex;
@@ -166,7 +166,7 @@
 
 .statsGrid .statItem:hover {
   transform: translateY(-5px);
-  background-color: rgba(0, 0, 0, 0.3);
-  border-color: rgba(0, 200, 150, 0.2);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  background-color: var(--background-tertiary);
+  border-color: var(--primary-subtle);
+  box-shadow: var(--shadow-lg);
 }

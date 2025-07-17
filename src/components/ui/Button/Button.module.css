@@ -4,56 +4,92 @@
   justify-content: center;
   border-radius: 0.375rem;
   font-weight: 500;
-  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
   cursor: pointer;
   border: 1px solid transparent;
 }
 
-.primary {
-  background-color: #4f46e5;
-  color: white;
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
-.primary:hover {
-  background-color: #4338ca;
+.primary {
+  background-color: var(--primary);
+  color: var(--text-inverse);
+  border-color: var(--primary);
+}
+
+.primary:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+  box-shadow: var(--shadow-md);
+}
+
+.primary:focus {
+  outline: 2px solid var(--primary-glow);
+  outline-offset: 2px;
 }
 
 .secondary {
-  background-color: #f3f4f6;
-  color: #1f2937;
+  background-color: var(--surface-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-primary);
 }
 
-.secondary:hover {
-  background-color: #e5e7eb;
+.secondary:hover:not(:disabled) {
+  background-color: var(--surface-hover);
+  border-color: var(--border-hover);
+}
+
+.secondary:focus {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
 }
 
 .outline {
-  border-color: #d1d5db;
+  border-color: var(--border-primary);
   background-color: transparent;
-  color: #1f2937;
+  color: var(--text-primary);
 }
 
-.outline:hover {
-  background-color: #f3f4f6;
+.outline:hover:not(:disabled) {
+  background-color: var(--surface-hover);
+  border-color: var(--border-hover);
+}
+
+.outline:focus {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
 }
 
 .ghost {
   background-color: transparent;
-  color: #1f2937;
+  color: var(--text-primary);
 }
 
-.ghost:hover {
-  background-color: #f3f4f6;
+.ghost:hover:not(:disabled) {
+  background-color: var(--surface-hover);
+}
+
+.ghost:focus {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
 }
 
 .link {
   background-color: transparent;
-  color: #4f46e5;
+  color: var(--primary);
   text-decoration: underline;
 }
 
-.link:hover {
-  color: #4338ca;
+.link:hover:not(:disabled) {
+  color: var(--primary-hover);
+}
+
+.link:focus {
+  outline: 2px solid var(--primary-glow);
+  outline-offset: 2px;
 }
 
 .sm {
@@ -76,8 +112,8 @@
 }
 
 .loader {
-  border: 2px solid #f3f4f6;
-  border-top: 2px solid #4f46e5;
+  border: 2px solid var(--border-secondary);
+  border-top: 2px solid var(--primary);
   border-radius: 50%;
   width: 1rem;
   height: 1rem;

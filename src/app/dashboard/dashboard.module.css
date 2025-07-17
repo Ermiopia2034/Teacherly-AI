@@ -10,8 +10,8 @@
 /* Dashboard Header Styles */
 .dashboardHeader {
   height: 50px;
-  background-color: #1a1a1a;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: var(--surface-primary);
+  border-bottom: 1px solid var(--border-primary);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -29,15 +29,21 @@
   gap: 1rem;
 }
 
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 /* Sidebar Styles */
 .sidebar {
   width: 220px;
-  background-color: #1a1a1a;
-  color: var(--foreground);
+  background-color: var(--surface-primary);
+  color: var(--text-primary);
   display: flex;
   flex-direction: column;
   transition: all 0.3s ease;
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  border-right: 1px solid var(--border-primary);
   position: fixed;
   top: 50px; /* Positioned below the header */
   left: 0;
@@ -75,7 +81,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.25rem 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border-primary);
 }
 
 .logo {
@@ -100,7 +106,7 @@
 .toggleButton {
   background: none;
   border: none;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   cursor: pointer;
   padding: 0.5rem;
   border-radius: 4px;
@@ -111,8 +117,8 @@
 }
 
 .toggleButton:hover {
-  color: var(--foreground);
-  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  background-color: var(--surface-hover);
   transform: scale(1.05);
 }
 
@@ -131,7 +137,7 @@
   font-size: 0.7rem;
   font-weight: 600;
   font-family: var(--font-body);
-  color: var(--text-muted);
+  color: var(--text-tertiary);
   padding: 0 1rem;
   margin-bottom: 0.5rem;
   letter-spacing: 1px;
@@ -147,7 +153,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.6rem 1rem;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-family: var(--font-body);
   font-size: 0.85rem;
   transition: all 0.3s ease;
@@ -163,14 +169,14 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 200, 150, 0.1), transparent);
+  background: linear-gradient(90deg, transparent, var(--primary-subtle), transparent);
   transform: translateX(-100%);
   transition: transform 0.5s ease;
 }
 
 .navItem:hover {
-  color: var(--foreground);
-  background-color: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  background-color: var(--surface-hover);
 }
 
 .navItem:hover::before {
@@ -180,7 +186,7 @@
 .navItem.active {
   color: var(--primary);
   border-left-color: var(--primary);
-  background-color: rgba(0, 200, 150, 0.1);
+  background-color: var(--primary-subtle);
 }
 
 .navItem svg {
@@ -196,7 +202,7 @@
 .subNavItem {
   padding-left: 2.5rem;
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   border-left: 2px solid transparent;
   position: relative;
 }
@@ -235,7 +241,7 @@
 
 .sidebarFooter {
   padding: 1rem 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border-primary);
 }
 
 .logoutButton {
@@ -246,13 +252,13 @@
   cursor: pointer;
   font-family: var(--font-body);
   font-size: 0.85rem;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   transition: all 0.3s ease;
 }
 
 .logoutButton:hover {
-  color: #ff4444;
-  background-color: rgba(255, 68, 68, 0.1);
+  color: var(--error);
+  background-color: var(--error-light);
 }
 
 .logoutButton:hover svg {
@@ -295,12 +301,12 @@
 }
 
 .breadcrumbLink:hover {
-  color: var(--primary-hover-color, #0056b3); /* Ensure you have a hover color defined */
+  color: var(--primary-hover);
   text-decoration: underline;
 }
 
 .breadcrumbCurrent {
-  color: var(--foreground); /* Or a specific color for the current page */
+  color: var(--text-primary);
   font-weight: 500;
 }
 /* End of New Breadcrumb Styles */
@@ -326,14 +332,14 @@
 }
 
 .card {
-  background-color: var(--card-bg);
+  background-color: var(--surface-primary);
   border-radius: 6px;
   padding: 1rem;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-primary);
 }
 
 .card::before {
@@ -358,7 +364,7 @@
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-xl);
 }
 
 .card:hover::before {
@@ -377,7 +383,7 @@
   font-weight: 700;
   font-family: var(--font-heading);
   margin-bottom: 0.35rem;
-  color: var(--foreground);
+  color: var(--text-primary);
   line-height: 1.3;
 }
 
@@ -398,7 +404,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border-secondary);
   transition: all 0.3s ease;
   font-size: 0.9rem;
 }
@@ -424,7 +430,7 @@
 }
 
 .cardListItem:hover .cardListItemText {
-  color: var(--foreground);
+  color: var(--text-primary);
 }
 
 .cardFooter {
@@ -443,7 +449,7 @@
 }
 
 .cardLink:hover {
-  color: var(--foreground);
+  color: var(--text-primary);
   text-decoration: underline;
 }
 
@@ -574,7 +580,7 @@
   margin-bottom: 0.5rem;
   font-weight: 600;
   font-family: var(--font-body);
-  color: var(--foreground);
+  color: var(--text-primary);
 }
 
 .formInput,
@@ -583,9 +589,9 @@
   width: 100%;
   padding: 0.75rem 1rem;
   border-radius: 4px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--foreground);
+  background-color: var(--surface-secondary);
+  border: 1px solid var(--border-primary);
+  color: var(--text-primary);
   font-size: 1rem;
   font-family: var(--font-body);
   line-height: 1.6;
@@ -596,8 +602,8 @@
 .formSelect:focus,
 .formTextarea:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(0, 200, 150, 0.2);
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--primary-glow);
 }
 
 .formInput::placeholder,
@@ -630,8 +636,8 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: var(--gradient-1);
-  color: #000;
+  background: var(--gradient-primary);
+  color: var(--text-inverse);
   border: none;
   border-radius: 4px;
   font-family: var(--font-body);
@@ -639,12 +645,12 @@
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 200, 150, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .submitButton:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 200, 150, 0.5);
+  box-shadow: var(--shadow-glow);
 }
 
 .cancelButton {
@@ -654,7 +660,7 @@
   padding: 0.75rem 1.5rem;
   background: transparent;
   color: var(--text-muted);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-primary);
   border-radius: 4px;
   font-family: var(--font-body);
   font-weight: 600;
@@ -664,6 +670,6 @@
 }
 
 .cancelButton:hover {
-  color: var(--foreground);
-  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  background-color: var(--surface-hover);
 }

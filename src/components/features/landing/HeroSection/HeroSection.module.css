@@ -67,7 +67,7 @@
   font-weight: 800;
   line-height: 1.1;
   font-family: 'Georgia', serif;
-  background: linear-gradient(to right, var(--foreground), #a0a0a0);
+  background: var(--gradient-text);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -75,7 +75,7 @@
 }
 
 .heroText {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   max-width: 500px;
   line-height: 1.6;
   animation: fadeIn 1.2s ease-out;
@@ -88,7 +88,7 @@
   max-width: 400px;
   margin: 0 auto;
   margin-top: -2rem; /* Move image up to match content */
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-lg);
   transition: all 0.5s ease;
   animation: fadeIn 1.4s ease-out;
   z-index: 1;
@@ -98,7 +98,7 @@
 
 .heroImage:hover {
   transform: scale(1.02) translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-xl);
 }
 
 @media (max-width: 992px) {
@@ -207,7 +207,7 @@
 
 .statLabel {
   font-size: 0.875rem;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 1px;
   transition: all 0.3s ease;
@@ -218,5 +218,5 @@
 }
 
 .statItem:hover .statLabel {
-  color: var(--foreground);
+  color: var(--text-primary);
 }

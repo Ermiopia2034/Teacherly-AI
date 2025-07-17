@@ -1,62 +1,67 @@
 .formGroup {
-  margin-bottom: 20px; /* Existing: from dashboard.module.css this is 1.5rem (24px) vs 20px */
+  margin-bottom: 1.25rem;
   display: flex;
   flex-direction: column;
 }
 
 .formLabel {
   display: block;
-  font-weight: 600; /* from dashboard.module.css */
-  color: var(--foreground, #e0e0e0); /* Dark theme: light text. Fallback for safety */
-  margin-bottom: 8px; /* dashboard.module.css uses 0.5rem (8px) */
-  font-size: 0.9rem; /* 14.4px */
-  font-family: var(--font-body); /* from dashboard.module.css */
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  font-family: var(--font-body);
 }
 
 .requiredIndicator {
-  color: #e53e3e; /* Red for asterisk, generally fine across themes */
-  margin-left: 4px;
+  color: var(--error);
+  margin-left: 0.25rem;
 }
 
 .formInput {
   width: 100%;
-  padding: 0.75rem 1rem; /* from dashboard.module.css (12px 16px) */
-  border: 1px solid rgba(255, 255, 255, 0.1); /* Dark theme: light border */
-  border-radius: 4px; /* from dashboard.module.css (vs 6px) */
-  font-size: 1rem; /* 16px */
-  color: var(--foreground, #e0e0e0); /* Dark theme: light text */
-  background-color: rgba(255, 255, 255, 0.05); /* Dark theme: subtle dark background */
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-primary);
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  color: var(--text-primary);
+  background-color: var(--surface-secondary);
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-  font-family: var(--font-body); /* from dashboard.module.css */
-  line-height: 1.6; /* from dashboard.module.css */
+  font-family: var(--font-body);
+  line-height: 1.6;
 }
 
 .formInput::placeholder {
-  color: var(--text-muted, #888); /* Dark theme: lighter placeholder */
+  color: var(--text-muted);
 }
 
 .formInput:focus {
   outline: none;
-  border-color: var(--primary, #00c896); /* Dark theme: primary color for border */
-  background-color: rgba(255, 255, 255, 0.08); /* Slightly lighter on focus */
-  /* Using a subtle glow similar to other focused elements if var(--primary-glow-faded) exists or similar */
-  box-shadow: 0 0 0 3px rgba(var(--primary-rgb, 0, 200, 150), 0.3); /* Assuming primary color is #00c896 */
+  border-color: var(--border-focus);
+  background-color: var(--surface-hover);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+.formInput:hover:not(:focus):not(:disabled) {
+  border-color: var(--border-hover);
+  background-color: var(--surface-hover);
 }
 
 .formInput:disabled {
-  background-color: rgba(255, 255, 255, 0.03); /* Darker, more muted for disabled state */
-  color: var(--text-muted, #888);
+  background-color: var(--surface-tertiary);
+  color: var(--text-disabled);
   cursor: not-allowed;
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-secondary);
+  opacity: 0.7;
 }
 
-/* Validation states, can be adjusted if specific dark theme validation colors are defined */
+/* Validation states */
 .formInput.invalid {
-  border-color: #e53e3e; /* Often, error colors remain consistent */
-  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.25);
+  border-color: var(--error);
+  box-shadow: 0 0 0 3px var(--error-light);
 }
 
 .formInput.valid {
-  border-color: #38a169; /* Success colors can also be consistent */
-  box-shadow: 0 0 0 3px rgba(56, 161, 105, 0.25);
+  border-color: var(--success);
+  box-shadow: 0 0 0 3px var(--success-light);
 }

@@ -1,6 +1,6 @@
 .breadcrumb {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .list {
@@ -17,20 +17,28 @@
 }
 
 .link {
-  color: #4f46e5;
+  color: var(--primary);
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 .link:hover {
+  color: var(--primary-hover);
   text-decoration: underline;
 }
 
+.link:focus {
+  outline: 2px solid var(--primary-glow);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
 .current {
-  color: #1f2937;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
 .separator {
   margin: 0 0.5rem;
-  color: #d1d5db;
+  color: var(--text-muted);
 }
