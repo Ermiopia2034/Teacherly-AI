@@ -41,8 +41,8 @@ export default function ExamForm() {
   topics: [] as string[],
   examType: 'quiz',
   difficulty: 'medium',
-  questionCount: '10',
-  marks: '10',
+  questionCount: '',
+  marks: '',
   additionalInfo: '',
   });
   
@@ -161,6 +161,18 @@ export default function ExamForm() {
   e.preventDefault();
   setError(null);
   
+  // Check if all basic fields are filled
+  if (!areBasicFieldsFilled) {
+    setError('Please fill in all required fields (subject, grade, unit, topics, exam type, and difficulty).');
+    return;
+  }
+  
+  // Check if marks and question count are filled
+  if (!formData.questionCount || !formData.marks) {
+    setError('Please enter the number of questions and total marks.');
+    return;
+  }
+  
   // Check mark validation before submitting
   if (!markValidation.isValid) {
     setError('The allocated marks exceed the semester limit. Please adjust the marks.');
@@ -190,6 +202,14 @@ export default function ExamForm() {
   }
   };
   
+  // Check if all required fields (except marks/questions) are filled
+  const areBasicFieldsFilled = formData.subject &&
+                               formData.grade &&
+                               formData.unit &&
+                               formData.topics.length > 0 &&
+                               formData.examType &&
+                               formData.difficulty;
+
   const toOptions = (items: string[]) => items.map(item => ({ value: item, label: item }));
   
   const examTypeOptions = [
@@ -264,6 +284,8 @@ export default function ExamForm() {
             min="1"
             max="50"
             required
+            disabled={!areBasicFieldsFilled}
+            placeholder={areBasicFieldsFilled ? "Enter number of questions" : "Fill required fields first"}
           />
 
           <LabeledInput
@@ -276,10 +298,12 @@ export default function ExamForm() {
             min="1"
             max="100"
             required
+            disabled={!areBasicFieldsFilled}
+            placeholder={areBasicFieldsFilled ? "Enter total marks" : "Fill required fields first"}
           />
 
           {/* Mark Allocation Progress */}
-          {currentSemester && (
+          {currentSemester && areBasicFieldsFilled && formData.marks && (
             <div className={styles.markAllocationSection}>
               <MarkAllocationProgress
                 showValidation={true}
@@ -310,7 +334,11 @@ export default function ExamForm() {
           {error && <div className={styles.errorText}>Error: {error}</div>}
           
           <div className={styles.formActions}>
-          <button type="submit" className={styles.submitButton} disabled={isLoading}>
+          <button
+            type="submit"
+            className={styles.submitButton}
+            disabled={isLoading || !areBasicFieldsFilled || !formData.questionCount || !formData.marks}
+          >
           {isLoading ? 'Generating...' : 'Generate and Save'}
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <line x1="5" y1="12" x2="19" y2="12"></line>

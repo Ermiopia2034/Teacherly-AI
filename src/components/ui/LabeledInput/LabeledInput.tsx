@@ -10,6 +10,7 @@ interface LabeledInputProps {
   type?: string;
   placeholder?: string;
   required?: boolean;
+  disabled?: boolean;
   className?: string; // For the wrapper div
   labelClassName?: string;
   inputClassName?: string;
@@ -27,6 +28,7 @@ const LabeledInput: React.FC<LabeledInputProps> = ({
   type = 'text',
   placeholder,
   required = false,
+  disabled = false,
   className = '',
   labelClassName = '',
   inputClassName = '',
@@ -48,6 +50,7 @@ const LabeledInput: React.FC<LabeledInputProps> = ({
         onChange={onChange}
         placeholder={placeholder}
         required={required}
+        disabled={disabled}
         className={`${styles.formInput} ${inputClassName}`}
         min={min}
         max={max}
