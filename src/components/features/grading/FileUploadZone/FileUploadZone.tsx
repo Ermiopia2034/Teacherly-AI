@@ -1,206 +1,174 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
 import {
-  uploadBatchSubmissionsThunk,
-  uploadBatchUnifiedSubmissionsThunk,
+  uploadBatchSectionSubmissionsThunk,
   selectActiveUpload,
   selectUploadError,
   clearUploadError
 } from '@/lib/features/grading/gradingSlice';
-import { selectStudents } from '@/lib/features/students/studentsSlice';
+import {
+  fetchSectionsThunk,
+  selectSections,
+  selectSectionsLoading
+} from '@/lib/features/academic/sectionsSlice';
 import FileUpload from '@/components/ui/FileUpload/FileUpload';
 import ProgressBar from '@/components/ui/ProgressBar/ProgressBar';
 import Button from '@/components/ui/Button/Button';
 import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
 import Card from '@/components/ui/Card/Card';
-import Modal from '@/components/ui/Modal/Modal';
 import styles from './FileUploadZone.module.css';
 
 interface FileUploadZoneProps {
   assessmentId: number;
-  sourceType?: 'manual_assessment' | 'ai_exam';
   onUploadComplete?: () => void;
   onUploadStart?: () => void;
 }
 
-interface FileWithStudent {
+interface FileUploadItem {
   file: File;
-  studentId: number;
-  studentName: string;
   status: 'pending' | 'uploading' | 'completed' | 'failed';
   progress: number;
   submissionId?: number;
   error?: string;
 }
 
-export function FileUploadZone({ assessmentId, sourceType, onUploadComplete, onUploadStart }: FileUploadZoneProps) {
+export function FileUploadZone({ assessmentId, onUploadComplete, onUploadStart }: FileUploadZoneProps) {
   const dispatch = useDispatch<AppDispatch>();
   const activeUpload = useSelector(selectActiveUpload);
   const uploadError = useSelector(selectUploadError);
-  const students = useSelector(selectStudents);
+  const sections = useSelector(selectSections);
+  const sectionsLoading = useSelector(selectSectionsLoading);
 
-  const [files, setFiles] = useState<FileWithStudent[]>([]);
-  const [showMappingModal, setShowMappingModal] = useState(false);
-  const [autoMapping, setAutoMapping] = useState(true);
-  const [unmappedFiles, setUnmappedFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<FileUploadItem[]>([]);
+  const [selectedSectionId, setSelectedSectionId] = useState<number>(0);
 
-  const studentOptions = [
-    { value: 0, label: 'Select a student...' },
-    ...students.map(student => ({
-      value: student.id,
-      label: student.full_name
+  useEffect(() => {
+    // Fetch sections when component mounts
+    dispatch(fetchSectionsThunk({}));
+  }, [dispatch]);
+
+  useEffect(() => {
+    // Sync Redux upload state with local file state
+    if (activeUpload && activeUpload.assessmentId === assessmentId) {
+      setFiles(prev => prev.map((fileItem, index) => {
+        const uploadFile = activeUpload.files[index];
+        if (uploadFile) {
+          return {
+            ...fileItem,
+            progress: uploadFile.progress,
+            status: uploadFile.status,
+            submissionId: uploadFile.submissionId,
+            error: uploadFile.error
+          };
+        }
+        return fileItem;
+      }));
+    }
+  }, [activeUpload, assessmentId]);
+
+  const sectionOptions = [
+    { value: 0, label: 'Select a section...' },
+    ...sections.map(section => ({
+      value: section.id,
+      label: `${section.name} (${section.subject} - ${section.grade_level})`
     }))
   ];
 
-  // Auto-map files to students based on filename patterns
-  const tryAutoMapFiles = (newFiles: File[]): FileWithStudent[] => {
-    return newFiles.map(file => {
-      const fileName = file.name.toLowerCase();
-      
-      // Try to find student by name in filename
-      const matchedStudent = students.find(student => {
-        const studentName = student.full_name.toLowerCase();
-        const nameParts = studentName.split(' ');
-        
-        // Check if filename contains full name or parts of name
-        return fileName.includes(studentName) || 
-               nameParts.some(part => part.length > 2 && fileName.includes(part));
-      });
-
-      return {
-        file,
-        studentId: matchedStudent?.id || 0,
-        studentName: matchedStudent?.full_name || '',
-        status: 'pending' as const,
-        progress: 0
-      };
-    });
-  };
-
   const handleFileSelect = (newFiles: File[]) => {
-    if (autoMapping) {
-      const mappedFiles = tryAutoMapFiles(newFiles);
-      const unmapped = mappedFiles.filter(f => f.studentId === 0);
-      
-      if (unmapped.length > 0) {
-        setUnmappedFiles(unmapped.map(f => f.file));
-        setFiles(mappedFiles);
-        setShowMappingModal(true);
-      } else {
-        setFiles(prev => [...prev, ...mappedFiles]);
-      }
-    } else {
-      setUnmappedFiles(newFiles);
-      setShowMappingModal(true);
-    }
-  };
-
-  const handleStudentMapping = (fileIndex: number, studentId: number) => {
-    const student = students.find(s => s.id === studentId);
-    setFiles(prev => prev.map((f, index) => 
-      index === fileIndex 
-        ? { ...f, studentId, studentName: student?.full_name || '' }
-        : f
-    ));
+    const newFileItems = newFiles.map(file => ({
+      file,
+      status: 'pending' as const,
+      progress: 0
+    }));
+    
+    setFiles(prev => [...prev, ...newFileItems]);
   };
 
   const handleRemoveFile = (index: number) => {
     setFiles(prev => prev.filter((_, i) => i !== index));
   };
 
+  const handleSectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedSectionId(Number(e.target.value));
+  };
+
   const handleStartUpload = async () => {
     if (files.length === 0) return;
     
-    const validFiles = files.filter(f => f.studentId > 0);
-    if (validFiles.length === 0) {
-      alert('Please assign students to all files before uploading.');
+    if (selectedSectionId === 0) {
+      alert('Please select a section before uploading files.');
       return;
     }
 
     onUploadStart?.();
 
     try {
-      const submissions = validFiles.map(f => ({
-        studentId: f.studentId,
-        file: f.file,
-        fileName: f.file.name
-      }));
-
-      if (sourceType) {
-        // Use unified upload for both manual assessments and AI exams
-        await dispatch(uploadBatchUnifiedSubmissionsThunk({
-          itemId: assessmentId,
-          sourceType,
-          submissions
-        })).unwrap();
-      } else {
-        // Fallback to old manual assessment upload for backward compatibility
-        await dispatch(uploadBatchSubmissionsThunk({
-          assessmentId,
-          submissions
-        })).unwrap();
-      }
+      const fileArray = files.map(f => f.file);
+      
+      await dispatch(uploadBatchSectionSubmissionsThunk({
+        assessmentId,
+        sectionId: selectedSectionId,
+        files: fileArray
+      })).unwrap();
 
       onUploadComplete?.();
-      setFiles([]);
+      // Clear files after successful upload
+      setTimeout(() => {
+        setFiles([]);
+      }, 2000);
     } catch (error) {
       console.error('Upload failed:', error);
+      // Error is already handled by Redux state
     }
   };
 
   const handleClearAll = () => {
     setFiles([]);
-    setUnmappedFiles([]);
     dispatch(clearUploadError());
   };
 
-  const completeMappingModal = () => {
-    setShowMappingModal(false);
-    setUnmappedFiles([]);
-  };
-
-  const addUnmappedFiles = () => {
-    const newMappedFiles = unmappedFiles.map(file => ({
-      file,
-      studentId: 0,
-      studentName: '',
-      status: 'pending' as const,
-      progress: 0
-    }));
-    
-    setFiles(prev => [...prev, ...newMappedFiles]);
-    completeMappingModal();
-  };
-
-  const totalProgress = files.length > 0 
-    ? files.reduce((sum, f) => sum + f.progress, 0) / files.length 
+  const totalProgress = files.length > 0
+    ? files.reduce((sum, f) => sum + f.progress, 0) / files.length
     : 0;
 
-  const hasValidFiles = files.some(f => f.studentId > 0);
-  const hasInvalidFiles = files.some(f => f.studentId === 0);
+  const hasFiles = files.length > 0;
+  const hasSection = selectedSectionId > 0;
+  const canUpload = hasFiles && hasSection && !activeUpload;
+  const isUploading = files.some(f => f.status === 'uploading');
 
   return (
     <div className={styles.container}>
       <Card className={styles.uploadCard}>
         <div className={styles.header}>
           <h3>Upload Student Submissions</h3>
-          <p>Drag and drop files or browse to upload multiple submissions at once</p>
+          <p>Select a section and upload multiple student submissions. AI will identify students from the papers.</p>
         </div>
 
         <div className={styles.content}>
-          {/* Auto-mapping toggle */}
-          <div className={styles.options}>
-            <label className={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                checked={autoMapping}
-                onChange={(e) => setAutoMapping(e.target.checked)}
-              />
-              Auto-map files to students by filename
-            </label>
+          {/* Section Selection */}
+          <div className={styles.sectionSelection}>
+            <LabeledSelect
+              label="Select Section"
+              id="section_select"
+              name="section_select"
+              value={selectedSectionId}
+              onChange={handleSectionChange}
+              options={sectionOptions}
+              disabled={sectionsLoading}
+              required
+            />
+            {selectedSectionId > 0 && (
+              <div className={styles.sectionInfo}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 6v6l4 2" />
+                </svg>
+                <span>AI will automatically identify students from this section based on their names written on the papers.</span>
+              </div>
+            )}
           </div>
 
           {/* File Upload Area */}
@@ -214,7 +182,7 @@ export function FileUploadZone({ assessmentId, sourceType, onUploadComplete, onU
           />
 
           {/* Upload Progress */}
-          {activeUpload && (
+          {isUploading && (
             <div className={styles.progressSection}>
               <h4>Upload Progress</h4>
               <ProgressBar
@@ -225,29 +193,29 @@ export function FileUploadZone({ assessmentId, sourceType, onUploadComplete, onU
               />
               
               <div className={styles.fileProgress}>
-                {activeUpload.files.map((file, index) => (
+                {files.map((fileItem, index) => (
                   <div key={index} className={styles.fileProgressItem}>
                     <div className={styles.fileProgressHeader}>
-                      <span className={styles.fileName}>{file.fileName}</span>
+                      <span className={styles.fileName}>{fileItem.file.name}</span>
                       <span className={styles.fileStatus}>
-                        {file.status === 'completed' && '✓'}
-                        {file.status === 'failed' && '✗'}
-                        {file.status === 'uploading' && '⏳'}
-                        {file.status === 'pending' && '⌛'}
+                        {fileItem.status === 'completed' && '✓'}
+                        {fileItem.status === 'failed' && '✗'}
+                        {fileItem.status === 'uploading' && '⏳'}
+                        {fileItem.status === 'pending' && '⌛'}
                       </span>
                     </div>
                     <ProgressBar
-                      value={file.progress}
+                      value={fileItem.progress}
                       size="sm"
                       variant={
-                        file.status === 'completed' ? 'success' :
-                        file.status === 'failed' ? 'error' :
+                        fileItem.status === 'completed' ? 'success' :
+                        fileItem.status === 'failed' ? 'error' :
                         'primary'
                       }
                       showPercentage={false}
                     />
-                    {file.error && (
-                      <div className={styles.fileError}>{file.error}</div>
+                    {fileItem.error && (
+                      <div className={styles.fileError}>{fileItem.error}</div>
                     )}
                   </div>
                 ))}
@@ -271,22 +239,22 @@ export function FileUploadZone({ assessmentId, sourceType, onUploadComplete, onU
                 </div>
               </div>
 
-              {hasInvalidFiles && (
+              {!hasSection && (
                 <div className={styles.warning}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
                     <line x1="12" y1="9" x2="12" y2="13" />
                     <path d="M12 17h.01" />
                   </svg>
-                  <p>Some files are not assigned to students. Please assign students before uploading.</p>
+                  <p>Please select a section before uploading files. The AI will identify students from the selected section.</p>
                 </div>
               )}
 
               <div className={styles.filesList}>
                 {files.map((fileItem, index) => (
-                  <div 
-                    key={index} 
-                    className={`${styles.fileItem} ${fileItem.studentId === 0 ? styles.unassigned : ''}`}
+                  <div
+                    key={index}
+                    className={styles.fileItem}
                   >
                     <div className={styles.fileInfo}>
                       <div className={styles.fileIcon}>
@@ -303,15 +271,28 @@ export function FileUploadZone({ assessmentId, sourceType, onUploadComplete, onU
                       </div>
                     </div>
 
-                    <div className={styles.studentMapping}>
-                      <LabeledSelect
-                        label=""
-                        id={`student_${index}`}
-                        name={`student_${index}`}
-                        value={fileItem.studentId}
-                        onChange={(e) => handleStudentMapping(index, Number(e.target.value))}
-                        options={studentOptions}
-                      />
+                    <div className={styles.fileStatus}>
+                      {fileItem.status === 'completed' && (
+                        <span className={styles.statusCompleted}>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="20,6 9,17 4,12" />
+                          </svg>
+                          Completed
+                        </span>
+                      )}
+                      {fileItem.status === 'failed' && (
+                        <span className={styles.statusFailed}>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="15" y1="9" x2="9" y2="15" />
+                            <line x1="9" y1="9" x2="15" y2="15" />
+                          </svg>
+                          Failed
+                        </span>
+                      )}
+                      {fileItem.status === 'pending' && (
+                        <span className={styles.statusPending}>Ready</span>
+                      )}
                     </div>
 
                     <Button
@@ -319,6 +300,7 @@ export function FileUploadZone({ assessmentId, sourceType, onUploadComplete, onU
                       size="sm"
                       onClick={() => handleRemoveFile(index)}
                       className={styles.removeButton}
+                      disabled={isUploading}
                     >
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <polyline points="3,6 5,6 21,6" />
@@ -351,55 +333,20 @@ export function FileUploadZone({ assessmentId, sourceType, onUploadComplete, onU
           )}
 
           {/* Upload Button */}
-          {hasValidFiles && !activeUpload && (
+          {canUpload && (
             <div className={styles.uploadActions}>
               <Button
                 onClick={handleStartUpload}
-                disabled={!hasValidFiles}
+                disabled={!canUpload}
                 size="lg"
               >
-                Upload {files.filter(f => f.studentId > 0).length} Submissions
+                Upload {files.length} Submissions
               </Button>
             </div>
           )}
         </div>
       </Card>
 
-      {/* Student Mapping Modal */}
-      <Modal
-        isOpen={showMappingModal}
-        onClose={completeMappingModal}
-        title="Student Mapping"
-        size="md"
-      >
-        <div className={styles.mappingModal}>
-          <p>Some files could not be automatically mapped to students. You can:</p>
-          
-          <div className={styles.mappingActions}>
-            <Button
-              variant="outline"
-              onClick={addUnmappedFiles}
-            >
-              Add Files & Assign Manually
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={completeMappingModal}
-            >
-              Skip These Files
-            </Button>
-          </div>
-          
-          <div className={styles.unmappedFiles}>
-            <h4>Unmapped Files:</h4>
-            <ul>
-              {unmappedFiles.map((file, index) => (
-                <li key={index}>{file.name}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </Modal>
     </div>
   );
 }

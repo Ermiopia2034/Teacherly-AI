@@ -390,6 +390,88 @@ export const uploadBatchUnifiedSubmissions = async (
   return results;
 };
 
+// Section-based upload for improved accuracy
+export const uploadSubmissionWithSection = async (
+  assessmentId: number,
+  sectionId: number,
+  file: File
+): Promise<FileUploadResponse> => {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('section_id', sectionId.toString());
+
+  const response = await apiClient.post(
+    `/grading/assessments/${assessmentId}/submissions/section`,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+  );
+  return response.data;
+};
+
+export const uploadSubmissionWithSectionAndProgress = async (
+  assessmentId: number,
+  sectionId: number,
+  file: File,
+  onProgress?: (progress: number) => void
+): Promise<FileUploadResponse> => {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('section_id', sectionId.toString());
+
+  const response = await apiClient.post(
+    `/grading/assessments/${assessmentId}/submissions/section`,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress: (progressEvent) => {
+        if (onProgress && progressEvent.total) {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          onProgress(progress);
+        }
+      },
+    }
+  );
+  return response.data;
+};
+
+// Batch section-based upload for multiple files
+export const uploadBatchSectionSubmissions = async (
+  assessmentId: number,
+  sectionId: number,
+  files: File[],
+  onProgress?: (fileIndex: number, progress: number) => void,
+  onComplete?: (fileIndex: number, result: FileUploadResponse) => void,
+  onError?: (fileIndex: number, error: Error) => void
+): Promise<{ successful: FileUploadResponse[]; failed: Error[] }> => {
+  const results: { successful: FileUploadResponse[]; failed: Error[] } = { successful: [], failed: [] };
+  
+  for (let i = 0; i < files.length; i++) {
+    try {
+      const file = files[i];
+      const result = await uploadSubmissionWithSectionAndProgress(
+        assessmentId,
+        sectionId,
+        file,
+        (progress) => onProgress?.(i, progress)
+      );
+      
+      results.successful.push(result);
+      onComplete?.(i, result);
+    } catch (error) {
+      results.failed.push(error as Error);
+      onError?.(i, error as Error);
+    }
+  }
+  
+  return results;
+};
+
 // Polling function for submission status updates
 export const pollSubmissionStatus = async (
   submissionIds: number[],

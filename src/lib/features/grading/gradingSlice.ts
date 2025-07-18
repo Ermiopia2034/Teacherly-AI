@@ -20,6 +20,7 @@ import {
   uploadSubmission as apiUploadSubmission,
   uploadBatchSubmissions as apiUploadBatchSubmissions,
   uploadBatchUnifiedSubmissions as apiUploadBatchUnifiedSubmissions,
+  uploadBatchSectionSubmissions as apiUploadBatchSectionSubmissions,
   getSubmissionStatus as apiGetSubmissionStatus,
   getAssessmentSubmissions as apiGetAssessmentSubmissions,
   getAssessmentStats as apiGetAssessmentStats,
@@ -362,6 +363,60 @@ export const uploadBatchUnifiedSubmissionsThunk = createAsyncThunk(
   }
 );
 
+export const uploadBatchSectionSubmissionsThunk = createAsyncThunk(
+  'grading/uploadBatchSectionSubmissions',
+  async (
+    {
+      assessmentId,
+      sectionId,
+      files
+    }: {
+      assessmentId: number;
+      sectionId: number;
+      files: File[]
+    },
+    { dispatch, rejectWithValue }
+  ) => {
+    try {
+      const batchId = `batch_section_${Date.now()}`;
+      
+      // Initialize batch upload
+      dispatch(initializeBatchUpload({
+        id: batchId,
+        assessmentId,
+        files: files.map((file, index) => ({
+          fileIndex: index,
+          fileName: file.name,
+          progress: 0,
+          status: 'pending'
+        }))
+      }));
+
+      const result = await apiUploadBatchSectionSubmissions(
+        assessmentId,
+        sectionId,
+        files,
+        (fileIndex, progress) => {
+          dispatch(updateUploadProgress({ batchId, fileIndex, progress }));
+        },
+        (fileIndex, result) => {
+          dispatch(updateUploadComplete({ batchId, fileIndex, submissionId: result.submission_id }));
+        },
+        (fileIndex, error) => {
+          dispatch(updateUploadError({ batchId, fileIndex, error: String(error) }));
+        }
+      );
+
+      dispatch(completeBatchUpload(batchId));
+      return result;
+    } catch (error) {
+      const message = error instanceof Error
+        ? error.message
+        : (error as { response?: { data?: { detail?: string } } }).response?.data?.detail || 'Failed to upload section submissions';
+      return rejectWithValue(message);
+    }
+  }
+);
 
 export const fetchSubmissionStatusThunk = createAsyncThunk(
   'grading/fetchSubmissionStatus',

@@ -337,7 +337,6 @@ export default function AssessmentDetailPage() {
           <div className={styles.uploadTab}>
             <FileUploadZone
               assessmentId={assessmentId}
-              sourceType={itemSourceType || undefined}
               onUploadComplete={handleUploadComplete}
               onUploadStart={handleUploadStart}
             />
@@ -526,7 +525,6 @@ export default function AssessmentDetailPage() {
       >
         <FileUploadZone
           assessmentId={assessmentId}
-          sourceType={itemSourceType || undefined}
           onUploadComplete={handleUploadComplete}
           onUploadStart={handleUploadStart}
         />
