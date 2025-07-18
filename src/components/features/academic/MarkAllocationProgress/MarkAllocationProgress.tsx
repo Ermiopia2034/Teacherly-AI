@@ -51,7 +51,6 @@ export function MarkAllocationProgress({
   const error = useSelector(selectMarkAllocationError);
 
   const [lastValidatedMarks, setLastValidatedMarks] = useState(0);
-  const [showValidationSpinner, setShowValidationSpinner] = useState(false);
 
   // Use the appropriate allocation data
   const allocation = semesterId 
@@ -81,31 +80,18 @@ export function MarkAllocationProgress({
         exclude_content_id: excludeContentId
       };
       
-      // Show spinner only for longer delays
-      const spinnerTimeoutId = setTimeout(() => {
-        setShowValidationSpinner(true);
-      }, 500);
-      
       // Add a small delay to debounce rapid changes
       const validationTimeoutId = setTimeout(() => {
+        // Fire and forget - don't block navigation
         dispatch(validateMarkAllocationThunk({
           semesterId: effectiveSemesterId,
           payload: validationPayload
-        })).catch(() => {
-          // Ensure validation state is reset on error
-          console.warn('Mark validation failed, but continuing...');
-        }).finally(() => {
-          setShowValidationSpinner(false);
-          clearTimeout(spinnerTimeoutId);
-        });
-        
+        }));
         setLastValidatedMarks(validationMarks);
       }, 300); // 300ms debounce
       
       return () => {
         clearTimeout(validationTimeoutId);
-        clearTimeout(spinnerTimeoutId);
-        setShowValidationSpinner(false);
       };
     }
   }, [dispatch, effectiveSemesterId, showValidation, validationMarks, contentType, excludeContentId, lastValidatedMarks]);
@@ -122,16 +108,8 @@ export function MarkAllocationProgress({
     if (validationMarks === 0 && lastValidationResult) {
       dispatch(clearValidationResult());
       setLastValidatedMarks(0);
-      setShowValidationSpinner(false);
     }
   }, [dispatch, validationMarks, lastValidationResult]);
-
-  // Cleanup effect to ensure spinner is cleared on unmount
-  useEffect(() => {
-    return () => {
-      setShowValidationSpinner(false);
-    };
-  }, []);
 
   const getProgressColor = (percentage: number, isValidation = false) => {
     if (isValidation) {
@@ -302,13 +280,7 @@ export function MarkAllocationProgress({
         </div>
       )}
 
-      {/* Loading overlay for validation - only show for longer operations */}
-      {(isValidating && showValidationSpinner) && (
-        <div className={styles.loadingOverlay}>
-          <div className={styles.spinner}></div>
-          <span>Validating...</span>
-        </div>
-      )}
+      {/* Loading overlay for validation - removed to prevent navigation blocking */}
     </Card>
   );
 }
