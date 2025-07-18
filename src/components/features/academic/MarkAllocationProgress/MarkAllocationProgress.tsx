@@ -11,7 +11,6 @@ import {
   selectSelectedSemesterAllocation,
   selectLastValidationResult,
   selectMarkAllocationLoading,
-  selectMarkAllocationValidating,
   selectMarkAllocationError,
   clearError,
   clearValidationResult
@@ -47,7 +46,6 @@ export function MarkAllocationProgress({
   const lastValidationResult = useSelector(selectLastValidationResult);
   const currentSemester = useSelector(selectCurrentSemester);
   const isLoading = useSelector(selectMarkAllocationLoading);
-  const isValidating = useSelector(selectMarkAllocationValidating);
   const error = useSelector(selectMarkAllocationError);
 
   const [lastValidatedMarks, setLastValidatedMarks] = useState(0);
