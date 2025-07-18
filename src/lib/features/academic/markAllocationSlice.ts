@@ -240,7 +240,11 @@ const markAllocationSlice = createSlice({
       })
       .addCase(validateMarkAllocationThunk.rejected, (state, action) => {
         state.isValidating = false;
-        state.error = action.payload as string;
+        // Don't set a persistent error for validation failures to avoid blocking UI
+        // Just log the error and continue
+        console.warn('Mark validation failed:', action.payload);
+        // Clear any previous validation result on error
+        state.lastValidationResult = null;
       });
   },
 });
