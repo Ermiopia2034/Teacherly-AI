@@ -76,10 +76,18 @@ export const getSemesterRemainingMarks = async (semesterId: number): Promise<Rem
 };
 
 export const validateMarkAllocation = async (
-  semesterId: number, 
+  semesterId: number,
   payload: MarkValidationPayload
 ): Promise<MarkValidationResult> => {
-  const response = await apiClient.post(`/mark-allocation/semester/${semesterId}/validate`, payload);
+  // Convert payload to query parameters to match backend expectations
+  const params = new URLSearchParams();
+  params.append('requested_marks', payload.marks.toString());
+  
+  if (payload.exclude_content_id !== undefined) {
+    params.append('exclude_content_id', payload.exclude_content_id.toString());
+  }
+  
+  const response = await apiClient.post(`/mark-allocation/semester/${semesterId}/validate?${params.toString()}`);
   return response.data;
 };
 
