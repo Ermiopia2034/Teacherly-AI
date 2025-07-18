@@ -1,57 +1,374 @@
-.pageContainer {
-  padding: 1rem;
-}
-
-.contentSection {
-  margin-top: 2rem;
-}
-
-.contentGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-}
-
-.contentCard {
-  padding: 1.5rem;
+.container {
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem;
 }
 
-
-.cardTitle {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--foreground);
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1rem;
+  gap: 1rem;
+  color: var(--text-muted);
+  background: var(--surface-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
 }
 
-.cardLink {
-  text-decoration: none;
-  color: inherit;
-  display: block; /* Ensures the link takes up the full card space */
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1rem;
+  text-align: center;
+  gap: 1rem;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
 }
 
-.cardLink:hover {
-  text-decoration: none;
+.errorState svg {
+  color: var(--text-muted);
+  opacity: 0.5;
 }
 
-.cardType {
+.errorState p {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin: 0;
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border-primary);
+  border-top: 3px solid var(--info);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Tabs Navigation */
+.tabsContainer {
+  background: var(--surface-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+.tabsList {
+  display: flex;
+  gap: 0.25rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tabsList::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
   font-size: 0.875rem;
   font-weight: 500;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-width: fit-content;
 }
 
-.cardDescription {
-  font-size: 1rem;
-  color: var(--text-muted);
-  flex-grow: 1;
+.tab:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
 }
 
-.errorText {
-  color: var(--error);
+.tab.active {
+  background: var(--info);
+  color: white;
+}
+
+.tabIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tabLabel {
   font-weight: 500;
+}
+
+.tabBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 0.25rem;
+  background: var(--surface-hover);
+  border-radius: 9px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.tab.active .tabBadge {
+  background: var(--surface-pressed);
+}
+
+.tabContent {
+  min-height: 400px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Content Header */
+.contentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 1.5rem 0 1.5rem;
+  border-bottom: 1px solid var(--border-primary);
+  margin-bottom: 1.5rem;
+}
+
+.contentHeader h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.contentStats {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Table Cell Styles */
+.titleCell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.contentTitle {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.contentDescription {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.subjectCell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.subjectName {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.gradeInfo {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.topicCell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.topicName {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.unitInfo {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.noData {
+  color: var(--text-muted);
+  font-size: 1.125rem;
+}
+
+/* Type Badge Styles */
+.typeBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.typeExam {
+  background: var(--info-light);
+  color: var(--info);
+  border: 1px solid var(--info-border);
+}
+
+.typeAssignment {
+  background: var(--warning-light);
+  color: var(--warning);
+  border: 1px solid var(--warning-border);
+}
+
+.typeMaterial {
+  background: var(--success-light);
+  color: var(--success);
+  border: 1px solid var(--success-border);
+}
+
+.typeNote {
+  background: var(--text-muted);
+  color: var(--surface-primary);
+  border: 1px solid var(--text-muted);
+  opacity: 0.8;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .container {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .contentHeader {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+    padding: 1rem 1rem 0 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0.75rem;
+  }
+
+  .tab {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .tabIcon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .contentHeader {
+    padding: 0.75rem 0.75rem 0 0.75rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .tab {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .tabLabel {
+    display: none;
+  }
+
+  .tabBadge {
+    min-width: 16px;
+    height: 16px;
+    font-size: 0.7rem;
+  }
+
+  .contentTitle {
+    font-size: 0.8rem;
+  }
+
+  .contentDescription {
+    font-size: 0.7rem;
+  }
+
+  .subjectName,
+  .topicName {
+    font-size: 0.8rem;
+  }
+
+  .gradeInfo,
+  .unitInfo {
+    font-size: 0.7rem;
+  }
+
+  .typeBadge {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  .contentStats {
+    font-size: 0.8rem;
+  }
+}
+
+/* Custom scrollbar for tabs */
+.tabsList {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-primary) transparent;
+}
+
+.tabsList::-webkit-scrollbar {
+  height: 4px;
+}
+
+.tabsList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tabsList::-webkit-scrollbar-thumb {
+  background: var(--border-primary);
+  border-radius: 2px;
+}
+
+.tabsList::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
 }
