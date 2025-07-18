@@ -3,14 +3,7 @@
   border-radius: 0.5rem;
   border: 1px solid var(--border-primary);
   overflow: hidden;
-  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   box-shadow: var(--shadow-sm);
-}
-
-.card:hover {
-  background-color: var(--surface-hover);
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
 }
 
 .header {
