@@ -200,8 +200,14 @@
 }
 
 .tab.active {
-  background: var(--info);
-  color: white;
+  background: var(--primary);
+  color: var(--text-inverse);
+  opacity: 0.9;
+}
+
+.tab.active:hover {
+  background: var(--primary-hover);
+  opacity: 1;
 }
 
 .tabIcon {
