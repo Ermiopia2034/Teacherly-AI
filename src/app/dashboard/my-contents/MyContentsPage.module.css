@@ -52,6 +52,6 @@
 }
 
 .errorText {
-  color: #d9534f;
+  color: var(--error);
   font-weight: 500;
 }

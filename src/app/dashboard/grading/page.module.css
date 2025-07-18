@@ -15,14 +15,14 @@
   justify-content: center;
   padding: 4rem 1rem;
   gap: 1rem;
-  color: var(--text-muted, #71717a);
+  color: var(--text-muted);
 }
 
 .spinner {
   width: 32px;
   height: 32px;
-  border: 3px solid var(--border-color, #27272a);
-  border-top: 3px solid var(--primary-color, #3b82f6);
+  border: 3px solid var(--border-primary);
+  border-top: 3px solid var(--info);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -43,15 +43,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: var(--background-primary, #09090b);
-  border: 1px solid var(--border-color, #27272a);
+  background: var(--surface-primary);
+  border: 1px solid var(--border-primary);
   transition: all 0.2s ease;
 }
 
 .statCard:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-  border-color: var(--border-hover, #3f3f46);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-hover);
 }
 
 .statContent {
@@ -63,18 +63,18 @@
 .statNumber {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   line-height: 1;
 }
 
 .statLabel {
   font-size: 0.875rem;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-muted);
   font-weight: 500;
 }
 
 .statIcon {
-  color: var(--text-muted, #71717a);
+  color: var(--text-muted);
   opacity: 0.6;
 }
 
@@ -87,19 +87,19 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: 1.5rem 1.5rem 0 1.5rem;
-  border-bottom: 1px solid var(--border-color, #27272a);
+  border-bottom: 1px solid var(--border-primary);
   margin-bottom: 1.5rem;
 }
 
 .headerContent h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   margin: 0 0 0.5rem 0;
 }
 
 .headerContent p {
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-muted);
   font-size: 0.875rem;
   margin: 0;
 }
@@ -118,24 +118,24 @@
 
 .filterLabel {
   font-size: 0.875rem;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-muted);
   font-weight: 500;
 }
 
 .filterSelect {
   padding: 0.5rem 0.75rem;
-  background: var(--background-subtle, #18181b);
-  border: 1px solid var(--border-color, #27272a);
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-primary);
   border-radius: 6px;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   font-size: 0.875rem;
   min-width: 120px;
 }
 
 .filterSelect:focus {
   outline: none;
-  border-color: var(--primary-color, #3b82f6);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--primary-glow);
 }
 
 .errorMessage {
@@ -143,10 +143,10 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1rem 1.5rem;
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  background: var(--error-light);
+  border: 1px solid var(--error-border);
   border-radius: 6px;
-  color: var(--error-color, #ef4444);
+  color: var(--error);
   margin: 0 1.5rem 1.5rem 1.5rem;
 }
 
@@ -171,19 +171,19 @@
 }
 
 .emptyIcon {
-  color: var(--text-muted, #71717a);
+  color: var(--text-muted);
   opacity: 0.5;
 }
 
 .emptyState h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   margin: 0;
 }
 
 .emptyState p {
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-muted);
   font-size: 0.875rem;
   margin: 0;
   max-width: 400px;
@@ -202,13 +202,13 @@
 
 .assessmentTitle {
   font-weight: 600;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   font-size: 0.875rem;
 }
 
 .assessmentDescription {
   font-size: 0.75rem;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-muted);
   line-height: 1.4;
   max-width: 300px;
   overflow: hidden;
@@ -228,27 +228,29 @@
 }
 
 .statusDraft {
-  background: rgba(161, 161, 170, 0.1);
-  color: #a1a1aa;
-  border: 1px solid rgba(161, 161, 170, 0.2);
+  background: var(--text-muted);
+  color: var(--text-muted);
+  border: 1px solid var(--text-muted);
+  opacity: 0.6;
 }
 
 .statusActive {
-  background: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  background: var(--info-light);
+  color: var(--info);
+  border: 1px solid var(--info-border);
 }
 
 .statusCompleted {
-  background: rgba(16, 185, 129, 0.1);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  background: var(--success-light);
+  color: var(--success);
+  border: 1px solid var(--success-border);
 }
 
 .statusArchived {
-  background: rgba(107, 114, 128, 0.1);
-  color: #6b7280;
-  border: 1px solid rgba(107, 114, 128, 0.2);
+  background: var(--text-tertiary);
+  color: var(--text-tertiary);
+  border: 1px solid var(--text-tertiary);
+  opacity: 0.7;
 }
 
 .actionsCell {

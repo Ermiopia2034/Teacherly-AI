@@ -132,42 +132,4 @@
   }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .pageContainer {
-    background-color: var(--bg-primary-dark, #0f172a);
-  }
-
-  .summaryCard {
-    background: var(--bg-surface-dark, #1e293b);
-    border-color: var(--border-color-dark, #334155);
-  }
-
-  .sectionHeader h2 {
-    color: var(--text-primary-dark, #f8fafc);
-  }
-
-  .sectionHeader p {
-    color: var(--text-secondary-dark, #cbd5e1);
-  }
-
-  .summaryItem h4 {
-    color: var(--text-primary-dark, #f8fafc);
-  }
-
-  .summaryItem strong {
-    color: var(--text-primary-dark, #f8fafc);
-  }
-
-  .dates {
-    color: var(--text-secondary-dark, #cbd5e1);
-  }
-
-  .subject {
-    color: var(--text-secondary-dark, #cbd5e1);
-  }
-
-  .notSet {
-    color: var(--text-muted-dark, #64748b);
-  }
-}
+/* The centralized theme system in globals.css handles all theming automatically */

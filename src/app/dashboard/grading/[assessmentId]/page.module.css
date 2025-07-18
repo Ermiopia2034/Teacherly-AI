@@ -15,7 +15,7 @@
   justify-content: center;
   padding: 4rem 1rem;
   gap: 1rem;
-  color: var(--text-muted, #71717a);
+  color: var(--text-muted);
 }
 
 .errorState {
@@ -29,19 +29,19 @@
 }
 
 .errorState svg {
-  color: var(--text-muted, #71717a);
+  color: var(--text-muted);
   opacity: 0.5;
 }
 
 .errorState h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   margin: 0;
 }
 
 .errorState p {
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-muted);
   font-size: 0.875rem;
   margin: 0;
   max-width: 400px;
@@ -51,8 +51,8 @@
 .spinner {
   width: 32px;
   height: 32px;
-  border: 3px solid var(--border-color, #27272a);
-  border-top: 3px solid var(--primary-color, #3b82f6);
+  border: 3px solid var(--border-primary);
+  border-top: 3px solid var(--info);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -67,8 +67,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: var(--background-primary, #09090b);
-  border: 1px solid var(--border-color, #27272a);
+  background: var(--surface-primary);
+  border: 1px solid var(--border-primary);
 }
 
 .infoContent {
@@ -85,13 +85,13 @@
 
 .infoLabel {
   font-size: 0.875rem;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-muted);
   font-weight: 500;
 }
 
 .infoValue {
   font-size: 0.875rem;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   font-weight: 600;
 }
 
@@ -107,27 +107,29 @@
 }
 
 .status.draft {
-  background: rgba(161, 161, 170, 0.1);
-  color: #a1a1aa;
-  border: 1px solid rgba(161, 161, 170, 0.2);
+  background: var(--text-muted);
+  color: var(--text-muted);
+  border: 1px solid var(--text-muted);
+  opacity: 0.6;
 }
 
 .status.active {
-  background: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  background: var(--info-light);
+  color: var(--info);
+  border: 1px solid var(--info-border);
 }
 
 .status.completed {
-  background: rgba(16, 185, 129, 0.1);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  background: var(--success-light);
+  color: var(--success);
+  border: 1px solid var(--success-border);
 }
 
 .status.archived {
-  background: rgba(107, 114, 128, 0.1);
-  color: #6b7280;
-  border: 1px solid rgba(107, 114, 128, 0.2);
+  background: var(--text-tertiary);
+  color: var(--text-tertiary);
+  border: 1px solid var(--text-tertiary);
+  opacity: 0.7;
 }
 
 .infoActions {
@@ -140,10 +142,10 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1rem;
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  background: var(--error-light);
+  border: 1px solid var(--error-border);
   border-radius: 6px;
-  color: var(--error-color, #ef4444);
+  color: var(--error);
 }
 
 .errorMessage svg {
@@ -157,8 +159,8 @@
 }
 
 .tabsContainer {
-  background: var(--background-primary, #09090b);
-  border: 1px solid var(--border-color, #27272a);
+  background: var(--surface-primary);
+  border: 1px solid var(--border-primary);
   border-radius: 8px;
   padding: 0.5rem;
 }
@@ -182,7 +184,7 @@
   padding: 0.75rem 1rem;
   border: none;
   background: transparent;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-muted);
   font-size: 0.875rem;
   font-weight: 500;
   border-radius: 6px;
@@ -193,12 +195,12 @@
 }
 
 .tab:hover {
-  background: var(--background-hover, #18181b);
-  color: var(--text-primary, #fafafa);
+  background: var(--surface-hover);
+  color: var(--text-primary);
 }
 
 .tab.active {
-  background: var(--primary-color, #3b82f6);
+  background: var(--info);
   color: white;
 }
 
@@ -219,7 +221,7 @@
   min-width: 18px;
   height: 18px;
   padding: 0 0.25rem;
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--surface-hover);
   border-radius: 9px;
   font-size: 0.75rem;
   font-weight: 600;
@@ -227,7 +229,7 @@
 }
 
 .tab.active .tabBadge {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--surface-pressed);
 }
 
 .tabContent {
@@ -245,20 +247,20 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 1.5rem 0 1.5rem;
-  border-bottom: 1px solid var(--border-color, #27272a);
+  border-bottom: 1px solid var(--border-primary);
   margin-bottom: 1.5rem;
 }
 
 .submissionsHeader h4 {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   margin: 0;
 }
 
 .submissionsStats {
   font-size: 0.875rem;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-muted);
   font-weight: 500;
 }
 
@@ -270,13 +272,13 @@
 
 .studentName {
   font-weight: 600;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   font-size: 0.875rem;
 }
 
 .studentId {
   font-size: 0.75rem;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-muted);
 }
 
 .fileCell {
@@ -287,7 +289,7 @@
 
 .fileName {
   font-size: 0.875rem;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -306,27 +308,28 @@
 }
 
 .statusPending {
-  background: rgba(161, 161, 170, 0.1);
-  color: #a1a1aa;
-  border: 1px solid rgba(161, 161, 170, 0.2);
+  background: var(--text-muted);
+  color: var(--text-muted);
+  border: 1px solid var(--text-muted);
+  opacity: 0.6;
 }
 
 .statusProcessing {
-  background: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  background: var(--info-light);
+  color: var(--info);
+  border: 1px solid var(--info-border);
 }
 
 .statusCompleted {
-  background: rgba(16, 185, 129, 0.1);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  background: var(--success-light);
+  color: var(--success);
+  border: 1px solid var(--success-border);
 }
 
 .statusFailed {
-  background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  background: var(--error-light);
+  color: var(--error);
+  border: 1px solid var(--error-border);
 }
 
 .scoreCell {
@@ -338,17 +341,17 @@
 
 .score {
   font-weight: 600;
-  color: var(--text-primary, #fafafa);
+  color: var(--text-primary);
   font-size: 0.875rem;
 }
 
 .percentage {
   font-size: 0.75rem;
-  color: var(--text-muted, #a1a1aa);
+  color: var(--text-muted);
 }
 
 .noScore {
-  color: var(--text-muted, #71717a);
+  color: var(--text-muted);
   font-size: 1.125rem;
 }
 
@@ -480,7 +483,7 @@
 /* Custom scrollbar for tabs */
 .tabsList {
   scrollbar-width: thin;
-  scrollbar-color: var(--border-color, #27272a) transparent;
+  scrollbar-color: var(--border-primary) transparent;
 }
 
 .tabsList::-webkit-scrollbar {
@@ -492,12 +495,12 @@
 }
 
 .tabsList::-webkit-scrollbar-thumb {
-  background: var(--border-color, #27272a);
+  background: var(--border-primary);
   border-radius: 2px;
 }
 
 .tabsList::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted, #71717a);
+  background: var(--text-muted);
 }
 
 /* Tab content animations */
@@ -524,7 +527,7 @@
 
 .loadingState,
 .errorState {
-  background: var(--background-primary, #09090b);
-  border: 1px solid var(--border-color, #27272a);
+  background: var(--surface-primary);
+  border: 1px solid var(--border-primary);
   border-radius: 8px;
 }

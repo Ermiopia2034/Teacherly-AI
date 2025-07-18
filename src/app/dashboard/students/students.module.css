@@ -63,25 +63,25 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1rem;
-  background-color: #fef3c7;
-  border: 1px solid #fbbf24;
+  background-color: var(--warning-light);
+  border: 1px solid var(--warning-border);
   border-radius: 8px;
-  color: #92400e;
+  color: var(--warning);
 }
 
 .warningMessage svg {
   flex-shrink: 0;
-  color: #f59e0b;
+  color: var(--warning);
 }
 
 .warningLink {
-  color: #1d4ed8;
+  color: var(--info);
   text-decoration: underline;
   font-weight: 600;
 }
 
 .warningLink:hover {
-  color: #1e40af;
+  color: var(--info-hover);
 }
 
 .sectionManagerCard {
@@ -145,49 +145,4 @@
   }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .pageContainer {
-    background-color: var(--bg-primary-dark, #0f172a);
-  }
-
-  .contextCard {
-    background: var(--bg-surface-dark, #1e293b);
-    border-color: var(--border-color-dark, #334155);
-  }
-
-  .sectionManagerCard {
-    background: var(--bg-surface-dark, #1e293b);
-    border-color: var(--border-color-dark, #334155);
-  }
-
-  .contextHeader h3 {
-    color: var(--text-primary-dark, #f8fafc);
-  }
-
-  .contextLabel {
-    color: var(--text-secondary-dark, #cbd5e1);
-  }
-
-  .contextValue {
-    color: var(--text-primary-dark, #f8fafc);
-  }
-
-  .warningMessage {
-    background-color: #451a03;
-    border-color: #92400e;
-    color: #fbbf24;
-  }
-
-  .warningMessage svg {
-    color: #fbbf24;
-  }
-
-  .warningLink {
-    color: #60a5fa;
-  }
-
-  .warningLink:hover {
-    color: #93c5fd;
-  }
-}
+/* Theme system handles all color variations automatically */

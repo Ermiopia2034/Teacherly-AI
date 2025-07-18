@@ -158,11 +158,11 @@
 }
 
 .quickInfoValue.enabled {
-  color: var(--success-color, #10b981);
+  color: var(--success);
 }
 
 .quickInfoValue.disabled {
-  color: var(--warning-color, #f59e0b);
+  color: var(--warning);
 }
 
 /* Responsive Design */

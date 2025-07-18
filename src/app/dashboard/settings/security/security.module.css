@@ -96,11 +96,11 @@
 }
 
 .statusValue.enabled {
-  color: var(--success-color, #10b981);
+  color: var(--success);
 }
 
 .statusValue.disabled {
-  color: var(--warning-color, #f59e0b);
+  color: var(--warning);
 }
 
 .statusIndicator {
@@ -143,19 +143,19 @@
 
 .errorMessage {
   padding: 1rem;
-  background: var(--error-light, #fef2f2);
-  border: 1px solid var(--error-color, #ef4444);
+  background: var(--error-light);
+  border: 1px solid var(--error-border);
   border-radius: 6px;
-  color: var(--error-color, #ef4444);
+  color: var(--error);
   font-weight: 500;
 }
 
 .successMessage {
   padding: 1rem;
-  background: var(--success-light, #f0fdf4);
-  border: 1px solid var(--success-color, #10b981);
+  background: var(--success-light);
+  border: 1px solid var(--success-border);
   border-radius: 6px;
-  color: var(--success-color, #10b981);
+  color: var(--success);
   font-weight: 500;
 }
 
