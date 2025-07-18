@@ -124,15 +124,13 @@ export default function MaterialForm() {
     });
   };
 
-  const handleTopicChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { options } = e.target;
-    const value: string[] = [];
-    for (let i = 0, l = options.length; i < l; i += 1) {
-      if (options[i].selected) {
-        value.push(options[i].value);
-      }
-    }
-    setFormData(prev => ({ ...prev, topics: value }));
+  const handleTopicChange = (topicValue: string, isChecked: boolean) => {
+    setFormData(prev => {
+      const newTopics = isChecked
+        ? [...prev.topics, topicValue]
+        : prev.topics.filter(topic => topic !== topicValue);
+      return { ...prev, topics: newTopics };
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -164,21 +162,28 @@ export default function MaterialForm() {
           <LabeledSelect label="Grade Level" id="grade" name="grade" value={formData.grade} onChange={handleChange} options={toOptions(grades)} placeholder="Select a grade level" required disabled={!formData.subject} />
           <LabeledSelect label="Unit" id="unit" name="unit" value={formData.unit} onChange={handleChange} options={toOptions(chapters)} placeholder="Select a unit" required disabled={!formData.grade} />
           <div className={styles.formGroup}>
-            <label htmlFor="topics" className={styles.label}>Topics (multi-select)</label>
-            <select
-              id="topics"
-              name="topics"
-              multiple
-              value={formData.topics}
-              onChange={handleTopicChange}
-              className={styles.multiSelect}
-              required
-              disabled={!formData.unit}
-            >
-              {topics.map(topic => (
-                <option key={topic} value={topic}>{topic}</option>
-              ))}
-            </select>
+            <label className={styles.label}>Topics *</label>
+            <div className={styles.checkboxGroup}>
+              {topics.length > 0 ? (
+                topics.map(topic => (
+                  <label key={topic} className={styles.checkboxItem}>
+                    <input
+                      type="checkbox"
+                      value={topic}
+                      checked={formData.topics.includes(topic)}
+                      onChange={(e) => handleTopicChange(topic, e.target.checked)}
+                      disabled={!formData.unit}
+                      className={styles.checkbox}
+                    />
+                    <span className={styles.checkboxLabel}>{topic}</span>
+                  </label>
+                ))
+              ) : (
+                <p className={styles.placeholderText}>
+                  {!formData.unit ? 'Select a unit first' : 'No topics available'}
+                </p>
+              )}
+            </div>
           </div>
           <LabeledSelect label="Content Type" id="contentType" name="contentType" value={formData.contentType} onChange={handleChange} options={[{ value: 'note', label: 'Teaching Note' }, { value: 'homework', label: 'Homework Assignment' }]} required />
           <LabeledTextarea label="Additional Information" id="additionalInfo" name="additionalInfo" value={formData.additionalInfo} onChange={handleChange} placeholder="Any specific requirements..." rows={4} />

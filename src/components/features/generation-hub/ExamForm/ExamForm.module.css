@@ -197,6 +197,66 @@
   background-color: var(--primary-subtle);
 }
 
+/* Checkbox Group Styles */
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--border-primary);
+  border-radius: 6px;
+  background-color: var(--surface-hover);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.checkboxItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.checkboxItem:hover {
+  background-color: var(--surface-tertiary);
+}
+
+.checkbox {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.checkbox:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.checkboxLabel {
+  font-size: 0.875rem;
+  color: var(--foreground);
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.checkboxItem:has(.checkbox:disabled) .checkboxLabel {
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.placeholderText {
+  margin: 0;
+  padding: 1rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.875rem;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .formActions {
