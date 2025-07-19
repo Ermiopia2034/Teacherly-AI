@@ -90,9 +90,19 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
     return enrollments.filter(enrollment => enrollment.student_id === studentId);
   };
 
+  // Debug logging
+  console.log('Debug - Students:', students.length);
+  console.log('Debug - Enrollments:', enrollments.length);
+  console.log('Debug - Filters:', filters);
+  if (enrollments.length > 0) {
+    console.log('Debug - Sample enrollment:', enrollments[0]);
+  }
+
   // Filter students based on selected filters
   const filteredStudents = students.filter(student => {
     const studentEnrollments = getStudentEnrollments(student.id);
+    
+    console.log(`Debug - Student ${student.id} (${student.full_name}) has ${studentEnrollments.length} enrollments`);
     
     // Filter by section
     if (filters.section_id !== 0) {
@@ -113,6 +123,8 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
     
     return true;
   });
+
+  console.log('Debug - Filtered students:', filteredStudents.length);
 
   // Create options for filters
   const sectionOptions = [
