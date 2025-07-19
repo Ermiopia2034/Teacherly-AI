@@ -5,6 +5,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
 import { createGradeThunk, updateGradeThunk, fetchGradesThunk, selectGradesCreating, selectGradesError } from '@/lib/features/grades/gradesSlice';
 import { fetchStudentsThunk, selectStudents } from '@/lib/features/students/studentsSlice';
+import {
+  fetchSectionsThunk,
+  selectSections
+} from '@/lib/features/academic/sectionsSlice';
 import { fetchMyContent } from '@/lib/api/content';
 import Button from '@/components/ui/Button/Button';
 import LabeledInput from '@/components/ui/LabeledInput/LabeledInput';
@@ -25,11 +29,13 @@ export function GradeForm({ grade, onSuccess, onCancel }: GradeFormProps) {
   const isCreating = useSelector(selectGradesCreating);
   const error = useSelector(selectGradesError);
   const students = useSelector(selectStudents);
+  const sections = useSelector(selectSections);
 
   const [contentItems, setContentItems] = useState<ContentRead[]>([]);
   const [formData, setFormData] = useState({
     student_id: grade?.student_id || 0,
     content_id: grade?.content_id || 0,
+    section_id: grade?.section_id || 0,
     score: grade?.score || 0,
     max_score: grade?.max_score || 100,
     feedback: grade?.feedback || ''
@@ -38,8 +44,9 @@ export function GradeForm({ grade, onSuccess, onCancel }: GradeFormProps) {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    // Fetch students and content for dropdowns
+    // Fetch students, sections, and content for dropdowns
     dispatch(fetchStudentsThunk({}));
+    dispatch(fetchSectionsThunk({}));
     fetchContentItems();
   }, [dispatch]);
 
@@ -54,11 +61,11 @@ export function GradeForm({ grade, onSuccess, onCancel }: GradeFormProps) {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ 
-      ...prev, 
-      [name]: name === 'score' || name === 'max_score' || name === 'student_id' || name === 'content_id' 
-        ? Number(value) 
-        : value 
+    setFormData(prev => ({
+      ...prev,
+      [name]: name === 'score' || name === 'max_score' || name === 'student_id' || name === 'content_id' || name === 'section_id'
+        ? Number(value)
+        : value
     }));
     
     // Clear validation error when user starts typing
@@ -76,6 +83,10 @@ export function GradeForm({ grade, onSuccess, onCancel }: GradeFormProps) {
 
     if (!formData.content_id || formData.content_id === 0) {
       errors.content_id = 'Please select content';
+    }
+
+    if (!formData.section_id || formData.section_id === 0) {
+      errors.section_id = 'Please select a section';
     }
 
     if (formData.score < 0) {
@@ -121,6 +132,7 @@ export function GradeForm({ grade, onSuccess, onCancel }: GradeFormProps) {
         setFormData({
           student_id: 0,
           content_id: 0,
+          section_id: 0,
           score: 0,
           max_score: 100,
           feedback: ''
@@ -143,6 +155,7 @@ export function GradeForm({ grade, onSuccess, onCancel }: GradeFormProps) {
       setFormData({
         student_id: grade.student_id,
         content_id: grade.content_id,
+        section_id: grade.section_id || 0,
         score: grade.score,
         max_score: grade.max_score || 100,
         feedback: grade.feedback || ''
@@ -152,6 +165,7 @@ export function GradeForm({ grade, onSuccess, onCancel }: GradeFormProps) {
       setFormData({
         student_id: 0,
         content_id: 0,
+        section_id: 0,
         score: 0,
         max_score: 100,
         feedback: ''
@@ -172,6 +186,11 @@ export function GradeForm({ grade, onSuccess, onCancel }: GradeFormProps) {
   const contentOptions = contentItems.map(content => ({
     value: content.id,
     label: `${content.title} (${content.content_type})`
+  }));
+
+  const sectionOptions = sections.map(section => ({
+    value: section.id,
+    label: `${section.name} - ${section.subject}${section.semester ? ` (${section.semester.name})` : ''}`
   }));
 
   return (
@@ -208,6 +227,20 @@ export function GradeForm({ grade, onSuccess, onCancel }: GradeFormProps) {
         />
         {validationErrors.content_id && (
           <div className={styles.fieldError}>{validationErrors.content_id}</div>
+        )}
+
+        <LabeledSelect
+          label="Section"
+          id="section_id"
+          name="section_id"
+          value={formData.section_id}
+          onChange={handleInputChange}
+          options={sectionOptions}
+          placeholder="Select a section"
+          required
+        />
+        {validationErrors.section_id && (
+          <div className={styles.fieldError}>{validationErrors.section_id}</div>
         )}
 
         <div className={styles.scoreGroup}>

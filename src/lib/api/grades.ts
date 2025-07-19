@@ -36,6 +36,7 @@ export interface GradeCreatePayload {
   feedback?: string;
   student_id: number;
   content_id: number;
+  section_id: number;
 }
 
 export interface GradeUpdatePayload {

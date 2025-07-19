@@ -31,6 +31,7 @@ export interface AttendanceCreatePayload {
   status: 'present' | 'absent' | 'late' | 'excused';
   notes?: string;
   student_id: number;
+  section_id: number;
 }
 
 export interface AttendanceUpdatePayload {
@@ -43,6 +44,7 @@ export interface AttendanceRecord {
   student_id: number;
   status: 'present' | 'absent' | 'late' | 'excused';
   notes?: string;
+  section_id: number;
 }
 
 export interface AttendanceBulkCreatePayload {

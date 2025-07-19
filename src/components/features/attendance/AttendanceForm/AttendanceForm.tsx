@@ -3,14 +3,18 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
-import { 
-  createAttendanceThunk, 
+import {
+  createAttendanceThunk,
   createBulkAttendanceThunk,
   fetchAttendanceThunk,
-  selectAttendanceCreating, 
-  selectAttendanceError 
+  selectAttendanceCreating,
+  selectAttendanceError
 } from '@/lib/features/attendance/attendanceSlice';
 import { fetchStudentsThunk, selectStudents } from '@/lib/features/students/studentsSlice';
+import {
+  fetchSectionsThunk,
+  selectSections
+} from '@/lib/features/academic/sectionsSlice';
 import Button from '@/components/ui/Button/Button';
 import LabeledInput from '@/components/ui/LabeledInput/LabeledInput';
 import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
@@ -28,11 +32,13 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
   const isCreating = useSelector(selectAttendanceCreating);
   const error = useSelector(selectAttendanceError);
   const students = useSelector(selectStudents);
+  const sections = useSelector(selectSections);
 
   const [mode, setMode] = useState<'single' | 'bulk'>('bulk');
   const [attendanceDate, setAttendanceDate] = useState(
     new Date().toISOString().split('T')[0]
   );
+  const [selectedSectionId, setSelectedSectionId] = useState(0);
 
   // Single attendance form
   const [singleFormData, setSingleFormData] = useState({
@@ -48,22 +54,38 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
 
   useEffect(() => {
     dispatch(fetchStudentsThunk({}));
+    dispatch(fetchSectionsThunk({}));
   }, [dispatch]);
 
   useEffect(() => {
-    // Initialize bulk attendance when students are loaded
-    if (students.length > 0 && Object.keys(bulkAttendance).length === 0) {
+    // Initialize bulk attendance when students are loaded and section is selected
+    if (students.length > 0 && selectedSectionId > 0 && Object.keys(bulkAttendance).length === 0) {
       const initialBulkData: Record<number, AttendanceRecord> = {};
       students.forEach(student => {
         initialBulkData[student.id] = {
           student_id: student.id,
+          section_id: selectedSectionId,
           status: 'present',
           notes: ''
         };
       });
       setBulkAttendance(initialBulkData);
     }
-  }, [students, bulkAttendance]);
+  }, [students, selectedSectionId, bulkAttendance]);
+
+  // Update section_id in bulk attendance when selectedSectionId changes
+  useEffect(() => {
+    if (selectedSectionId > 0 && Object.keys(bulkAttendance).length > 0) {
+      const updatedBulkData: Record<number, AttendanceRecord> = {};
+      Object.entries(bulkAttendance).forEach(([studentId, record]) => {
+        updatedBulkData[Number(studentId)] = {
+          ...record,
+          section_id: selectedSectionId
+        };
+      });
+      setBulkAttendance(updatedBulkData);
+    }
+  }, [selectedSectionId]);
 
   const handleSingleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -98,6 +120,10 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
       errors.student_id = 'Please select a student';
     }
 
+    if (!selectedSectionId || selectedSectionId === 0) {
+      errors.section_id = 'Please select a section';
+    }
+
     if (!attendanceDate) {
       errors.attendance_date = 'Please select a date';
     }
@@ -107,11 +133,18 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
   };
 
   const validateBulkForm = (): boolean => {
-    if (!attendanceDate) {
-      setValidationErrors({ attendance_date: 'Please select a date' });
-      return false;
+    const errors: Record<string, string> = {};
+    
+    if (!selectedSectionId || selectedSectionId === 0) {
+      errors.section_id = 'Please select a section';
     }
-    return true;
+    
+    if (!attendanceDate) {
+      errors.attendance_date = 'Please select a date';
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -124,6 +157,7 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
         await dispatch(createAttendanceThunk({
           attendance_date: attendanceDate,
           student_id: singleFormData.student_id,
+          section_id: selectedSectionId,
           status: singleFormData.status,
           notes: singleFormData.notes.trim() || undefined
         })).unwrap();
@@ -158,6 +192,7 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
         students.forEach(student => {
           resetBulkData[student.id] = {
             student_id: student.id,
+            section_id: selectedSectionId,
             status: 'present',
             notes: ''
           };
@@ -184,6 +219,11 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
   const studentOptions = students.map(student => ({
     value: student.id,
     label: student.full_name
+  }));
+
+  const sectionOptions = sections.map(section => ({
+    value: section.id,
+    label: `${section.name} - ${section.subject}${section.semester ? ` (${section.semester.name})` : ''}`
   }));
 
   const getStatusBadgeClass = (status: string) => {
@@ -236,6 +276,20 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
           <div className={styles.fieldError}>{validationErrors.attendance_date}</div>
         )}
 
+        <LabeledSelect
+          label="Section"
+          id="section_id"
+          name="section_id"
+          value={selectedSectionId}
+          onChange={(e) => setSelectedSectionId(Number(e.target.value))}
+          options={sectionOptions}
+          placeholder="Select a section"
+          required
+        />
+        {validationErrors.section_id && (
+          <div className={styles.fieldError}>{validationErrors.section_id}</div>
+        )}
+
         {mode === 'single' ? (
           <div className={styles.singleForm}>
             <LabeledSelect
@@ -285,13 +339,14 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
                     students.forEach(student => {
                       allPresent[student.id] = {
                         student_id: student.id,
+                        section_id: selectedSectionId,
                         status: 'present',
                         notes: ''
                       };
                     });
                     setBulkAttendance(allPresent);
                   }}
-                  disabled={isCreating}
+                  disabled={isCreating || selectedSectionId === 0}
                 >
                   Mark All Present
                 </Button>
@@ -303,13 +358,14 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
                     students.forEach(student => {
                       allAbsent[student.id] = {
                         student_id: student.id,
+                        section_id: selectedSectionId,
                         status: 'absent',
                         notes: ''
                       };
                     });
                     setBulkAttendance(allAbsent);
                   }}
-                  disabled={isCreating}
+                  disabled={isCreating || selectedSectionId === 0}
                 >
                   Mark All Absent
                 </Button>

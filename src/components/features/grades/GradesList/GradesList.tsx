@@ -107,11 +107,19 @@ export function GradesList() {
     if (filters.content_id && grade.content_id !== filters.content_id) {
       return false;
     }
-    if (filters.semester_id && grade.semester_id !== filters.semester_id) {
-      return false;
+    if (filters.semester_id) {
+      // Check both direct semester_id and semester relationship
+      const gradeSemesterId = grade.semester_id || grade.semester?.id;
+      if (gradeSemesterId !== filters.semester_id) {
+        return false;
+      }
     }
-    if (filters.section_id && grade.section_id !== filters.section_id) {
-      return false;
+    if (filters.section_id) {
+      // Check both direct section_id and section relationship
+      const gradeSectionId = grade.section_id || grade.section?.id;
+      if (gradeSectionId !== filters.section_id) {
+        return false;
+      }
     }
     return true;
   });

@@ -142,11 +142,19 @@ export function AttendanceList() {
       if (filters.end_date && record.attendance_date > filters.end_date) {
         return false;
       }
-      if (filters.semester_id && record.semester_id !== filters.semester_id) {
-        return false;
+      if (filters.semester_id) {
+        // Check both direct semester_id and semester relationship
+        const recordSemesterId = record.semester_id || record.semester?.id;
+        if (recordSemesterId !== filters.semester_id) {
+          return false;
+        }
       }
-      if (filters.section_id && record.section_id !== filters.section_id) {
-        return false;
+      if (filters.section_id) {
+        // Check both direct section_id and section relationship
+        const recordSectionId = record.section_id || record.section?.id;
+        if (recordSectionId !== filters.section_id) {
+          return false;
+        }
       }
       return true;
     });
