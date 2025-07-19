@@ -82,16 +82,23 @@ export function StudentsList() {
     // Filter by section
     if (filters.section_id !== 0) {
       const isEnrolledInSection = studentEnrollments.some(
-        enrollment => enrollment.section_id === filters.section_id
+        enrollment => enrollment.section_id === filters.section_id &&
+        (!enrollment.status || enrollment.status === 'ENROLLED')
       );
       if (!isEnrolledInSection) return false;
     }
     
     // Filter by enrollment status
     if (filters.enrollment_status === 'enrolled') {
-      if (studentEnrollments.length === 0) return false;
+      const hasActiveEnrollment = studentEnrollments.some(
+        enrollment => !enrollment.status || enrollment.status === 'ENROLLED'
+      );
+      if (!hasActiveEnrollment) return false;
     } else if (filters.enrollment_status === 'not_enrolled') {
-      if (studentEnrollments.length > 0) return false;
+      const hasActiveEnrollment = studentEnrollments.some(
+        enrollment => !enrollment.status || enrollment.status === 'ENROLLED'
+      );
+      if (hasActiveEnrollment) return false;
     }
     
     return true;

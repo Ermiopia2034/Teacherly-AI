@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { selectCurrentSemester } from '@/lib/features/academic/semestersSlice';
-import { selectCurrentAcademicYear } from '@/lib/features/academic/academicYearsSlice';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { AppDispatch } from '@/lib/store';
+import { selectCurrentSemester, fetchCurrentSemesterThunk } from '@/lib/features/academic/semestersSlice';
+import { selectCurrentAcademicYear, fetchCurrentAcademicYearThunk } from '@/lib/features/academic/academicYearsSlice';
 import StudentsList from '@/components/features/students/StudentsList';
 import PageHeader from '@/components/ui/PageHeader/PageHeader';
 import Breadcrumb from '@/components/ui/Breadcrumb/Breadcrumb';
@@ -14,10 +15,21 @@ import SectionManager from '@/components/features/academic/SectionManager';
 import styles from './students.module.css';
 
 export default function StudentsPage() {
+  const dispatch = useDispatch<AppDispatch>();
   const currentSemester = useSelector(selectCurrentSemester);
   const currentAcademicYear = useSelector(selectCurrentAcademicYear);
   const [selectedSection, setSelectedSection] = useState<Section | null>(null);
   const [showSectionManager, setShowSectionManager] = useState(false);
+
+  // Ensure academic data is loaded
+  useEffect(() => {
+    if (!currentAcademicYear) {
+      dispatch(fetchCurrentAcademicYearThunk());
+    }
+    if (!currentSemester) {
+      dispatch(fetchCurrentSemesterThunk());
+    }
+  }, [dispatch, currentAcademicYear, currentSemester]);
 
   const breadcrumbItems = [
     { label: 'Dashboard', href: '/dashboard' },
@@ -71,7 +83,7 @@ export default function StudentsPage() {
             </div>
           </div>
 
-          {!currentAcademicYear || !currentSemester && (
+          {(!currentAcademicYear || !currentSemester) && (
             <div className={styles.warningMessage}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>

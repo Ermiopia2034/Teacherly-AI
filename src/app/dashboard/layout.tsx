@@ -8,6 +8,8 @@ import styles from './dashboard.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
 import { logoutUser, selectUser, selectIsAuthLoading } from '@/lib/features/auth/authSlice';
+import { fetchCurrentAcademicYearThunk } from '@/lib/features/academic/academicYearsSlice';
+import { fetchCurrentSemesterThunk } from '@/lib/features/academic/semestersSlice';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 
 export default function DashboardLayout({
@@ -51,6 +53,24 @@ export default function DashboardLayout({
       router.push('/auth?mode=login&redirect=/dashboard'); // Added redirect query
     }
   }, [isLoadingAuth, user, router]);
+
+  // Initialize academic data when user is authenticated
+  useEffect(() => {
+    if (user && !isLoadingAuth) {
+      // Fetch current academic year and semester for the teacher
+      dispatch(fetchCurrentAcademicYearThunk());
+      dispatch(fetchCurrentSemesterThunk());
+    }
+  }, [user, isLoadingAuth, dispatch]);
+
+  // Initialize academic data when user is authenticated
+  useEffect(() => {
+    if (user && !isLoadingAuth) {
+      // Fetch current academic year and semester for the teacher
+      dispatch(fetchCurrentAcademicYearThunk());
+      dispatch(fetchCurrentSemesterThunk());
+    }
+  }, [user, isLoadingAuth, dispatch]);
 
   const handleLogout = async () => {
     try {

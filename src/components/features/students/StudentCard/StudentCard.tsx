@@ -1,19 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
-import { 
-  updateStudentThunk, 
-  deleteStudentThunk, 
-  selectStudentsUpdating, 
-  selectStudentsDeleting 
+import {
+  updateStudentThunk,
+  deleteStudentThunk,
+  selectStudentsUpdating,
+  selectStudentsDeleting
 } from '@/lib/features/students/studentsSlice';
+import { fetchSectionsThunk, selectSections } from '@/lib/features/academic/sectionsSlice';
+import {
+  createEnrollmentThunk,
+  updateEnrollmentThunk,
+  deleteEnrollmentThunk
+} from '@/lib/features/academic/enrollmentsSlice';
 import { Student, StudentUpdatePayload } from '@/lib/api/students';
 import { StudentEnrollment } from '@/lib/api/enrollments';
 import Card from '@/components/ui/Card/Card';
 import Button from '@/components/ui/Button/Button';
 import LabeledInput from '@/components/ui/LabeledInput/LabeledInput';
+import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
 import styles from './StudentCard.module.css';
 
 interface StudentCardProps {
@@ -27,49 +34,82 @@ export function StudentCard({ student, enrollments = [], onUpdate, onDelete }: S
   const dispatch = useDispatch<AppDispatch>();
   const isUpdating = useSelector(selectStudentsUpdating);
   const isDeleting = useSelector(selectStudentsDeleting);
+  const sections = useSelector(selectSections);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editFormData, setEditFormData] = useState({
     full_name: student.full_name,
-    grade_level: student.grade_level || '',
-    parent_email: student.parent_email || ''
+    parent_email: student.parent_email || '',
+    section_id: enrollments.length > 0 ? enrollments[0].section_id : 0
   });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Fetch sections when editing starts
+  useEffect(() => {
+    if (isEditing && sections.length === 0) {
+      dispatch(fetchSectionsThunk({}));
+    }
+  }, [isEditing, sections.length, dispatch]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setEditFormData(prev => ({ ...prev, [name]: value }));
+    setEditFormData(prev => ({
+      ...prev,
+      [name]: name === 'section_id' ? Number(value) : value
+    }));
   };
 
   const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     try {
-      // Only include fields that have changed
+      // Update student basic info
       const updatePayload: StudentUpdatePayload = {};
       
       if (editFormData.full_name !== student.full_name) {
         updatePayload.full_name = editFormData.full_name.trim();
       }
-      if (editFormData.grade_level !== (student.grade_level || '')) {
-        updatePayload.grade_level = editFormData.grade_level.trim() || undefined;
-      }
       if (editFormData.parent_email !== (student.parent_email || '')) {
         updatePayload.parent_email = editFormData.parent_email.trim() || undefined;
       }
 
-      // Only submit if there are changes
+      // Update student info if there are changes
       if (Object.keys(updatePayload).length > 0) {
-        const updatedStudent = await dispatch(
+        await dispatch(
           updateStudentThunk({ studentId: student.id, payload: updatePayload })
         ).unwrap();
-        
-        if (onUpdate) {
-          onUpdate(updatedStudent);
+      }
+
+      // Handle section enrollment changes
+      const currentEnrollment = enrollments.find(e => e.student_id === student.id);
+      const currentSectionId = currentEnrollment?.section_id || 0;
+      
+      if (editFormData.section_id !== currentSectionId) {
+        // Section has changed
+        if (currentEnrollment && editFormData.section_id === 0) {
+          // Remove from current section
+          await dispatch(deleteEnrollmentThunk(currentEnrollment.id)).unwrap();
+        } else if (currentEnrollment && editFormData.section_id !== 0) {
+          // Move to different section - update enrollment
+          await dispatch(updateEnrollmentThunk({
+            enrollmentId: currentEnrollment.id,
+            payload: { section_id: editFormData.section_id }
+          })).unwrap();
+        } else if (!currentEnrollment && editFormData.section_id !== 0) {
+          // Add to new section
+          await dispatch(createEnrollmentThunk({
+            student_id: student.id,
+            section_id: editFormData.section_id
+          })).unwrap();
         }
       }
       
       setIsEditing(false);
+      
+      if (onUpdate) {
+        // Trigger parent component refresh
+        onUpdate(student);
+      }
     } catch (error) {
       console.error('Failed to update student:', error);
     }
@@ -92,8 +132,8 @@ export function StudentCard({ student, enrollments = [], onUpdate, onDelete }: S
   const handleCancelEdit = () => {
     setEditFormData({
       full_name: student.full_name,
-      grade_level: student.grade_level || '',
-      parent_email: student.parent_email || ''
+      parent_email: student.parent_email || '',
+      section_id: enrollments.length > 0 ? enrollments[0].section_id : 0
     });
     setIsEditing(false);
   };
@@ -120,14 +160,19 @@ export function StudentCard({ student, enrollments = [], onUpdate, onDelete }: S
             required
           />
           
-          <LabeledInput
-            label="Grade Level"
-            id="edit_grade_level"
-            name="grade_level"
-            type="text"
-            value={editFormData.grade_level}
+          <LabeledSelect
+            label="Section"
+            id="edit_section_id"
+            name="section_id"
+            value={editFormData.section_id}
             onChange={handleInputChange}
-            placeholder="e.g., Grade 10, Year 2"
+            options={[
+              { value: 0, label: 'No section assigned' },
+              ...sections.map(section => ({
+                value: section.id,
+                label: `${section.name} (${section.subject} - ${section.grade_level})`
+              }))
+            ]}
           />
           
           <LabeledInput

@@ -5,8 +5,9 @@ export interface StudentEnrollment {
   id: number;
   student_id: number;
   section_id: number;
+  status?: string; // enrollment status (enrolled, dropped, etc.)
   enrollment_date: string;
-  teacher_id: number;
+  drop_date?: string;
   created_at: string;
   updated_at?: string;
   student?: {
