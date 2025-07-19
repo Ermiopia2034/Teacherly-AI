@@ -20,11 +20,12 @@ import {
   fetchEnrollmentsThunk,
   selectEnrollments
 } from '@/lib/features/academic/enrollmentsSlice';
-import StudentCard from '@/components/features/students/StudentCard';
+import { Student } from '@/lib/api/students';
 import StudentRegistrationForm from '@/components/features/students/StudentRegistrationForm';
 import Button from '@/components/ui/Button/Button';
 import Card from '@/components/ui/Card/Card';
 import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
+import DataTable, { Column } from '@/components/ui/DataTable/DataTable';
 import styles from './StudentsList.module.css';
 
 interface StudentsListProps {
@@ -90,19 +91,9 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
     return enrollments.filter(enrollment => enrollment.student_id === studentId);
   };
 
-  // Debug logging
-  console.log('Debug - Students:', students.length);
-  console.log('Debug - Enrollments:', enrollments.length);
-  console.log('Debug - Filters:', filters);
-  if (enrollments.length > 0) {
-    console.log('Debug - Sample enrollment:', enrollments[0]);
-  }
-
   // Filter students based on selected filters
   const filteredStudents = students.filter(student => {
     const studentEnrollments = getStudentEnrollments(student.id);
-    
-    console.log(`Debug - Student ${student.id} (${student.full_name}) has ${studentEnrollments.length} enrollments`);
     
     // Filter by section
     if (filters.section_id !== 0) {
@@ -124,8 +115,6 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
     return true;
   });
 
-  console.log('Debug - Filtered students:', filteredStudents.length);
-
   // Create options for filters
   const sectionOptions = [
     { value: 0, label: 'All Sections' },
@@ -141,16 +130,94 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
     { value: 'not_enrolled', label: 'Not Enrolled' }
   ];
 
-  const handleStudentUpdated = () => {
-    // Refresh stats in case they changed
-    dispatch(fetchStudentStatsThunk());
-  };
+  // Table columns configuration
+  const columns: Column<Student>[] = [
+    {
+      key: 'avatar',
+      title: '',
+      width: 60,
+      align: 'center',
+      render: (_, student: Student) => (
+        <div className={styles.avatarCell}>
+          <div className={styles.avatar}>
+            {student.full_name.charAt(0).toUpperCase()}
+          </div>
+        </div>
+      )
+    },
+    {
+      key: 'name',
+      title: 'Student Name',
+      dataIndex: 'full_name',
+      sortable: true,
+      render: (value: unknown, student: Student) => (
+        <div className={styles.nameCell}>
+          <div className={styles.studentName}>{String(value)}</div>
+          {student.grade_level && (
+            <div className={styles.gradeLevel}>{student.grade_level}</div>
+          )}
+        </div>
+      )
+    },
+    {
+      key: 'email',
+      title: 'Parent Email',
+      dataIndex: 'parent_email',
+      render: (value: unknown) => value ? String(value) : <span className={styles.noData}>—</span>
+    },
+    {
+      key: 'enrollments',
+      title: 'Enrolled Sections',
+      render: (_, student: Student) => {
+        const studentEnrollments = getStudentEnrollments(student.id);
+        if (studentEnrollments.length === 0) {
+          return <span className={styles.noEnrollments}>No enrollments</span>;
+        }
+        return (
+          <div className={styles.enrollmentsCell}>
+            {studentEnrollments.map((enrollment) => (
+              <div key={enrollment.id} className={styles.enrollmentTag}>
+                <span className={styles.sectionName}>
+                  {enrollment.section_name || 'Unknown Section'}
+                </span>
+                <span className={styles.sectionSubject}>
+                  {enrollment.section_subject || 'Unknown Subject'}
+                </span>
+              </div>
+            ))}
+          </div>
+        );
+      }
+    },
+    {
+      key: 'registered',
+      title: 'Registered',
+      dataIndex: 'created_at',
+      sortable: true,
+      render: (value: unknown) => new Date(String(value)).toLocaleDateString()
+    },
+    {
+      key: 'actions',
+      title: 'Actions',
+      width: 120,
+      align: 'center',
+      render: (_, student: Student) => (
+        <div className={styles.actionsCell}>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => {
+              // TODO: Implement editing modal or inline editing
+              console.log('Edit student:', student.id);
+            }}
+          >
+            Edit
+          </Button>
+        </div>
+      )
+    }
+  ];
 
-  const handleStudentDeleted = () => {
-    // Refresh the student list and stats
-    dispatch(fetchStudentsThunk({}));
-    dispatch(fetchStudentStatsThunk());
-  };
 
   if (isLoading && students.length === 0) {
     return (
@@ -243,56 +310,20 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
         </div>
       )}
 
-      {/* Students Grid */}
+      {/* Students Table */}
       <div className={styles.studentsSection}>
-        {filteredStudents.length === 0 ? (
-          <div className={styles.emptyState}>
-            <div className={styles.emptyStateIcon}>
-              <svg 
-                width="64" 
-                height="64" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="1.5"
-              >
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                <circle cx="9" cy="7" r="4"/>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-              </svg>
-            </div>
-            <h3>
-              {students.length === 0 ? 'No students yet' : 'No students match the selected filters'}
-            </h3>
-            <p>
-              {students.length === 0
-                ? 'Start building your class by registering your first student.'
-                : 'Try adjusting your filters or register a new student.'
-              }
-            </p>
-            {!showRegistrationForm && students.length === 0 && (
-              <Button onClick={() => setShowRegistrationForm(true)}>
-                Register First Student
-              </Button>
-            )}
-          </div>
-        ) : (
-          <div className={styles.studentsGrid}>
-            {filteredStudents.map((student) => {
-              const studentEnrollments = getStudentEnrollments(student.id);
-              return (
-                <StudentCard
-                  key={student.id}
-                  student={student}
-                  enrollments={studentEnrollments}
-                  onUpdate={handleStudentUpdated}
-                  onDelete={handleStudentDeleted}
-                />
-              );
-            })}
-          </div>
-        )}
+        <DataTable
+          columns={columns as unknown as Column<Record<string, unknown>>[]}
+          data={filteredStudents as unknown as Record<string, unknown>[]}
+          loading={isLoading}
+          emptyText={
+            students.length === 0
+              ? 'No students yet. Start by registering your first student.'
+              : 'No students match the selected filters. Try adjusting your filters.'
+          }
+          rowKey="id"
+          size="md"
+        />
       </div>
 
       {/* Results Summary */}
