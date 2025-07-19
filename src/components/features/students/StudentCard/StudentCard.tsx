@@ -240,16 +240,16 @@ export function StudentCard({ student, enrollments = [], onUpdate, onDelete }: S
                   <div key={enrollment.id} className={styles.enrollmentItem}>
                     <div className={styles.enrollmentInfo}>
                       <span className={styles.sectionName}>
-                        {enrollment.section?.name || 'Unknown Section'}
+                        {enrollment.section_name || enrollment.section?.name || 'Unknown Section'}
                       </span>
                       <span className={styles.sectionSubject}>
-                        {enrollment.section?.subject || 'Unknown Subject'}
+                        {enrollment.section_subject || enrollment.section?.subject || 'Unknown Subject'}
                       </span>
                     </div>
-                    {enrollment.section?.semester && (
+                    {(enrollment.semester_name || enrollment.section?.semester) && (
                       <div className={styles.semesterInfo}>
-                        {enrollment.section.semester.name}
-                        {enrollment.section.semester.academic_year && (
+                        {enrollment.semester_name || enrollment.section?.semester?.name}
+                        {enrollment.section?.semester?.academic_year && (
                           <span className={styles.academicYear}>
                             ({enrollment.section.semester.academic_year.name})
                           </span>

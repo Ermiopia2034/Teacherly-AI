@@ -10,6 +10,12 @@ export interface StudentEnrollment {
   drop_date?: string;
   created_at: string;
   updated_at?: string;
+  // Flat properties from backend
+  student_name?: string;
+  section_name?: string;
+  section_subject?: string;
+  semester_name?: string;
+  // Legacy nested objects for backward compatibility
   student?: {
     id: number;
     full_name: string;
