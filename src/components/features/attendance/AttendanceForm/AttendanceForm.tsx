@@ -38,11 +38,11 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
   const [attendanceDate, setAttendanceDate] = useState(
     new Date().toISOString().split('T')[0]
   );
-  const [selectedSectionId, setSelectedSectionId] = useState(0);
+  const [selectedSectionId, setSelectedSectionId] = useState('');
 
   // Single attendance form
   const [singleFormData, setSingleFormData] = useState({
-    student_id: 0,
+    student_id: '',
     status: 'present' as 'present' | 'absent' | 'late' | 'excused',
     notes: ''
   });
@@ -59,12 +59,12 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
 
   useEffect(() => {
     // Initialize bulk attendance when students are loaded and section is selected
-    if (students.length > 0 && selectedSectionId > 0 && Object.keys(bulkAttendance).length === 0) {
+    if (students.length > 0 && selectedSectionId !== '' && selectedSectionId !== '0' && Object.keys(bulkAttendance).length === 0) {
       const initialBulkData: Record<number, AttendanceRecord> = {};
       students.forEach(student => {
         initialBulkData[student.id] = {
           student_id: student.id,
-          section_id: selectedSectionId,
+          section_id: Number(selectedSectionId),
           status: 'present',
           notes: ''
         };
@@ -73,25 +73,18 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
     }
   }, [students, selectedSectionId, bulkAttendance]);
 
-  // Update section_id in bulk attendance when selectedSectionId changes
+  // Clear bulk attendance when section changes
   useEffect(() => {
-    if (selectedSectionId > 0 && Object.keys(bulkAttendance).length > 0) {
-      const updatedBulkData: Record<number, AttendanceRecord> = {};
-      Object.entries(bulkAttendance).forEach(([studentId, record]) => {
-        updatedBulkData[Number(studentId)] = {
-          ...record,
-          section_id: selectedSectionId
-        };
-      });
-      setBulkAttendance(updatedBulkData);
+    if (selectedSectionId !== '' && selectedSectionId !== '0') {
+      setBulkAttendance({});
     }
   }, [selectedSectionId]);
 
   const handleSingleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setSingleFormData(prev => ({ 
-      ...prev, 
-      [name]: name === 'student_id' ? Number(value) : value 
+    setSingleFormData(prev => ({
+      ...prev,
+      [name]: name === 'student_id' ? (value === '' ? '' : Number(value)) : value
     }));
     
     if (validationErrors[name]) {
@@ -116,11 +109,11 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
   const validateSingleForm = (): boolean => {
     const errors: Record<string, string> = {};
 
-    if (!singleFormData.student_id || singleFormData.student_id === 0) {
+    if (!singleFormData.student_id || singleFormData.student_id === '') {
       errors.student_id = 'Please select a student';
     }
 
-    if (!selectedSectionId || selectedSectionId === 0) {
+    if (!selectedSectionId || selectedSectionId === '' || selectedSectionId === '0') {
       errors.section_id = 'Please select a section';
     }
 
@@ -135,7 +128,7 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
   const validateBulkForm = (): boolean => {
     const errors: Record<string, string> = {};
     
-    if (!selectedSectionId || selectedSectionId === 0) {
+    if (!selectedSectionId || selectedSectionId === '' || selectedSectionId === '0') {
       errors.section_id = 'Please select a section';
     }
     
@@ -156,15 +149,15 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
       try {
         await dispatch(createAttendanceThunk({
           attendance_date: attendanceDate,
-          student_id: singleFormData.student_id,
-          section_id: selectedSectionId,
+          student_id: Number(singleFormData.student_id),
+          section_id: Number(selectedSectionId),
           status: singleFormData.status,
           notes: singleFormData.notes.trim() || undefined
         })).unwrap();
 
         // Reset form
         setSingleFormData({
-          student_id: 0,
+          student_id: '',
           status: 'present',
           notes: ''
         });
@@ -192,7 +185,7 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
         students.forEach(student => {
           resetBulkData[student.id] = {
             student_id: student.id,
-            section_id: selectedSectionId,
+            section_id: Number(selectedSectionId),
             status: 'present',
             notes: ''
           };
@@ -281,7 +274,7 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
           id="section_id"
           name="section_id"
           value={selectedSectionId}
-          onChange={(e) => setSelectedSectionId(Number(e.target.value))}
+          onChange={(e) => setSelectedSectionId(e.target.value)}
           options={sectionOptions}
           placeholder="Select a section"
           required
@@ -339,14 +332,14 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
                     students.forEach(student => {
                       allPresent[student.id] = {
                         student_id: student.id,
-                        section_id: selectedSectionId,
+                        section_id: Number(selectedSectionId),
                         status: 'present',
                         notes: ''
                       };
                     });
                     setBulkAttendance(allPresent);
                   }}
-                  disabled={isCreating || selectedSectionId === 0}
+                  disabled={isCreating || selectedSectionId === '' || selectedSectionId === '0'}
                 >
                   Mark All Present
                 </Button>
@@ -358,14 +351,14 @@ export function AttendanceForm({ onSuccess, onCancel }: AttendanceFormProps) {
                     students.forEach(student => {
                       allAbsent[student.id] = {
                         student_id: student.id,
-                        section_id: selectedSectionId,
+                        section_id: Number(selectedSectionId),
                         status: 'absent',
                         notes: ''
                       };
                     });
                     setBulkAttendance(allAbsent);
                   }}
-                  disabled={isCreating || selectedSectionId === 0}
+                  disabled={isCreating || selectedSectionId === '' || selectedSectionId === '0'}
                 >
                   Mark All Absent
                 </Button>

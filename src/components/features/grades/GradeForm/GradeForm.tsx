@@ -33,11 +33,11 @@ export function GradeForm({ grade, onSuccess, onCancel }: GradeFormProps) {
 
   const [contentItems, setContentItems] = useState<ContentRead[]>([]);
   const [formData, setFormData] = useState({
-    student_id: grade?.student_id || 0,
-    content_id: grade?.content_id || 0,
-    section_id: grade?.section_id || 0,
-    score: grade?.score || 0,
-    max_score: grade?.max_score || 100,
+    student_id: grade?.student_id || '',
+    content_id: grade?.content_id || '',
+    section_id: grade?.section_id || '',
+    score: grade?.score || '',
+    max_score: grade?.max_score || '',
     feedback: grade?.feedback || ''
   });
 
@@ -64,7 +64,7 @@ export function GradeForm({ grade, onSuccess, onCancel }: GradeFormProps) {
     setFormData(prev => ({
       ...prev,
       [name]: name === 'score' || name === 'max_score' || name === 'student_id' || name === 'content_id' || name === 'section_id'
-        ? Number(value)
+        ? (value === '' ? '' : Number(value))
         : value
     }));
     
@@ -77,27 +77,31 @@ export function GradeForm({ grade, onSuccess, onCancel }: GradeFormProps) {
   const validateForm = (): boolean => {
     const errors: Record<string, string> = {};
 
-    if (!formData.student_id || formData.student_id === 0) {
+    if (!formData.student_id || formData.student_id === '' || formData.student_id === 0) {
       errors.student_id = 'Please select a student';
     }
 
-    if (!formData.content_id || formData.content_id === 0) {
+    if (!formData.content_id || formData.content_id === '' || formData.content_id === 0) {
       errors.content_id = 'Please select content';
     }
 
-    if (!formData.section_id || formData.section_id === 0) {
+    if (!formData.section_id || formData.section_id === '' || formData.section_id === 0) {
       errors.section_id = 'Please select a section';
     }
 
-    if (formData.score < 0) {
+    if (formData.score === '' || formData.score === null || formData.score === undefined) {
+      errors.score = 'Please enter a score';
+    } else if (Number(formData.score) < 0) {
       errors.score = 'Score cannot be negative';
     }
 
-    if (formData.max_score <= 0) {
+    if (formData.max_score === '' || formData.max_score === null || formData.max_score === undefined) {
+      errors.max_score = 'Please enter a max score';
+    } else if (Number(formData.max_score) <= 0) {
       errors.max_score = 'Max score must be greater than 0';
     }
 
-    if (formData.score > formData.max_score) {
+    if (formData.score !== '' && formData.max_score !== '' && Number(formData.score) > Number(formData.max_score)) {
       errors.score = 'Score cannot exceed max score';
     }
 
@@ -113,15 +117,25 @@ export function GradeForm({ grade, onSuccess, onCancel }: GradeFormProps) {
     }
 
     try {
+      // Prepare payload with proper numeric values
+      const payload = {
+        student_id: Number(formData.student_id),
+        content_id: Number(formData.content_id),
+        section_id: Number(formData.section_id),
+        score: Number(formData.score),
+        max_score: Number(formData.max_score),
+        feedback: formData.feedback
+      };
+
       if (grade) {
         // Update existing grade
         await dispatch(updateGradeThunk({
           gradeId: grade.id,
-          payload: formData
+          payload
         })).unwrap();
       } else {
         // Create new grade
-        await dispatch(createGradeThunk(formData)).unwrap();
+        await dispatch(createGradeThunk(payload)).unwrap();
       }
 
       // Refresh grades list
@@ -130,11 +144,11 @@ export function GradeForm({ grade, onSuccess, onCancel }: GradeFormProps) {
       // Reset form if creating new
       if (!grade) {
         setFormData({
-          student_id: 0,
-          content_id: 0,
-          section_id: 0,
-          score: 0,
-          max_score: 100,
+          student_id: '',
+          content_id: '',
+          section_id: '',
+          score: '',
+          max_score: '',
           feedback: ''
         });
       }
@@ -155,19 +169,19 @@ export function GradeForm({ grade, onSuccess, onCancel }: GradeFormProps) {
       setFormData({
         student_id: grade.student_id,
         content_id: grade.content_id,
-        section_id: grade.section_id || 0,
+        section_id: grade.section_id || '',
         score: grade.score,
-        max_score: grade.max_score || 100,
+        max_score: grade.max_score || '',
         feedback: grade.feedback || ''
       });
     } else {
       // Reset for create mode
       setFormData({
-        student_id: 0,
-        content_id: 0,
-        section_id: 0,
-        score: 0,
-        max_score: 100,
+        student_id: '',
+        content_id: '',
+        section_id: '',
+        score: '',
+        max_score: '',
         feedback: ''
       });
     }
