@@ -44,6 +44,15 @@ export function StudentCard({ student, enrollments = [], onUpdate, onDelete }: S
   });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
+  // Update editFormData when enrollments change
+  useEffect(() => {
+    setEditFormData({
+      full_name: student.full_name,
+      parent_email: student.parent_email || '',
+      section_id: enrollments.length > 0 ? enrollments[0].section_id : 0
+    });
+  }, [student.full_name, student.parent_email, enrollments]);
+
   // Fetch sections when editing starts
   useEffect(() => {
     if (isEditing && sections.length === 0) {
