@@ -21,6 +21,7 @@ import {
   selectEnrollments
 } from '@/lib/features/academic/enrollmentsSlice';
 import { Student } from '@/lib/api/students';
+import StudentCard from '@/components/features/students/StudentCard';
 import StudentRegistrationForm from '@/components/features/students/StudentRegistrationForm';
 import Button from '@/components/ui/Button/Button';
 import Card from '@/components/ui/Card/Card';
@@ -42,6 +43,7 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
   const error = useSelector(selectStudentsError);
 
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+  const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [filters, setFilters] = useState({
     section_id: initialSectionId || 0,
     enrollment_status: 'all'
@@ -206,10 +208,7 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
           <Button
             size="sm"
             variant="outline"
-            onClick={() => {
-              // TODO: Implement editing modal or inline editing
-              console.log('Edit student:', student.id);
-            }}
+            onClick={() => setEditingStudent(student)}
           >
             Edit
           </Button>
@@ -218,6 +217,16 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
     }
   ];
 
+  const handleStudentUpdated = () => {
+    setEditingStudent(null);
+    // Refresh the student list and stats
+    dispatch(fetchStudentsThunk({}));
+    dispatch(fetchStudentStatsThunk());
+  };
+
+  const handleEditCancel = () => {
+    setEditingStudent(null);
+  };
 
   if (isLoading && students.length === 0) {
     return (
@@ -294,6 +303,30 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
             onSuccess={handleStudentRegistered}
             onCancel={() => setShowRegistrationForm(false)}
           />
+        </div>
+      )}
+
+      {/* Edit Student Modal */}
+      {editingStudent && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h3>Edit Student Information</h3>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleEditCancel}
+              >
+                ×
+              </Button>
+            </div>
+            <StudentCard
+              student={editingStudent}
+              enrollments={getStudentEnrollments(editingStudent.id)}
+              onUpdate={handleStudentUpdated}
+              onDelete={handleStudentUpdated}
+            />
+          </div>
         </div>
       )}
 
