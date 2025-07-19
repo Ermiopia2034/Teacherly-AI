@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/navigation';
 import { AppDispatch } from '@/lib/store';
 import {
   fetchSectionsThunk,
@@ -15,7 +16,6 @@ import {
   clearError
 } from '@/lib/features/academic/sectionsSlice';
 import { selectCurrentSemester, selectSemesters } from '@/lib/features/academic/semestersSlice';
-import { fetchEnrollmentsBySectionThunk } from '@/lib/features/academic/enrollmentsSlice';
 import Button from '@/components/ui/Button/Button';
 import Card from '@/components/ui/Card/Card';
 import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
@@ -39,6 +39,7 @@ export function SectionManager({
   className = '' 
 }: SectionManagerProps) {
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
   const sections = useSelector(selectSections);
   const semesters = useSelector(selectSemesters);
   const currentSemester = useSelector(selectCurrentSemester);
@@ -196,8 +197,9 @@ export function SectionManager({
     }
   };
 
-  const handleViewEnrollments = (sectionId: number) => {
-    dispatch(fetchEnrollmentsBySectionThunk(sectionId));
+  const handleViewStudents = (sectionId: number) => {
+    // Navigate to students page with section filter
+    router.push(`/dashboard/students?section_id=${sectionId}`);
   };
 
   const semesterOptions = [
@@ -337,7 +339,7 @@ export function SectionManager({
                     size="sm"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleViewEnrollments(section.id);
+                      handleViewStudents(section.id);
                     }}
                   >
                     View Students

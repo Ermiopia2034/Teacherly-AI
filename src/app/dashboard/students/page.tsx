@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
 import { selectCurrentSemester, fetchCurrentSemesterThunk } from '@/lib/features/academic/semestersSlice';
 import { selectCurrentAcademicYear, fetchCurrentAcademicYearThunk } from '@/lib/features/academic/academicYearsSlice';
+import { useSearchParams } from 'next/navigation';
 import StudentsList from '@/components/features/students/StudentsList';
 import PageHeader from '@/components/ui/PageHeader/PageHeader';
 import Breadcrumb from '@/components/ui/Breadcrumb/Breadcrumb';
@@ -14,12 +15,16 @@ import { Section } from '@/lib/api/sections';
 import SectionManager from '@/components/features/academic/SectionManager';
 import styles from './students.module.css';
 
-export default function StudentsPage() {
+function StudentsPageContent() {
   const dispatch = useDispatch<AppDispatch>();
+  const searchParams = useSearchParams();
   const currentSemester = useSelector(selectCurrentSemester);
   const currentAcademicYear = useSelector(selectCurrentAcademicYear);
   const [selectedSection, setSelectedSection] = useState<Section | null>(null);
   const [showSectionManager, setShowSectionManager] = useState(false);
+
+  // Get section_id from URL if present
+  const urlSectionId = searchParams.get('section_id');
 
   // Ensure academic data is loaded
   useEffect(() => {
@@ -114,9 +119,17 @@ export default function StudentsPage() {
 
         {/* Students List */}
         <div className={styles.studentsSection}>
-          <StudentsList />
+          <StudentsList initialSectionId={urlSectionId ? Number(urlSectionId) : undefined} />
         </div>
       </div>
     </div>
+  );
+}
+
+export default function StudentsPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <StudentsPageContent />
+    </Suspense>
   );
 }

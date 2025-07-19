@@ -27,7 +27,11 @@ import Card from '@/components/ui/Card/Card';
 import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
 import styles from './StudentsList.module.css';
 
-export function StudentsList() {
+interface StudentsListProps {
+  initialSectionId?: number;
+}
+
+export function StudentsList({ initialSectionId }: StudentsListProps) {
   const dispatch = useDispatch<AppDispatch>();
   const students = useSelector(selectStudents);
   const stats = useSelector(selectStudentStats);
@@ -38,7 +42,7 @@ export function StudentsList() {
 
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   const [filters, setFilters] = useState({
-    section_id: 0,
+    section_id: initialSectionId || 0,
     enrollment_status: 'all'
   });
 
@@ -49,6 +53,17 @@ export function StudentsList() {
     dispatch(fetchSectionsThunk({}));
     dispatch(fetchEnrollmentsThunk({}));
   }, [dispatch]);
+
+  // Update filters when initialSectionId changes
+  useEffect(() => {
+    if (initialSectionId && initialSectionId !== filters.section_id) {
+      setFilters(prev => ({
+        ...prev,
+        section_id: initialSectionId,
+        enrollment_status: 'enrolled' // Show enrolled students when filtering by section
+      }));
+    }
+  }, [initialSectionId, filters.section_id]);
 
   useEffect(() => {
     // Clear any existing errors when component mounts
@@ -82,23 +97,18 @@ export function StudentsList() {
     // Filter by section
     if (filters.section_id !== 0) {
       const isEnrolledInSection = studentEnrollments.some(
-        enrollment => enrollment.section_id === filters.section_id &&
-        (!enrollment.status || enrollment.status === 'ENROLLED')
+        enrollment => enrollment.section_id === filters.section_id
       );
       if (!isEnrolledInSection) return false;
     }
     
     // Filter by enrollment status
     if (filters.enrollment_status === 'enrolled') {
-      const hasActiveEnrollment = studentEnrollments.some(
-        enrollment => !enrollment.status || enrollment.status === 'ENROLLED'
-      );
-      if (!hasActiveEnrollment) return false;
+      // Student has at least one enrollment
+      if (studentEnrollments.length === 0) return false;
     } else if (filters.enrollment_status === 'not_enrolled') {
-      const hasActiveEnrollment = studentEnrollments.some(
-        enrollment => !enrollment.status || enrollment.status === 'ENROLLED'
-      );
-      if (hasActiveEnrollment) return false;
+      // Student has no enrollments
+      if (studentEnrollments.length > 0) return false;
     }
     
     return true;
