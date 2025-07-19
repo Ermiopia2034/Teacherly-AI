@@ -22,6 +22,16 @@ export interface SignupCredentials extends LoginCredentials {
   full_name?: string;
 }
 
+export interface OTPVerificationCredentials {
+  email: string;
+  otp_code: string;
+}
+
+export interface OTPResponse {
+  message: string;
+  email: string;
+}
+
 export const signup = async (credentials: SignupCredentials): Promise<User> => {
   const response = await apiClient.post('/auth/register', {
     email: credentials.email,
@@ -31,7 +41,8 @@ export const signup = async (credentials: SignupCredentials): Promise<User> => {
   return response.data; // Backend returns UserRead schema
 };
 
-export const login = async (credentials: LoginCredentials): Promise<User> => {
+// Step 1: Request OTP after credential validation
+export const requestLoginOTP = async (credentials: LoginCredentials): Promise<OTPResponse> => {
   // Backend expects form data for OAuth2PasswordRequestForm
   const formData = new URLSearchParams();
   formData.append('username', credentials.email); // 'username' is the field OAuth2 expects
@@ -42,7 +53,22 @@ export const login = async (credentials: LoginCredentials): Promise<User> => {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
   });
+  return response.data; // Backend returns OTP response with message and email
+};
+
+// Step 2: Complete login with OTP verification
+export const completeLoginWithOTP = async (credentials: OTPVerificationCredentials): Promise<User> => {
+  const response = await apiClient.post('/auth/complete-login', {
+    email: credentials.email,
+    otp_code: credentials.otp_code,
+  });
   return response.data; // Backend returns UserRead schema, token is in HttpOnly cookie
+};
+
+// Legacy login function for backward compatibility (if needed)
+export const login = async (): Promise<User> => {
+  // For now, this could throw an error or redirect to OTP flow
+  throw new Error('Direct login is no longer supported. Please use OTP authentication.');
 };
 
 export const logout = async (): Promise<{ message: string }> => {

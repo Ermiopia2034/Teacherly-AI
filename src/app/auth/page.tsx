@@ -6,7 +6,17 @@ import styles from "./auth.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/lib/store";
-import { loginUser, signupUser, clearAuthError, selectUser, selectIsAuthLoading, selectAuthError } from "@/lib/features/auth/authSlice";
+import {
+  requestOTP,
+  signupUser,
+  clearAuthError,
+  clearOTPState,
+  selectUser,
+  selectIsAuthLoading,
+  selectAuthError,
+  selectOTPStep
+} from "@/lib/features/auth/authSlice";
+import OTPVerification from "@/components/features/auth/OTPVerification";
 
 // Component that uses useSearchParamss
 function AuthContent() {
@@ -26,6 +36,7 @@ function AuthContent() {
   const isLoading = useSelector(selectIsAuthLoading);
   
   const authError = useSelector(selectAuthError);
+  const otpStep = useSelector(selectOTPStep);
   const [localError, setLocalError] = useState<string | null>(null); // For UI feedback, separate from Redux error for more control
 
   // Mark component as client-side loaded after initial render
@@ -37,7 +48,9 @@ function AuthContent() {
     } else {
       setIsLogin(true);
     }
-  }, [mode]);
+    // Clear OTP state when mode changes
+    dispatch(clearOTPState());
+  }, [mode, dispatch]);
 
   // Redirect if user is already logged in
   useEffect(() => {
@@ -53,6 +66,7 @@ function AuthContent() {
       setIsLogin(!isLogin);
       setLocalError(null); // Clear error on mode toggle
       dispatch(clearAuthError()); // Clear Redux error state as well
+      dispatch(clearOTPState()); // Clear OTP state on mode toggle
       setIsAnimating(false);
     }, 300);
   };
@@ -65,16 +79,54 @@ function AuthContent() {
 
     let resultAction;
     if (isLogin) {
-      resultAction = await dispatch(loginUser({ email, password }));
+      resultAction = await dispatch(requestOTP({ email, password }));
     } else {
       resultAction = await dispatch(signupUser({ email, password, full_name: name }));
     }
 
-    if (loginUser.rejected.match(resultAction) || signupUser.rejected.match(resultAction)) {
+    if (requestOTP.rejected.match(resultAction) || signupUser.rejected.match(resultAction)) {
       setLocalError(resultAction.payload as string || "An unexpected error occurred.");
     }
-    // Successful login/signup will trigger useEffect to redirect
+    // Successful OTP request will change otpStep to 'sent'
+    // Successful signup will trigger useEffect to redirect
   };
+
+  // Handle going back from OTP verification
+  const handleBackFromOTP = () => {
+    dispatch(clearOTPState());
+    setEmail("");
+    setPassword("");
+    setLocalError(null);
+  };
+
+  // Show OTP verification if we're in the OTP step
+  if (otpStep === 'sent' || otpStep === 'verifying') {
+    return (
+      <div className={styles.authContainer}>
+        <div className={styles.authBackground}>
+          <div className={styles.glowEffect}></div>
+        </div>
+
+        <div className={styles.headerNav}>
+          <Link href="/" className={styles.logo}>
+            Teacherly
+          </Link>
+        </div>
+        <Link href="/dashboard" className={styles.dashboardButton}>
+          Go to Dashboard
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="3" y1="9" x2="21" y2="9"></line>
+            <line x1="9" y1="21" x2="9" y2="9"></line>
+          </svg>
+        </Link>
+
+        <div className={styles.formContainer}>
+          <OTPVerification onBack={handleBackFromOTP} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.authContainer}>

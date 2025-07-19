@@ -6,7 +6,10 @@ import {
   SignupCredentials,
   ForgotPasswordPayload,
   ResetPasswordPayload,
-  login as apiLogin,
+  OTPVerificationCredentials,
+  OTPResponse,
+  requestLoginOTP as apiRequestLoginOTP,
+  completeLoginWithOTP as apiCompleteLoginWithOTP,
   logout as apiLogout,
   signup as apiSignup,
   fetchCurrentUser as apiFetchCurrentUser,
@@ -20,21 +23,58 @@ interface AuthState {
   user: User | null;
   isLoading: boolean;
   error: string | null | undefined; // Can be string for error messages or undefined from rejectedWithValue
+  otpStep: 'idle' | 'pending' | 'sent' | 'verifying'; // Track OTP flow state
+  pendingEmail: string | null; // Store email for OTP verification step
 }
 
 const initialState: AuthState = {
   user: null,
   isLoading: true, // Start with true to handle initial user fetch
   error: null,
+  otpStep: 'idle',
+  pendingEmail: null,
 };
 
 // Async Thunks
+export const requestOTP = createAsyncThunk<OTPResponse & { originalCredentials: LoginCredentials }, LoginCredentials, { rejectValue: string }>(
+  'auth/requestOTP',
+  async (credentials, { rejectWithValue }) => {
+    try {
+      const response = await apiRequestLoginOTP(credentials);
+      return {
+        ...response,
+        email: credentials.email, // Ensure we have the email
+        originalCredentials: credentials
+      };
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ detail?: string }>;
+      return rejectWithValue(error.response?.data?.detail || error.message || 'Failed to send OTP');
+    }
+  }
+);
+
+export const verifyOTPAndLogin = createAsyncThunk<User, OTPVerificationCredentials, { rejectValue: string }>(
+  'auth/verifyOTP',
+  async (credentials, { rejectWithValue }) => {
+    try {
+      const user = await apiCompleteLoginWithOTP(credentials);
+      return user;
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ detail?: string }>;
+      return rejectWithValue(error.response?.data?.detail || error.message || 'Invalid OTP code');
+    }
+  }
+);
+
+// Legacy loginUser for backward compatibility (updated to use OTP flow)
 export const loginUser = createAsyncThunk<User, LoginCredentials, { rejectValue: string }>(
   'auth/login',
   async (credentials, { rejectWithValue }) => {
     try {
-      const user = await apiLogin(credentials);
-      return user;
+      // First request OTP
+      await apiRequestLoginOTP(credentials);
+      // Return a special response indicating OTP was sent
+      return rejectWithValue('OTP_REQUIRED');
     } catch (err: unknown) {
       const error = err as AxiosError<{ detail?: string }>;
       return rejectWithValue(error.response?.data?.detail || error.message || 'Login failed');
@@ -119,6 +159,11 @@ const authSlice = createSlice({
     clearAuthError: (state) => {
       state.error = null;
     },
+    clearOTPState: (state) => {
+      state.otpStep = 'idle';
+      state.pendingEmail = null;
+      state.error = null;
+    },
     // If direct user setting is needed, e.g., after token refresh outside thunks
     setUser: (state, action: PayloadAction<User | null>) => {
         state.user = action.payload;
@@ -135,7 +180,44 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Login
+      // Request OTP
+      .addCase(requestOTP.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+        state.otpStep = 'pending';
+      })
+      .addCase(requestOTP.fulfilled, (state, action: PayloadAction<OTPResponse & { originalCredentials: LoginCredentials }>) => {
+        state.isLoading = false;
+        state.otpStep = 'sent';
+        state.pendingEmail = action.payload.email;
+        state.error = null;
+      })
+      .addCase(requestOTP.rejected, (state, action) => {
+        state.isLoading = false;
+        state.otpStep = 'idle';
+        state.pendingEmail = null;
+        state.error = action.payload ?? action.error.message;
+      })
+      // Verify OTP and Login
+      .addCase(verifyOTPAndLogin.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+        state.otpStep = 'verifying';
+      })
+      .addCase(verifyOTPAndLogin.fulfilled, (state, action: PayloadAction<User>) => {
+        state.isLoading = false;
+        state.user = action.payload;
+        state.otpStep = 'idle';
+        state.pendingEmail = null;
+        state.error = null;
+      })
+      .addCase(verifyOTPAndLogin.rejected, (state, action) => {
+        state.isLoading = false;
+        state.user = null;
+        state.otpStep = 'sent'; // Stay in sent state for retry
+        state.error = action.payload ?? action.error.message;
+      })
+      // Legacy Login (now redirects to OTP flow)
       .addCase(loginUser.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -148,7 +230,12 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
         state.user = null;
-        state.error = action.payload ?? action.error.message;
+        if (action.payload === 'OTP_REQUIRED') {
+          state.otpStep = 'sent';
+          state.error = null;
+        } else {
+          state.error = action.payload ?? action.error.message;
+        }
       })
       // Signup
       .addCase(signupUser.pending, (state) => {
@@ -226,11 +313,13 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearAuthError, setUser, updateUserProfile } = authSlice.actions;
+export const { clearAuthError, clearOTPState, setUser, updateUserProfile } = authSlice.actions;
 
 // Selectors
 export const selectUser = (state: RootState) => state.auth.user;
 export const selectIsAuthLoading = (state: RootState) => state.auth.isLoading;
 export const selectAuthError = (state: RootState) => state.auth.error;
+export const selectOTPStep = (state: RootState) => state.auth.otpStep;
+export const selectPendingEmail = (state: RootState) => state.auth.pendingEmail;
 
 export default authSlice.reducer;
