@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import styles from './ExamForm.module.css';
@@ -10,9 +10,13 @@ import LabeledTextarea from '@/components/ui/LabeledTextarea/LabeledTextarea';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
 import {
-  generateExamThunk,
-  selectGenerationIsLoading,
+  submitExamGenerationThunk,
+  selectGenerationIsSubmitting,
+  selectGenerationSubmitError,
+  selectShowSuccessMessage,
+  selectLastSubmissionResponse,
   resetGenerationState,
+  clearSuccessMessage,
 } from '@/lib/features/generation/generationSlice';
 import {
   fetchCurrentSemesterThunk,
@@ -30,7 +34,10 @@ import MarkAllocationProgress from '@/components/features/academic/MarkAllocatio
 export default function ExamForm() {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
-  const isLoading = useSelector(selectGenerationIsLoading);
+  const isSubmitting = useSelector(selectGenerationIsSubmitting);
+  const submitError = useSelector(selectGenerationSubmitError);
+  const showSuccessMessage = useSelector(selectShowSuccessMessage);
+  const submissionResponse = useSelector(selectLastSubmissionResponse);
   const currentSemester = useSelector(selectCurrentSemester);
   const semestersLoading = useSelector(selectSemestersLoading);
   
@@ -56,11 +63,25 @@ export default function ExamForm() {
   const [chapters, setChapters] = useState<string[]>([]);
   const [topics, setTopics] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const hasStartedRedirectRef = useRef(false);
   
   useEffect(() => {
     // Fetch current semester when component mounts
     dispatch(fetchCurrentSemesterThunk());
   }, [dispatch]);
+  
+  // Handle success message and delayed redirect
+  useEffect(() => {
+    if (showSuccessMessage && submissionResponse && !hasStartedRedirectRef.current) {
+      hasStartedRedirectRef.current = true;
+      const timer = setTimeout(() => {
+        dispatch(clearSuccessMessage());
+        router.push('/dashboard/my-contents');
+      }, 3000); // Show success message for 3 seconds
+      
+      return () => clearTimeout(timer);
+    }
+  }, [showSuccessMessage, submissionResponse, dispatch, router]);
   
   useEffect(() => {
   const loadSubjects = async () => {
@@ -151,9 +172,9 @@ export default function ExamForm() {
     });
   };
   
-  const handleMarkValidationChange = (isValid: boolean, remainingMarks: number) => {
+  const handleMarkValidationChange = useCallback((isValid: boolean, remainingMarks: number) => {
     setMarkValidation({ isValid, remainingMarks });
-  };
+  }, []);
   
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
@@ -184,6 +205,7 @@ export default function ExamForm() {
   }
   
   dispatch(resetGenerationState());
+  hasStartedRedirectRef.current = false;
   
   try {
     // Include semester context and marks in the form data
@@ -193,8 +215,8 @@ export default function ExamForm() {
       marks: Number(formData.marks)
     };
     
-    await dispatch(generateExamThunk(examPayload)).unwrap();
-    router.push('/dashboard/my-contents');
+    await dispatch(submitExamGenerationThunk(examPayload)).unwrap();
+    // Success message and redirect will be handled by useEffect
   } catch (rejectedValue) {
     setError(rejectedValue as string);
   }
@@ -336,15 +358,23 @@ export default function ExamForm() {
             rows={4}
           />
 
-          {error && <div className={styles.errorText}>Error: {error}</div>}
+          {showSuccessMessage && submissionResponse && (
+            <div className={styles.successText}>
+              ✅ {submissionResponse.message}
+              <br />
+              <small>Redirecting to My Contents in 3 seconds...</small>
+            </div>
+          )}
+          
+          {(error || submitError) && <div className={styles.errorText}>Error: {error || submitError}</div>}
           
           <div className={styles.formActions}>
           <button
             type="submit"
             className={styles.submitButton}
-            disabled={isLoading || !areBasicFieldsFilled || !formData.questionCount || !formData.marks}
+            disabled={isSubmitting || !areBasicFieldsFilled || !formData.questionCount || !formData.marks}
           >
-          {isLoading ? 'Generating...' : 'Generate and Save'}
+          {isSubmitting ? 'Submitting...' : 'Generate and Save'}
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <line x1="5" y1="12" x2="19" y2="12"></line>
           <polyline points="12 5 19 12 12 19"></polyline>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import styles from './MaterialForm.module.css';
@@ -9,9 +9,13 @@ import LabeledTextarea from '@/components/ui/LabeledTextarea/LabeledTextarea';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
 import {
-  generateMaterialThunk,
-  selectGenerationIsLoading,
+  submitMaterialGenerationThunk,
+  selectGenerationIsSubmitting,
+  selectGenerationSubmitError,
+  selectShowSuccessMessage,
+  selectLastSubmissionResponse,
   resetGenerationState,
+  clearSuccessMessage,
 } from '@/lib/features/generation/generationSlice';
 import {
   fetchSubjects,
@@ -23,7 +27,10 @@ import {
 export default function MaterialForm() {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
-  const isLoading = useSelector(selectGenerationIsLoading);
+  const isSubmitting = useSelector(selectGenerationIsSubmitting);
+  const submitError = useSelector(selectGenerationSubmitError);
+  const showSuccessMessage = useSelector(selectShowSuccessMessage);
+  const submissionResponse = useSelector(selectLastSubmissionResponse);
 
   const [formData, setFormData] = useState({
     subject: '',
@@ -39,6 +46,7 @@ export default function MaterialForm() {
   const [chapters, setChapters] = useState<string[]>([]);
   const [topics, setTopics] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const hasStartedRedirectRef = useRef(false);
 
   useEffect(() => {
     const loadSubjects = async () => {
@@ -98,6 +106,19 @@ export default function MaterialForm() {
     }
   }, [formData.subject, formData.grade, formData.unit]);
 
+  // Handle success message and delayed redirect
+  useEffect(() => {
+    if (showSuccessMessage && submissionResponse && !hasStartedRedirectRef.current) {
+      hasStartedRedirectRef.current = true;
+      const timer = setTimeout(() => {
+        dispatch(clearSuccessMessage());
+        router.push('/dashboard/my-contents');
+      }, 3000); // Show success message for 3 seconds
+      
+      return () => clearTimeout(timer);
+    }
+  }, [showSuccessMessage, submissionResponse, dispatch, router]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => {
@@ -137,10 +158,11 @@ export default function MaterialForm() {
     e.preventDefault();
     setError(null);
     dispatch(resetGenerationState());
+    hasStartedRedirectRef.current = false;
 
     try {
-      await dispatch(generateMaterialThunk(formData)).unwrap();
-      router.push('/dashboard/my-contents');
+      await dispatch(submitMaterialGenerationThunk(formData)).unwrap();
+      // Success message and redirect will be handled by useEffect
     } catch (rejectedValue) {
       setError(rejectedValue as string);
     }
@@ -188,11 +210,19 @@ export default function MaterialForm() {
           <LabeledSelect label="Content Type" id="contentType" name="contentType" value={formData.contentType} onChange={handleChange} options={[{ value: 'note', label: 'Teaching Note' }, { value: 'homework', label: 'Homework Assignment' }]} required />
           <LabeledTextarea label="Additional Information" id="additionalInfo" name="additionalInfo" value={formData.additionalInfo} onChange={handleChange} placeholder="Any specific requirements..." rows={4} />
           
-          {error && <div className={styles.errorText}>Error: {error}</div>}
+          {showSuccessMessage && submissionResponse && (
+            <div className={styles.successText}>
+              ✅ {submissionResponse.message}
+              <br />
+              <small>Redirecting to My Contents in 3 seconds...</small>
+            </div>
+          )}
+          
+          {(error || submitError) && <div className={styles.errorText}>Error: {error || submitError}</div>}
 
           <div className={styles.formActions}>
-            <button type="submit" className={styles.submitButton} disabled={isLoading}>
-              {isLoading ? 'Generating...' : 'Generate and Save'}
+            <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
+              {isSubmitting ? 'Submitting...' : 'Generate and Save'}
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
