@@ -133,6 +133,12 @@
   margin-top: 0.25rem;
 }
 
+.parentEmail {
+  color: #666;
+  font-size: 0.9em;
+  margin-left: 8px;
+}
+
 .errorMessage {
   background-color: var(--error-light);
   color: var(--error);

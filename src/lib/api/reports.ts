@@ -4,7 +4,9 @@ import apiClient from './client';
 export enum ReportType {
   GRADES = 'grades',
   ATTENDANCE = 'attendance',
-  COMPREHENSIVE = 'comprehensive'
+  COMPREHENSIVE = 'comprehensive',
+  SINGLE_STUDENT = 'single_student',
+  SCHOOL_ADMINISTRATIVE = 'school_administrative'
 }
 
 export enum ReportFormat {
@@ -14,13 +16,15 @@ export enum ReportFormat {
 
 export interface ReportRequest {
   report_type: ReportType;
-  start_date: string; // ISO date string
-  end_date: string; // ISO date string
+  start_date?: string; // ISO date string - optional for semester-based reports
+  end_date?: string; // ISO date string - optional for semester-based reports
+  semester_id?: number; // For semester-based reports
   student_ids?: number[];
   content_ids?: number[];
   format?: ReportFormat;
   include_summary?: boolean;
   include_trends?: boolean;
+  recipient_email?: string; // For school administrative reports
 }
 
 export interface StudentReportData {
@@ -153,6 +157,22 @@ export interface ReportHistoryParams {
   page_size?: number;
 }
 
+export interface Semester {
+  id: number;
+  name: string;
+  semester_type: string;
+  start_date: string;
+  end_date: string;
+  status: string;
+  is_current: boolean;
+  description?: string;
+  teacher_id?: number;
+  created_at?: string;
+  updated_at?: string;
+  academic_year_name?: string;
+  academic_year_id?: number;
+}
+
 // API functions for report operations
 export const generateReport = async (payload: ReportRequest): Promise<ReportResponse> => {
   const response = await apiClient.post('/reports/generate', payload);
@@ -182,11 +202,18 @@ export const getReportStats = async (): Promise<ReportStats> => {
   return response.data;
 };
 
+export const getSemesters = async (): Promise<Semester[]> => {
+  const response = await apiClient.get('/semesters');
+  return response.data;
+};
+
 // Helper functions for report configuration
 export const getAvailableReportTypes = (): Array<{ value: ReportType; label: string }> => [
   { value: ReportType.GRADES, label: 'Grades Only' },
   { value: ReportType.ATTENDANCE, label: 'Attendance Only' },
-  { value: ReportType.COMPREHENSIVE, label: 'Comprehensive (Grades + Attendance)' }
+  { value: ReportType.COMPREHENSIVE, label: 'Comprehensive (Grades + Attendance)' },
+  { value: ReportType.SINGLE_STUDENT, label: 'Single Student Report (Sent to Parent)' },
+  { value: ReportType.SCHOOL_ADMINISTRATIVE, label: 'School Administrative Report' }
 ];
 
 export const getAvailableFormats = (): Array<{ value: ReportFormat; label: string }> => [

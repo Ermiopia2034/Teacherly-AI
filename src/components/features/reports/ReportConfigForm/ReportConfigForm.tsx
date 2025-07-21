@@ -11,7 +11,7 @@ import LabeledInput from '@/components/ui/LabeledInput/LabeledInput';
 import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
 import Card from '@/components/ui/Card/Card';
 import { ContentRead } from '@/lib/api/content';
-import { ReportType, ReportFormat, getAvailableReportTypes, getAvailableFormats, getDateRangePresets } from '@/lib/api/reports';
+import { ReportType, ReportFormat, getAvailableReportTypes, getAvailableFormats, getDateRangePresets, getSemesters, Semester } from '@/lib/api/reports';
 import styles from './ReportConfigForm.module.css';
 
 interface ReportConfigFormProps {
@@ -26,15 +26,18 @@ export function ReportConfigForm({ onSuccess, onCancel }: ReportConfigFormProps)
   const students = useSelector(selectStudents);
 
   const [contentItems, setContentItems] = useState<ContentRead[]>([]);
+  const [semesters, setSemesters] = useState<Semester[]>([]);
   const [formData, setFormData] = useState({
     report_type: ReportType.COMPREHENSIVE,
     start_date: '',
     end_date: '',
+    semester_id: undefined as number | undefined,
     student_ids: [] as number[],
     content_ids: [] as number[],
     format: ReportFormat.EXCEL,
     include_summary: true,
-    include_trends: false
+    include_trends: false,
+    recipient_email: ''
   });
 
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
@@ -44,11 +47,12 @@ export function ReportConfigForm({ onSuccess, onCancel }: ReportConfigFormProps)
   const [selectAllContent, setSelectAllContent] = useState(false);
 
   useEffect(() => {
-    // Fetch students and content for selection
+    // Fetch students, content, and semesters for selection
     dispatch(fetchStudentsThunk({}));
     fetchContentItems();
+    fetchSemesters();
     
-    // Set default date range to last 30 days
+    // Set default date range to last 30 days for legacy report types
     const presets = getDateRangePresets();
     const last30Days = presets.find(p => p.label === 'Last 30 Days');
     if (last30Days) {
@@ -67,6 +71,23 @@ export function ReportConfigForm({ onSuccess, onCancel }: ReportConfigFormProps)
       setContentItems(content);
     } catch (error) {
       console.error('Failed to fetch content:', error);
+    }
+  };
+
+  const fetchSemesters = async () => {
+    try {
+      const semesterList = await getSemesters();
+      setSemesters(semesterList);
+      // Set default semester to current semester if available
+      const currentSemester = semesterList.find(s => s.is_current);
+      if (currentSemester) {
+        setFormData(prev => ({
+          ...prev,
+          semester_id: currentSemester.id
+        }));
+      }
+    } catch (error) {
+      console.error('Failed to fetch semesters:', error);
     }
   };
 
@@ -170,27 +191,46 @@ export function ReportConfigForm({ onSuccess, onCancel }: ReportConfigFormProps)
   const validateForm = (): boolean => {
     const errors: Record<string, string> = {};
 
-    if (!formData.start_date) {
-      errors.start_date = 'Start date is required';
-    }
+    // Validation for new report types (semester-based)
+    if (formData.report_type === ReportType.SINGLE_STUDENT || formData.report_type === ReportType.SCHOOL_ADMINISTRATIVE) {
+      if (!formData.semester_id) {
+        errors.semester_id = 'Semester selection is required for this report type';
+      }
+      
+      // Single student report must have exactly one student selected
+      if (formData.report_type === ReportType.SINGLE_STUDENT) {
+        if (formData.student_ids.length !== 1) {
+          errors.student_ids = 'Please select exactly one student for single student reports';
+        }
+      }
+      
+      // School administrative report requires recipient email
+      if (formData.report_type === ReportType.SCHOOL_ADMINISTRATIVE) {
+        if (!formData.recipient_email || !formData.recipient_email.trim()) {
+          errors.recipient_email = 'Recipient email is required for school administrative reports';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.recipient_email.trim())) {
+          errors.recipient_email = 'Please enter a valid email address';
+        }
+      }
+    } else {
+      // Validation for legacy report types (date-based)
+      if (!formData.start_date) {
+        errors.start_date = 'Start date is required';
+      }
 
-    if (!formData.end_date) {
-      errors.end_date = 'End date is required';
-    }
+      if (!formData.end_date) {
+        errors.end_date = 'End date is required';
+      }
 
-    if (formData.start_date && formData.end_date && formData.start_date > formData.end_date) {
-      errors.end_date = 'End date must be after start date';
-    }
+      if (formData.start_date && formData.end_date && formData.start_date > formData.end_date) {
+        errors.end_date = 'End date must be after start date';
+      }
 
-    // Check if date range is not too far in the future
-    const today = new Date().toISOString().split('T')[0];
-    if (formData.end_date > today) {
-      errors.end_date = 'End date cannot be in the future';
-    }
-
-    // Validate that at least some students are selected (if not all)
-    if (formData.student_ids.length === 0 && students.length > 0) {
-      // This is okay - it means all students will be included
+      // Check if date range is not too far in the future
+      const today = new Date().toISOString().split('T')[0];
+      if (formData.end_date > today) {
+        errors.end_date = 'End date cannot be in the future';
+      }
     }
 
     setValidationErrors(errors);
@@ -207,10 +247,22 @@ export function ReportConfigForm({ onSuccess, onCancel }: ReportConfigFormProps)
     try {
       const reportRequest = {
         ...formData,
-        // If no students selected, include all by omitting student_ids
-        student_ids: formData.student_ids.length === 0 ? undefined : formData.student_ids,
+        // For new report types, use semester_id instead of date range
+        start_date: (formData.report_type === ReportType.SINGLE_STUDENT || formData.report_type === ReportType.SCHOOL_ADMINISTRATIVE)
+          ? undefined : formData.start_date,
+        end_date: (formData.report_type === ReportType.SINGLE_STUDENT || formData.report_type === ReportType.SCHOOL_ADMINISTRATIVE)
+          ? undefined : formData.end_date,
+        semester_id: (formData.report_type === ReportType.SINGLE_STUDENT || formData.report_type === ReportType.SCHOOL_ADMINISTRATIVE)
+          ? formData.semester_id : undefined,
+        // If no students selected, include all by omitting student_ids (except for single student reports)
+        student_ids: formData.report_type === ReportType.SINGLE_STUDENT
+          ? formData.student_ids
+          : (formData.student_ids.length === 0 ? undefined : formData.student_ids),
         // If no content selected, include all by omitting content_ids
         content_ids: formData.content_ids.length === 0 ? undefined : formData.content_ids,
+        // Only include recipient_email for school administrative reports
+        recipient_email: formData.report_type === ReportType.SCHOOL_ADMINISTRATIVE
+          ? formData.recipient_email.trim() : undefined,
       };
 
       await dispatch(generateReportThunk(reportRequest)).unwrap();
@@ -229,11 +281,13 @@ export function ReportConfigForm({ onSuccess, onCancel }: ReportConfigFormProps)
       report_type: ReportType.COMPREHENSIVE,
       start_date: '',
       end_date: '',
+      semester_id: undefined,
       student_ids: [],
       content_ids: [],
       format: ReportFormat.EXCEL,
       include_summary: true,
-      include_trends: false
+      include_trends: false,
+      recipient_email: ''
     });
     setSelectedStudents(new Set());
     setSelectedContent(new Set());
@@ -264,6 +318,14 @@ export function ReportConfigForm({ onSuccess, onCancel }: ReportConfigFormProps)
     }))
   ];
 
+  const semesterOptions = semesters.map(semester => ({
+    value: semester.id.toString(),
+    label: `${semester.name} (${semester.status})`
+  }));
+
+  const isNewReportType = formData.report_type === ReportType.SINGLE_STUDENT ||
+                          formData.report_type === ReportType.SCHOOL_ADMINISTRATIVE;
+
   return (
     <Card className={styles.formCard}>
       <div className={styles.formHeader}>
@@ -283,75 +345,147 @@ export function ReportConfigForm({ onSuccess, onCancel }: ReportConfigFormProps)
           required
         />
 
-        {/* Date Range */}
-        <div className={styles.dateSection}>
-          <h4>Date Range</h4>
-          
-          <LabeledSelect
-            label="Quick Select"
-            id="date_preset"
-            name="date_preset"
-            value=""
-            onChange={handleDatePresetChange}
-            options={datePresetOptions}
-          />
-
-          <div className={styles.dateGroup}>
-            <LabeledInput
-              label="Start Date"
-              id="start_date"
-              name="start_date"
-              type="date"
-              value={formData.start_date}
-              onChange={handleInputChange}
+        {/* Date Range or Semester Selection */}
+        {isNewReportType ? (
+          <div className={styles.dateSection}>
+            <h4>Semester Selection</h4>
+            <LabeledSelect
+              label="Semester"
+              id="semester_id"
+              name="semester_id"
+              value={formData.semester_id?.toString() || ''}
+              onChange={(e) => setFormData(prev => ({
+                ...prev,
+                semester_id: e.target.value ? parseInt(e.target.value) : undefined
+              }))}
+              options={[
+                { value: '', label: 'Select a semester...' },
+                ...semesterOptions
+              ]}
               required
             />
-            
-            <LabeledInput
-              label="End Date"
-              id="end_date"
-              name="end_date"
-              type="date"
-              value={formData.end_date}
-              onChange={handleInputChange}
-              required
-            />
+            {validationErrors.semester_id && (
+              <div className={styles.fieldError}>{validationErrors.semester_id}</div>
+            )}
           </div>
-          {validationErrors.start_date && (
-            <div className={styles.fieldError}>{validationErrors.start_date}</div>
-          )}
-          {validationErrors.end_date && (
-            <div className={styles.fieldError}>{validationErrors.end_date}</div>
-          )}
-        </div>
+        ) : (
+          <div className={styles.dateSection}>
+            <h4>Date Range</h4>
+            
+            <LabeledSelect
+              label="Quick Select"
+              id="date_preset"
+              name="date_preset"
+              value=""
+              onChange={handleDatePresetChange}
+              options={datePresetOptions}
+            />
+
+            <div className={styles.dateGroup}>
+              <LabeledInput
+                label="Start Date"
+                id="start_date"
+                name="start_date"
+                type="date"
+                value={formData.start_date}
+                onChange={handleInputChange}
+                required
+              />
+              
+              <LabeledInput
+                label="End Date"
+                id="end_date"
+                name="end_date"
+                type="date"
+                value={formData.end_date}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            {validationErrors.start_date && (
+              <div className={styles.fieldError}>{validationErrors.start_date}</div>
+            )}
+            {validationErrors.end_date && (
+              <div className={styles.fieldError}>{validationErrors.end_date}</div>
+            )}
+          </div>
+        )}
+
+        {/* Recipient Email for School Administrative Reports */}
+        {formData.report_type === ReportType.SCHOOL_ADMINISTRATIVE && (
+          <div className={styles.emailSection}>
+            <h4>Recipient Information</h4>
+            <LabeledInput
+              label="Recipient Email"
+              id="recipient_email"
+              name="recipient_email"
+              type="email"
+              value={formData.recipient_email}
+              onChange={handleInputChange}
+              placeholder="Enter administrator email address"
+              required
+            />
+            {validationErrors.recipient_email && (
+              <div className={styles.fieldError}>{validationErrors.recipient_email}</div>
+            )}
+          </div>
+        )}
 
         {/* Student Selection */}
         <div className={styles.selectionSection}>
           <h4>Student Selection</h4>
           <p className={styles.sectionDescription}>
-            Select specific students or leave empty to include all students
+            {formData.report_type === ReportType.SINGLE_STUDENT ? (
+              <>
+                Select exactly one student for this report. The report will be automatically sent to the parent&apos;s email address on file.
+                {validationErrors.student_ids && (
+                  <span className={styles.fieldError}> {validationErrors.student_ids}</span>
+                )}
+              </>
+            ) : formData.report_type === ReportType.SCHOOL_ADMINISTRATIVE ? (
+              'Select specific students or leave empty to include all students in the administrative report.'
+            ) : (
+              'Select specific students or leave empty to include all students'
+            )}
           </p>
           
-          <div className={styles.selectAllOption}>
-            <label className={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                checked={selectAllStudents}
-                onChange={(e) => handleSelectAllStudents(e.target.checked)}
-              />
-              Select All Students ({students.length})
-            </label>
-          </div>
+          {formData.report_type !== ReportType.SINGLE_STUDENT && (
+            <div className={styles.selectAllOption}>
+              <label className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={selectAllStudents}
+                  onChange={(e) => handleSelectAllStudents(e.target.checked)}
+                />
+                Select All Students ({students.length})
+              </label>
+            </div>
+          )}
 
           <div className={styles.selectionGrid}>
             {students.map(student => (
               <label key={student.id} className={styles.checkboxLabel}>
                 <input
-                  type="checkbox"
+                  type={formData.report_type === ReportType.SINGLE_STUDENT ? 'radio' : 'checkbox'}
+                  name={formData.report_type === ReportType.SINGLE_STUDENT ? 'single_student' : undefined}
                   checked={selectedStudents.has(student.id)}
-                  onChange={(e) => handleStudentSelection(student.id, e.target.checked)}
+                  onChange={(e) => {
+                    if (formData.report_type === ReportType.SINGLE_STUDENT) {
+                      // For single student, clear all others and select only this one
+                      setSelectedStudents(new Set([student.id]));
+                      setFormData(prev => ({
+                        ...prev,
+                        student_ids: [student.id]
+                      }));
+                    } else {
+                      handleStudentSelection(student.id, e.target.checked);
+                    }
+                  }}
                 />
                 {student.full_name} ({student.grade_level})
+                {student.parent_email && formData.report_type === ReportType.SINGLE_STUDENT && (
+                  <span className={styles.parentEmail}> - {student.parent_email}</span>
+                )}
               </label>
             ))}
           </div>

@@ -14,7 +14,7 @@ import Button from '@/components/ui/Button/Button';
 import LabeledInput from '@/components/ui/LabeledInput/LabeledInput';
 import LabeledTextarea from '@/components/ui/LabeledTextarea/LabeledTextarea';
 import Card from '@/components/ui/Card/Card';
-import { ReportResponse } from '@/lib/api/reports';
+import { ReportResponse, ReportType } from '@/lib/api/reports';
 import styles from './EmailReportModal.module.css';
 
 interface EmailReportModalProps {
@@ -50,6 +50,12 @@ export function EmailReportModal({ isOpen, report, onClose }: EmailReportModalPr
       }));
     }
   }, [report, isOpen]);
+
+  // Check if this is an auto-emailed report type
+  const isAutoEmailedReport = report && (
+    report.report_type === ReportType.SINGLE_STUDENT ||
+    report.report_type === ReportType.SCHOOL_ADMINISTRATIVE
+  );
 
   useEffect(() => {
     if (emailResult) {
@@ -222,6 +228,53 @@ export function EmailReportModal({ isOpen, report, onClose }: EmailReportModalPr
                   </ul>
                 </div>
               )}
+            </div>
+          ) : isAutoEmailedReport ? (
+            // Show info about automatic email sending for new report types
+            <div className={styles.autoEmailInfo}>
+              <div className={styles.infoIcon}>📧</div>
+              <h4>Report Automatically Sent</h4>
+              <p>
+                This {report?.report_type === ReportType.SINGLE_STUDENT ? 'single student' : 'school administrative'} report has been automatically sent via email:
+              </p>
+              
+              {report && (
+                <div className={styles.reportInfo}>
+                  <div className={styles.reportSummary}>
+                    <span><strong>Type:</strong> {report.report_type.replace('_', ' ')}</span>
+                    <span><strong>Period:</strong> {report.date_range_start} to {report.date_range_end}</span>
+                    <span><strong>Students:</strong> {report.total_students_included}</span>
+                  </div>
+                </div>
+              )}
+
+              <div className={styles.emailInfo}>
+                {report?.report_type === ReportType.SINGLE_STUDENT ? (
+                  <div>
+                    <p><strong>Recipient:</strong> Parent/Guardian</p>
+                    <p><strong>Email sent to:</strong> {report.student_data[0]?.parent_email || 'Parent email on file'}</p>
+                    <p>The report has been automatically sent to the parent&apos;s email address registered in the system.</p>
+                  </div>
+                ) : (
+                  <div>
+                    <p><strong>Recipient:</strong> School Administrator</p>
+                    <p>The report has been automatically sent to the specified administrator email address.</p>
+                  </div>
+                )}
+              </div>
+
+              <div className={styles.additionalInfo}>
+                <p><strong>Note:</strong> If you need to send this report to additional recipients, you can download it and forward manually, or contact your system administrator.</p>
+              </div>
+
+              <div className={styles.buttonGroup}>
+                <Button
+                  type="button"
+                  onClick={handleClose}
+                >
+                  Close
+                </Button>
+              </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className={styles.form}>
