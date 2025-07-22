@@ -203,7 +203,7 @@ export const getReportStats = async (): Promise<ReportStats> => {
 };
 
 export const getSemesters = async (): Promise<Semester[]> => {
-  const response = await apiClient.get('/semesters');
+  const response = await apiClient.get('/semesters/');
   return response.data;
 };
 
