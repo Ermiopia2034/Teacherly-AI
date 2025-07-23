@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useClientSideState } from '@/lib/hooks/useClientSideState';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import styles from './dashboard.module.css';
 import { useDispatch, useSelector } from 'react-redux';
@@ -117,8 +118,16 @@ export default function DashboardLayout({
               <line x1="3" y1="18" x2="21" y2="18"></line>
             </svg>
           </button>
-          <Link href="/dashboard" className={styles.logo}>
-            Teacherly
+          <Link href="/dashboard" className={styles.logoContainer}>
+            <Image
+              src="/logo.png"
+              alt="Teacherly AI"
+              width={32}
+              height={32}
+              className={styles.logoImage}
+              priority
+            />
+            <span className={styles.logoText}>Teacherly AI</span>
           </Link>
         </div>
         <div className={styles.headerRight}>

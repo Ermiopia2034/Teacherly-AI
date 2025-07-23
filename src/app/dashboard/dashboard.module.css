@@ -84,7 +84,29 @@
   border-bottom: 1px solid var(--border-primary);
 }
 
-.logo {
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 0.2rem 0;
+}
+
+.logoContainer:hover {
+  transform: translateY(-1px);
+}
+
+.logoImage {
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.logoContainer:hover .logoImage {
+  box-shadow: 0 0 15px var(--primary-glow);
+}
+
+.logoText {
   color: transparent;
   background: var(--gradient-1);
   background-clip: text;
@@ -93,14 +115,23 @@
   font-weight: 700;
   font-family: var(--font-heading);
   transition: all 0.3s ease;
-  display: inline-block;
-  padding: 0.2rem 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  background-size: 200% 200%;
+  animation: gradientShift 4s ease-in-out infinite;
 }
 
-.logo:hover {
+.logoContainer:hover .logoText {
   text-shadow: 0 0 15px var(--primary-glow);
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 .toggleButton {
@@ -507,8 +538,13 @@
     height: 45px;
   }
 
-  .logo {
+  .logoText {
     font-size: 1.1rem;
+  }
+  
+  .logoImage {
+    width: 28px;
+    height: 28px;
   }
 
 

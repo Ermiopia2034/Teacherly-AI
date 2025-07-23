@@ -1,5 +1,6 @@
 import styles from "./page.module.css";
 import Link from "next/link";
+import Image from "next/image";
 import Button from "@/components/ui/Button";
 import AnimatedElement from "@/components/common/AnimatedElement/AnimatedElement";
 import HeroSection from "@/components/features/landing/HeroSection";
@@ -11,7 +12,17 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <div className={styles.logo}>Teacherly</div>
+        <Link href="/" className={styles.logoContainer}>
+          <Image
+            src="/logo.png"
+            alt="Teacherly AI"
+            width={40}
+            height={40}
+            className={styles.logoImage}
+            priority
+          />
+          <span className={styles.logoText}>Teacherly AI</span>
+        </Link>
         <div className={styles.signIn}>
           <Link href="/auth?mode=login">
             <Button variant="link">Sign In</Button>

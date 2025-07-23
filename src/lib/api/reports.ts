@@ -2,9 +2,6 @@ import apiClient from './client';
 
 // TypeScript interfaces for Report data structures
 export enum ReportType {
-  GRADES = 'grades',
-  ATTENDANCE = 'attendance',
-  COMPREHENSIVE = 'comprehensive',
   SINGLE_STUDENT = 'single_student',
   SCHOOL_ADMINISTRATIVE = 'school_administrative'
 }
@@ -16,15 +13,10 @@ export enum ReportFormat {
 
 export interface ReportRequest {
   report_type: ReportType;
-  start_date?: string; // ISO date string - optional for semester-based reports
-  end_date?: string; // ISO date string - optional for semester-based reports
-  semester_id?: number; // For semester-based reports
-  student_ids?: number[];
-  content_ids?: number[];
+  semester_id: number; // Required for all reports
+  student_ids?: number[]; // Required for single student (exactly one), optional for administrative
   format?: ReportFormat;
-  include_summary?: boolean;
-  include_trends?: boolean;
-  recipient_email?: string; // For school administrative reports
+  recipient_email?: string; // Required for school administrative reports
 }
 
 export interface StudentReportData {
@@ -209,11 +201,8 @@ export const getSemesters = async (): Promise<Semester[]> => {
 
 // Helper functions for report configuration
 export const getAvailableReportTypes = (): Array<{ value: ReportType; label: string }> => [
-  { value: ReportType.GRADES, label: 'Grades Only' },
-  { value: ReportType.ATTENDANCE, label: 'Attendance Only' },
-  { value: ReportType.COMPREHENSIVE, label: 'Comprehensive (Grades + Attendance)' },
   { value: ReportType.SINGLE_STUDENT, label: 'Single Student Report (Sent to Parent)' },
-  { value: ReportType.SCHOOL_ADMINISTRATIVE, label: 'School Administrative Report' }
+  { value: ReportType.SCHOOL_ADMINISTRATIVE, label: 'School Administrative Report (Sent to Administrator)' }
 ];
 
 export const getAvailableFormats = (): Array<{ value: ReportFormat; label: string }> => [

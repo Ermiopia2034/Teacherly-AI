@@ -80,27 +80,19 @@ export function ReportHistory({ onViewReport, onEmailReport }: ReportHistoryProp
 
   const getReportTypeLabel = (type: ReportType) => {
     switch (type) {
-      case ReportType.GRADES:
-        return 'Grades';
-      case ReportType.ATTENDANCE:
-        return 'Attendance';
-      case ReportType.COMPREHENSIVE:
-        return 'Comprehensive';
-      default:
-        return type;
+      case ReportType.SINGLE_STUDENT:
+        return 'Single Student Report';
+      case ReportType.SCHOOL_ADMINISTRATIVE:
+        return 'School Administrative Report';
     }
   };
 
   const getReportTypeColor = (type: ReportType) => {
     switch (type) {
-      case ReportType.GRADES:
+      case ReportType.SINGLE_STUDENT:
         return '#3b82f6';
-      case ReportType.ATTENDANCE:
+      case ReportType.SCHOOL_ADMINISTRATIVE:
         return '#10b981';
-      case ReportType.COMPREHENSIVE:
-        return '#8b5cf6';
-      default:
-        return '#6b7280';
     }
   };
 
@@ -119,9 +111,8 @@ export function ReportHistory({ onViewReport, onEmailReport }: ReportHistoryProp
 
   const reportTypeOptions = [
     { value: '', label: 'All Report Types' },
-    { value: ReportType.GRADES, label: 'Grades Only' },
-    { value: ReportType.ATTENDANCE, label: 'Attendance Only' },
-    { value: ReportType.COMPREHENSIVE, label: 'Comprehensive' }
+    { value: ReportType.SINGLE_STUDENT, label: 'Single Student Reports' },
+    { value: ReportType.SCHOOL_ADMINISTRATIVE, label: 'Administrative Reports' }
   ];
 
   const pageSizeOptions = [

@@ -1,15 +1,9 @@
 .container {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--background);
-  max-width: 1400px;
-  margin: 0 auto;
-  box-shadow: var(--shadow-lg);
+  background: transparent;
   position: relative;
-  overflow: hidden;
   width: 100%;
-  flex: 1;
 }
 
 .header {
@@ -17,7 +11,6 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 2rem;
-  border-bottom: 1px solid var(--border-primary);
   background: var(--background-overlay);
   backdrop-filter: blur(10px);
   position: sticky;
@@ -26,7 +19,29 @@
   animation: fadeIn 0.5s ease-out;
 }
 
-.logo {
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.logoContainer:hover {
+  transform: translateY(-1px);
+}
+
+.logoImage {
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.logoContainer:hover .logoImage {
+  box-shadow: 0 0 20px var(--primary-glow);
+}
+
+.logoText {
   color: transparent;
   background: var(--gradient-primary);
   background-clip: text;
@@ -35,9 +50,11 @@
   font-weight: 700;
   position: relative;
   transition: all 0.3s ease;
+  background-size: 200% 200%;
+  animation: gradientShift 4s ease-in-out infinite;
 }
 
-.logo::after {
+.logoContainer::after {
   content: '';
   position: absolute;
   bottom: -5px;
@@ -48,11 +65,7 @@
   transition: width 0.3s ease;
 }
 
-.logo:hover {
-  text-shadow: 0 0 15px var(--primary-glow);
-}
-
-.logo:hover::after {
+.logoContainer:hover::after {
   width: 100%;
 }
 
@@ -134,8 +147,7 @@
 
 @media (max-width: 1200px) {
   .container {
-    max-width: 100%;
-    margin: 0;
+    width: 100%;
   }
 }
 
