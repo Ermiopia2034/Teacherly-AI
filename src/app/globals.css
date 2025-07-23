@@ -9,99 +9,8 @@
   --font-body: var(--font-lato), sans-serif;
 }
 
-/* DARK THEME (DEFAULT) */
-[data-theme="dark"], :root {
-  /* === BRAND COLORS === */
-  --primary: #00c896;
-  --primary-hover: #00b085;
-  --primary-light: #1dd1a5;
-  --primary-glow: rgba(0, 200, 150, 0.35);
-  --primary-subtle: rgba(0, 200, 150, 0.1);
-  
-  /* === ACCENT COLORS === */
-  --accent-blue: #00a0ff;
-  --accent-blue-hover: #0090e5;
-  --accent-purple: #7928ca;
-  --accent-purple-hover: #6b23b8;
-  --accent-pink: #ff0080;
-  --accent-pink-hover: #e50073;
-  
-  /* === BACKGROUND COLORS === */
-  --background: #121212;
-  --background-secondary: #1a1a1a;
-  --background-tertiary: #1e1e1e;
-  --background-elevated: #222222;
-  --background-overlay: rgba(0, 0, 0, 0.8);
-  --background-glass: rgba(30, 30, 30, 0.8);
-  
-  /* === SURFACE COLORS === */
-  --surface-primary: #1a1a1a;
-  --surface-secondary: #1e1e1e;
-  --surface-tertiary: #222222;
-  --surface-hover: #262626;
-  --surface-pressed: #2a2a2a;
-  
-  /* === TEXT COLORS === */
-  --text-primary: #ffffff;
-  --text-secondary: #a0a0a0;
-  --text-tertiary: #707070;
-  --text-muted: #5a5a5a;
-  --text-disabled: #404040;
-  --text-inverse: #121212;
-  
-  /* === BORDER COLORS === */
-  --border-primary: rgba(255, 255, 255, 0.1);
-  --border-secondary: rgba(255, 255, 255, 0.05);
-  --border-tertiary: rgba(255, 255, 255, 0.02);
-  --border-hover: rgba(255, 255, 255, 0.15);
-  --border-focus: var(--primary);
-  
-  /* === SEMANTIC COLORS === */
-  --success: #10b981;
-  --success-hover: #059669;
-  --success-light: rgba(16, 185, 129, 0.1);
-  --success-border: rgba(16, 185, 129, 0.2);
-  
-  --warning: #f59e0b;
-  --warning-hover: #d97706;
-  --warning-light: rgba(245, 158, 11, 0.1);
-  --warning-border: rgba(245, 158, 11, 0.2);
-  
-  --error: #ef4444;
-  --error-hover: #dc2626;
-  --error-light: rgba(239, 68, 68, 0.1);
-  --error-border: rgba(239, 68, 68, 0.2);
-  
-  --info: #3b82f6;
-  --info-hover: #2563eb;
-  --info-light: rgba(59, 130, 246, 0.1);
-  --info-border: rgba(59, 130, 246, 0.2);
-  
-  /* === GRADIENTS === */
-  --gradient-primary: linear-gradient(45deg, var(--primary) 0%, var(--accent-blue) 100%);
-  --gradient-secondary: linear-gradient(45deg, var(--accent-purple) 0%, var(--accent-pink) 100%);
-  --gradient-text: linear-gradient(to right, var(--text-primary), var(--text-secondary));
-  --gradient-background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
-  
-  /* === SHADOWS === */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
-  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.4);
-  --shadow-glow: 0 0 20px var(--primary-glow);
-  
-  /* === LEGACY ALIASES (for backwards compatibility) === */
-  --foreground: var(--text-primary);
-  --secondary: var(--background-secondary);
-  --card-bg: var(--surface-primary);
-  --card-hover: var(--surface-hover);
-  --text-color: var(--text-primary);
-  --gradient-1: var(--gradient-primary);
-  --gradient-2: var(--gradient-secondary);
-}
-
-/* LIGHT THEME */
-[data-theme="light"] {
+/* LIGHT THEME (DEFAULT) */
+[data-theme="light"], :root {
   /* === BRAND COLORS === */
   --primary: #00a078;
   --primary-hover: #008f6a;
@@ -191,23 +100,114 @@
   --gradient-2: var(--gradient-secondary);
 }
 
+/* DARK THEME */
+[data-theme="dark"] {
+  /* === BRAND COLORS === */
+  --primary: #00c896;
+  --primary-hover: #00b085;
+  --primary-light: #1dd1a5;
+  --primary-glow: rgba(0, 200, 150, 0.35);
+  --primary-subtle: rgba(0, 200, 150, 0.1);
+  
+  /* === ACCENT COLORS === */
+  --accent-blue: #00a0ff;
+  --accent-blue-hover: #0090e5;
+  --accent-purple: #7928ca;
+  --accent-purple-hover: #6b23b8;
+  --accent-pink: #ff0080;
+  --accent-pink-hover: #e50073;
+  
+  /* === BACKGROUND COLORS === */
+  --background: #121212;
+  --background-secondary: #1a1a1a;
+  --background-tertiary: #1e1e1e;
+  --background-elevated: #222222;
+  --background-overlay: rgba(0, 0, 0, 0.8);
+  --background-glass: rgba(30, 30, 30, 0.8);
+  
+  /* === SURFACE COLORS === */
+  --surface-primary: #1a1a1a;
+  --surface-secondary: #1e1e1e;
+  --surface-tertiary: #222222;
+  --surface-hover: #262626;
+  --surface-pressed: #2a2a2a;
+  
+  /* === TEXT COLORS === */
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --text-tertiary: #707070;
+  --text-muted: #5a5a5a;
+  --text-disabled: #404040;
+  --text-inverse: #121212;
+  
+  /* === BORDER COLORS === */
+  --border-primary: rgba(255, 255, 255, 0.1);
+  --border-secondary: rgba(255, 255, 255, 0.05);
+  --border-tertiary: rgba(255, 255, 255, 0.02);
+  --border-hover: rgba(255, 255, 255, 0.15);
+  --border-focus: var(--primary);
+  
+  /* === SEMANTIC COLORS === */
+  --success: #10b981;
+  --success-hover: #059669;
+  --success-light: rgba(16, 185, 129, 0.1);
+  --success-border: rgba(16, 185, 129, 0.2);
+  
+  --warning: #f59e0b;
+  --warning-hover: #d97706;
+  --warning-light: rgba(245, 158, 11, 0.1);
+  --warning-border: rgba(245, 158, 11, 0.2);
+  
+  --error: #ef4444;
+  --error-hover: #dc2626;
+  --error-light: rgba(239, 68, 68, 0.1);
+  --error-border: rgba(239, 68, 68, 0.2);
+  
+  --info: #3b82f6;
+  --info-hover: #2563eb;
+  --info-light: rgba(59, 130, 246, 0.1);
+  --info-border: rgba(59, 130, 246, 0.2);
+  
+  /* === GRADIENTS === */
+  --gradient-primary: linear-gradient(45deg, var(--primary) 0%, var(--accent-blue) 100%);
+  --gradient-secondary: linear-gradient(45deg, var(--accent-purple) 0%, var(--accent-pink) 100%);
+  --gradient-text: linear-gradient(to right, var(--text-primary), var(--text-secondary));
+  --gradient-background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  
+  /* === SHADOWS === */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px var(--primary-glow);
+  
+  /* === LEGACY ALIASES (for backwards compatibility) === */
+  --foreground: var(--text-primary);
+  --secondary: var(--background-secondary);
+  --card-bg: var(--surface-primary);
+  --card-hover: var(--surface-hover);
+  --text-color: var(--text-primary);
+  --gradient-1: var(--gradient-primary);
+  --gradient-2: var(--gradient-secondary);
+}
+
 /* ===================================
    THEME INITIALIZATION
    ================================= */
 
-/* Default to dark theme */
+/* Default to light theme */
 html {
-  color-scheme: dark;
-}
-
-html[data-theme="light"] {
   color-scheme: light;
 }
 
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
 /* Automatic theme detection based on system preference */
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   html:not([data-theme]) {
-    color-scheme: light;
+    color-scheme: dark;
   }
 }
 

@@ -17,8 +17,8 @@ const getSystemTheme = (): 'light' | 'dark' => {
 
 // Helper function to get stored theme
 const getStoredTheme = (): Theme => {
-  if (typeof window === 'undefined') return 'system';
-  return (localStorage.getItem('teacherly-theme') as Theme) || 'system';
+  if (typeof window === 'undefined') return 'light';
+  return (localStorage.getItem('teacherly-theme') as Theme) || 'light';
 };
 
 // Helper function to resolve theme

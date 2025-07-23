@@ -4,6 +4,7 @@ import Image from "next/image";
 import Button from "@/components/ui/Button";
 import AnimatedElement from "@/components/common/AnimatedElement/AnimatedElement";
 import HeroSection from "@/components/features/landing/HeroSection";
+import TeacherStrugglesSection from "@/components/features/landing/TeacherStrugglesSection/TeacherStrugglesSection";
 import ServicesSection from "@/components/features/landing/ServicesSection";
 import TestimonialsSection from "@/components/features/landing/TestimonialsSection";
 import Footer from "@/components/features/landing/Footer";
@@ -38,6 +39,8 @@ export default function Home() {
       <AnimatedElement animation="scale" delay={0.3}>
         <div className={styles.instructorsText}>Over 120+ Instructors</div>
       </AnimatedElement>
+
+      <TeacherStrugglesSection />
 
       <ServicesSection />
 

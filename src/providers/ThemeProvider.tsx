@@ -100,14 +100,14 @@ export function useTheme(): ThemeContextType {
 export const themeInitScript = `
 (function() {
   try {
-    var theme = localStorage.getItem('teacherly-theme') || 'system';
+    var theme = localStorage.getItem('teacherly-theme') || 'light';
     var systemTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
     var resolvedTheme = theme === 'system' ? systemTheme : theme;
     document.documentElement.setAttribute('data-theme', resolvedTheme);
     document.documentElement.style.colorScheme = resolvedTheme;
   } catch (e) {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    document.documentElement.style.colorScheme = 'dark';
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.documentElement.style.colorScheme = 'light';
   }
 })();
 `;

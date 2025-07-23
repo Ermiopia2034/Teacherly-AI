@@ -11,12 +11,20 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 2rem;
-  background: var(--background-overlay);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px) saturate(1.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   position: sticky;
   top: 0;
   z-index: 100;
   animation: fadeIn 0.5s ease-out;
+  transition: all 0.3s ease;
+}
+
+/* Dark theme header */
+[data-theme="dark"] .header {
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .logoContainer {

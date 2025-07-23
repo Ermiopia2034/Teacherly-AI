@@ -11,77 +11,9 @@
   bottom: 0;
   padding: 2rem;
   overflow: hidden;
-  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
-  /* Force dark theme colors for auth pages */
-  --background: #121212;
-  --background-secondary: #1a1a1a;
-  --background-tertiary: #1e1e1e;
-  --background-glass: rgba(30, 30, 30, 0.8);
-  --surface-primary: #1a1a1a;
-  --surface-hover: #262626;
-  --text-primary: #ffffff;
-  --text-secondary: #a0a0a0;
-  --text-muted: #5a5a5a;
-  --border-primary: rgba(255, 255, 255, 0.1);
-  --primary: #00c896;
-  --primary-hover: #00b085;
-  --primary-glow: rgba(0, 200, 150, 0.35);
-  --gradient-primary: linear-gradient(45deg, #00c896 0%, #00a0ff 100%);
+  background: var(--gradient-background);
 }
 
-/* Ensure all text is white/light in auth container */
-.authContainer * {
-  color: inherit;
-}
-
-.authContainer .subtitle {
-  color: #a0a0a0 !important;
-}
-
-.authContainer .inputGroup label {
-  color: #ffffff !important;
-}
-
-.authContainer .toggleMode {
-  color: #a0a0a0 !important;
-}
-
-.authContainer .toggleButton {
-  color: #00c896 !important;
-}
-
-.authContainer .forgotPassword {
-  color: #00c896 !important;
-}
-
-.authContainer p,
-.authContainer span,
-.authContainer div {
-  color: #a0a0a0 !important;
-}
-
-.authContainer h1,
-.authContainer h2,
-.authContainer h3 {
-  color: #ffffff !important;
-}
-
-.authContainer .socialButton {
-  color: #ffffff !important;
-}
-
-/* Fix input text color when typing */
-.authContainer .inputWrapper input {
-  color: #ffffff !important;
-}
-
-.authContainer .inputWrapper input:focus {
-  color: #ffffff !important;
-}
-
-.authContainer input::placeholder {
-  color: #a0a0a0 !important;
-}
 
 .authBackground {
   position: absolute;
@@ -153,7 +85,7 @@
 
 .logo {
   color: transparent;
-  background: var(--gradient-1);
+  background: var(--gradient-primary);
   background-clip: text;
   -webkit-background-clip: text;
   font-size: 1.8rem;
@@ -171,20 +103,20 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.6rem 1.2rem;
-  background: var(--gradient-1);
-  color: #000;
+  background: var(--gradient-primary);
+  color: var(--text-inverse);
   border-radius: 8px;
   font-weight: 600;
   font-size: 0.9rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 200, 150, 0.3);
+  box-shadow: var(--shadow-md);
   position: relative;
   z-index: 101;
 }
 
 .dashboardButton:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 200, 150, 0.5);
+  box-shadow: var(--shadow-glow);
 }
 
 .dashboardButton svg {
@@ -204,12 +136,12 @@
 }
 
 .formCard {
-  background-color: rgba(30, 30, 30, 0.8);
-  backdrop-filter: blur(10px);
+  background-color: var(--background-glass);
+  backdrop-filter: blur(16px) saturate(1.8);
   border-radius: 16px;
   padding: 2.5rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border-primary);
   transition: transform 0.5s ease, opacity 0.3s ease;
   transform-style: preserve-3d;
   animation: fadeIn 0.5s ease-out;
@@ -224,14 +156,14 @@
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  background: linear-gradient(to right, #ffffff, #f0f0f0);
+  background: var(--gradient-text);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .subtitle {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   margin-bottom: 2rem;
   font-size: 0.95rem;
 }
@@ -257,7 +189,7 @@
 .inputGroup label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--foreground);
+  color: var(--text-primary);
 }
 
 .forgotPassword {
@@ -268,7 +200,7 @@
 
 .forgotPassword:hover {
   text-decoration: underline;
-  color: var(--foreground);
+  color: var(--text-primary);
 }
 
 .inputWrapper {
@@ -287,10 +219,10 @@
 .inputWrapper input {
   width: 100%;
   padding: 0.875rem 1rem 0.875rem 2.5rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid transparent;
+  background-color: var(--surface-secondary);
+  border: 1px solid var(--border-secondary);
   border-radius: 8px;
-  color: var(--foreground);
+  color: var(--text-primary);
   font-size: 0.95rem;
   transition: all 0.3s ease;
 }
@@ -298,8 +230,12 @@
 .inputWrapper input:focus {
   outline: none;
   border-color: var(--primary);
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: var(--surface-hover);
   box-shadow: 0 0 0 2px var(--primary-glow);
+}
+
+.inputWrapper input::placeholder {
+  color: var(--text-muted);
 }
 
 .inputWrapper input:focus + .inputIcon,
@@ -310,8 +246,8 @@
 .submitButton {
   margin-top: 1rem;
   padding: 1rem;
-  background: var(--gradient-1);
-  color: #000;
+  background: var(--gradient-primary);
+  color: var(--text-inverse);
   border: none;
   border-radius: 8px;
   font-weight: 600;
@@ -342,7 +278,7 @@
 
 .submitButton:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 200, 150, 0.3);
+  box-shadow: var(--shadow-glow);
 }
 
 .submitButton:hover::before {
@@ -370,7 +306,7 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-primary);
 }
 
 .divider span {
@@ -389,10 +325,10 @@
   justify-content: center;
   gap: 0.75rem;
   padding: 0.875rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: var(--surface-secondary);
+  border: 1px solid var(--border-primary);
   border-radius: 8px;
-  color: var(--foreground);
+  color: var(--text-primary);
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
@@ -400,7 +336,7 @@
 }
 
 .socialButton:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--surface-hover);
   transform: translateY(-2px);
 }
 
@@ -422,7 +358,7 @@
 }
 
 .toggleButton:hover {
-  color: var(--foreground);
+  color: var(--text-primary);
   text-decoration: underline;
 }
 
@@ -592,9 +528,9 @@
   font-size: 1.25rem !important;
   font-weight: 600;
   border-radius: 8px !important;
-  background-color: rgba(255, 255, 255, 0.05) !important;
-  border: 2px solid transparent !important;
-  color: var(--foreground) !important;
+  background-color: var(--surface-secondary) !important;
+  border: 2px solid var(--border-secondary) !important;
+  color: var(--text-primary) !important;
   transition: all 0.3s ease;
   padding: 0 !important;
 }
@@ -602,7 +538,7 @@
 .otpInput:focus {
   outline: none !important;
   border-color: var(--primary) !important;
-  background-color: rgba(255, 255, 255, 0.08) !important;
+  background-color: var(--surface-hover) !important;
   box-shadow: 0 0 0 2px var(--primary-glow) !important;
   transform: scale(1.05);
 }
@@ -657,7 +593,7 @@
 }
 
 .resendButton:hover:not(:disabled) {
-  background-color: rgba(0, 200, 150, 0.1);
+  background-color: var(--primary-subtle);
   border-color: var(--primary);
   transform: translateY(-2px);
 }
@@ -679,7 +615,7 @@
 }
 
 .backButton:hover {
-  color: var(--foreground);
+  color: var(--text-primary);
   text-decoration: underline;
 }
 
