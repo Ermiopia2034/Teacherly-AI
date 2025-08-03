@@ -43,76 +43,100 @@ export default function Dashboard() {
 
   return (
     <div className={`${isLoaded ? styles.fadeIn : ''}`}>
-      <PageHeader 
-        title="Dashboard" 
-        subtitle="Welcome back, Teacher! Here's an overview of your teaching tools and resources." 
+      <PageHeader
+        title="Dashboard"
+        subtitle="Welcome back, Teacher! Here's an overview of your teaching tools and resources."
       />
 
-      <div className={styles.cardsGrid}>
-        <DashboardFeatureCard
-          title="Generation Hub"
-          description="Create teaching materials and exams"
-          icon={<GenerationHubIcon />}
-          mainContent="Use AI to generate teaching materials and exams for your classes."
-          linkHref="/dashboard/generation-hub"
-          linkText="Go to Generation Hub"
-          animationDelay={0.1}
-          pulseIcon={true}
-        />
-
-        <DashboardFeatureCard
-          title="Students"
-          description="Manage your student roster"
-          icon={<StudentsIcon />}
-          mainContent="View and manage your students, classes, and groups. This includes detailed profiles and academic records."
-          linkHref="/dashboard/students"
-          linkText="Manage Students"
-          animationDelay={0.2}
-        />
-
-        <DashboardFeatureCard
-          title="Grades & Attendance"
-          description="Track student performance"
-          icon={<GradesIcon />}
-          mainContent="Record and analyze student grades and attendance."
-          linkHref="/dashboard/grades" // Assuming this is the correct link, adjust if needed
-          linkText="View Grades"
-          animationDelay={0.3}
-        />
+      {/* Compact top summary bar to move secondary numeric indicators out of the main workspace */}
+      <div className={styles.topSummaryBar}>
+        <div className={styles.summaryItem}>
+          <span className={styles.summaryItemLabel}>Classes</span>
+          <span className={styles.summaryItemValue}>—</span>
+        </div>
+        <div className={styles.summaryItem}>
+          <span className={styles.summaryItemLabel}>Students</span>
+          <span className={styles.summaryItemValue}>—</span>
+        </div>
+        <div className={styles.summaryItem}>
+          <span className={styles.summaryItemLabel}>Pending Grading</span>
+          <span className={styles.summaryItemValue}>—</span>
+        </div>
+        <div className={styles.summaryItem}>
+          <span className={styles.summaryItemLabel}>Reports</span>
+          <span className={styles.summaryItemValue}>—</span>
+        </div>
       </div>
 
-      <AnimatedElement animation="fade" delay={0.4}>
-        {/* This outer card acts as a container for quick actions */}
-        <div className={styles.card} style={{ backgroundColor: 'var(--card-bg-alt)'}}> {/* Potentially use a different bg or style */}
-          <div className={styles.cardHeader}> {/* Re-using .cardHeader style for consistency */}
-            <div>
-              <h2 className={styles.cardTitle}>Quick Actions</h2> {/* Re-using .cardTitle style */}
-            </div>
+      {/* Two-pane grid: left (primary features), right (secondary quick actions) */}
+      <div className={styles.dashboardGrid}>
+        <section className={styles.leftPane} aria-label="Primary features">
+          <div className={styles.cardsGrid}>
+            <DashboardFeatureCard
+              title="Generation Hub"
+              description="Create teaching materials and exams"
+              icon={<GenerationHubIcon />}
+              mainContent="Use AI to generate teaching materials and exams for your classes."
+              linkHref="/dashboard/generation-hub"
+              linkText="Go to Generation Hub"
+              animationDelay={0.1}
+              pulseIcon={true}
+            />
+
+            <DashboardFeatureCard
+              title="Students"
+              description="Manage your student roster"
+              icon={<StudentsIcon />}
+              mainContent="View and manage your students, classes, and groups. This includes detailed profiles and academic records."
+              linkHref="/dashboard/students"
+              linkText="Manage Students"
+              animationDelay={0.2}
+            />
+
+            <DashboardFeatureCard
+              title="Grades & Attendance"
+              description="Track student performance"
+              icon={<GradesIcon />}
+              mainContent="Record and analyze student grades and attendance."
+              linkHref="/dashboard/grades" // Assuming this is the correct link, adjust if needed
+              linkText="View Grades"
+              animationDelay={0.3}
+            />
           </div>
-          <div className={styles.cardContent}> {/* Re-using .cardContent style */}
-            <div className={styles.cardsGrid}> {/* Nested grid for quick action cards */}
-              <QuickActionCard
-                title="Create New Material"
-                linkHref="/dashboard/generation-hub/material"
-                linkText="Start Now"
-                // animationDelay={0} // Animation handled by parent AnimatedElement or can be staggered
-              />
-              <QuickActionCard
-                title="Generate Exam"
-                linkHref="/dashboard/generation-hub/exam"
-                linkText="Start Now"
-                // animationDelay={0.1} // Stagger if desired
-              />
-              <QuickActionCard
-                title="Add New Student"
-                linkHref="/dashboard/students/add" // Assuming this link, adjust if needed
-                linkText="Start Now"
-                // animationDelay={0.2} // Stagger if desired
-              />
+        </section>
+
+        <aside className={styles.rightPane} aria-label="Quick actions and utilities">
+          <AnimatedElement animation="fade" delay={0.2}>
+            <div className={styles.card} style={{ backgroundColor: 'var(--surface-primary)'}}>
+              <div className={styles.cardHeader}>
+                <div>
+                  <h2 className={styles.cardTitle}>Quick Actions</h2>
+                  <p className={styles.cardSubtitle}>Frequently used tasks</p>
+                </div>
+              </div>
+              <div className={styles.cardContent}>
+                <div className={styles.cardsGrid}>
+                  <QuickActionCard
+                    title="Create New Material"
+                    linkHref="/dashboard/generation-hub/material"
+                    linkText="Start Now"
+                  />
+                  <QuickActionCard
+                    title="Generate Exam"
+                    linkHref="/dashboard/generation-hub/exam"
+                    linkText="Start Now"
+                  />
+                  <QuickActionCard
+                    title="Add New Student"
+                    linkHref="/dashboard/students/add"
+                    linkText="Start Now"
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </AnimatedElement>
+          </AnimatedElement>
+        </aside>
+      </div>
     </div>
   );
 }

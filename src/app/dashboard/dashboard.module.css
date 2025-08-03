@@ -1,3 +1,86 @@
+/* Top Summary Bar - compact indicators that do not clutter main workspace */
+.topSummaryBar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.summaryItem {
+  background-color: var(--surface-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: 6px;
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+}
+
+.summaryItemLabel {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.summaryItemValue {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Dashboard grid with left primary pane and right secondary pane */
+.dashboardGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1rem;
+}
+
+/* Left pane holds primary features */
+.leftPane {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Right pane holds secondary quick actions/utilities */
+.rightPane {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: sticky;
+  top: calc(50px + 1rem); /* below fixed header */
+  height: fit-content;
+}
+
+/* Refine cardsGrid spacing within leftPane */
+.leftPane .cardsGrid {
+  margin-bottom: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .topSummaryBar {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 992px) {
+  .dashboardGrid {
+    grid-template-columns: 1fr;
+  }
+  .rightPane {
+    position: static;
+  }
+  .topSummaryBar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .topSummaryBar {
+    grid-template-columns: 1fr;
+  }
+}
 .dashboardContainer {
   display: flex;
   flex-direction: column;
