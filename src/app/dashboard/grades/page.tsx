@@ -85,31 +85,66 @@ export default function GradesPage() {
       <Breadcrumb items={breadcrumbItems} />
       
       <PageHeader
-        title="Grades and Attendance"
-        subtitle="Manage student performance and attendance records"
+        title="Performance Analytics"
+        subtitle="Comprehensive student performance tracking and attendance management"
       />
 
-      {/* Tabs Navigation */}
-      <div className={styles.tabsContainer}>
-        <div className={styles.tabsList}>
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              className={`${styles.tab} ${activeTab === tab.id ? styles.active : ''}`}
-              onClick={() => setActiveTab(tab.id as 'grades' | 'attendance')}
-            >
-              <div className={styles.tabIcon}>
-                {tab.icon}
-              </div>
-              <span className={styles.tabLabel}>{tab.label}</span>
-            </button>
-          ))}
+      {/* Enhanced Enterprise Layout */}
+      <div className={styles.enterpriseContainer}>
+        {/* Navigation Switcher */}
+        <div className={styles.navigationPanel}>
+          <div className={styles.panelHeader}>
+            <h3>Analytics Modules</h3>
+            <div className={styles.statusIndicator}>
+              <span className={styles.statusDot}></span>
+              <span>Live Data</span>
+            </div>
+          </div>
+          
+          <div className={styles.moduleSelector}>
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                className={`${styles.moduleButton} ${activeTab === tab.id ? styles.activeModule : ''}`}
+                onClick={() => setActiveTab(tab.id as 'grades' | 'attendance')}
+              >
+                <div className={styles.moduleIcon}>
+                  {tab.icon}
+                </div>
+                <div className={styles.moduleInfo}>
+                  <span className={styles.moduleLabel}>{tab.label}</span>
+                  <span className={styles.moduleDescription}>
+                    {tab.id === 'grades' ? 'Performance tracking' : 'Attendance monitoring'}
+                  </span>
+                </div>
+                <div className={styles.moduleIndicator}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Tab Content */}
-      <div className={styles.tabContent}>
-        {renderTabContent()}
+        {/* Main Content Area */}
+        <div className={styles.contentArea}>
+          <div className={styles.contentHeader}>
+            <div className={styles.contentTitle}>
+              <h2>{activeTab === 'grades' ? 'Grade Management' : 'Attendance Tracking'}</h2>
+              <p className={styles.contentSubtitle}>
+                {activeTab === 'grades'
+                  ? 'Monitor and analyze student academic performance'
+                  : 'Track and manage student attendance patterns'
+                }
+              </p>
+            </div>
+          </div>
+          
+          <div className={styles.moduleContent}>
+            {renderTabContent()}
+          </div>
+        </div>
       </div>
     </div>
   );

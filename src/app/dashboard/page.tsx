@@ -45,97 +45,133 @@ export default function Dashboard() {
     <div className={`${isLoaded ? styles.fadeIn : ''}`}>
       <PageHeader
         title="Dashboard"
-        subtitle="Welcome back, Teacher! Here's an overview of your teaching tools and resources."
+        subtitle="Welcome back, Teacher! Here's your command center for intelligent teaching."
       />
 
-      {/* Compact top summary bar to move secondary numeric indicators out of the main workspace */}
-      <div className={styles.topSummaryBar}>
-        <div className={styles.summaryItem}>
-          <span className={styles.summaryItemLabel}>Classes</span>
-          <span className={styles.summaryItemValue}>—</span>
-        </div>
-        <div className={styles.summaryItem}>
-          <span className={styles.summaryItemLabel}>Students</span>
-          <span className={styles.summaryItemValue}>—</span>
-        </div>
-        <div className={styles.summaryItem}>
-          <span className={styles.summaryItemLabel}>Pending Grading</span>
-          <span className={styles.summaryItemValue}>—</span>
-        </div>
-        <div className={styles.summaryItem}>
-          <span className={styles.summaryItemLabel}>Reports</span>
-          <span className={styles.summaryItemValue}>—</span>
-        </div>
-      </div>
-
-      {/* Two-pane grid: left (primary features), right (secondary quick actions) */}
-      <div className={styles.dashboardGrid}>
-        <section className={styles.leftPane} aria-label="Primary features">
-          <div className={styles.cardsGrid}>
+      {/* Enhanced enterprise dashboard layout */}
+      <div className={styles.enterpriseDashboard}>
+        {/* Primary Features Section - More prominent */}
+        <section className={styles.primarySection} aria-label="Core Features">
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Core Features</h2>
+            <div className={styles.contextIndicators}>
+              <span className={styles.contextDot}></span>
+              <span className={styles.contextText}>Active Session</span>
+            </div>
+          </div>
+          
+          <div className={styles.primaryGrid}>
             <DashboardFeatureCard
               title="Generation Hub"
-              description="Create teaching materials and exams"
+              description="AI-powered content creation"
               icon={<GenerationHubIcon />}
-              mainContent="Use AI to generate teaching materials and exams for your classes."
+              mainContent="Create intelligent teaching materials and comprehensive exams using advanced AI technology."
               linkHref="/dashboard/generation-hub"
-              linkText="Go to Generation Hub"
+              linkText="Launch Hub"
               animationDelay={0.1}
               pulseIcon={true}
             />
 
             <DashboardFeatureCard
-              title="Students"
-              description="Manage your student roster"
+              title="Student Management"
+              description="Complete student lifecycle"
               icon={<StudentsIcon />}
-              mainContent="View and manage your students, classes, and groups. This includes detailed profiles and academic records."
+              mainContent="Comprehensive student roster management with detailed academic profiles and performance tracking."
               linkHref="/dashboard/students"
               linkText="Manage Students"
               animationDelay={0.2}
             />
 
             <DashboardFeatureCard
-              title="Grades & Attendance"
-              description="Track student performance"
+              title="Assessment & Analytics"
+              description="Performance insights"
               icon={<GradesIcon />}
-              mainContent="Record and analyze student grades and attendance."
-              linkHref="/dashboard/grades" // Assuming this is the correct link, adjust if needed
-              linkText="View Grades"
+              mainContent="Advanced grading system with attendance tracking and detailed performance analytics."
+              linkHref="/dashboard/grades"
+              linkText="View Analytics"
               animationDelay={0.3}
             />
           </div>
         </section>
 
-        <aside className={styles.rightPane} aria-label="Quick actions and utilities">
-          <AnimatedElement animation="fade" delay={0.2}>
-            <div className={styles.card} style={{ backgroundColor: 'var(--surface-primary)'}}>
-              <div className={styles.cardHeader}>
-                <div>
-                  <h2 className={styles.cardTitle}>Quick Actions</h2>
-                  <p className={styles.cardSubtitle}>Frequently used tasks</p>
+        {/* Quick Actions & Workflow Section */}
+        <section className={styles.workflowSection} aria-label="Quick Workflow">
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Quick Workflow</h2>
+          </div>
+          
+          <div className={styles.workflowGrid}>
+            <AnimatedElement animation="fade" delay={0.4}>
+              <div className={styles.workflowCard}>
+                <div className={styles.cardHeader}>
+                  <h3 className={styles.cardTitle}>Instant Actions</h3>
+                  <span className={styles.cardBadge}>Popular</span>
                 </div>
-              </div>
-              <div className={styles.cardContent}>
-                <div className={styles.cardsGrid}>
+                <div className={styles.quickActionsList}>
                   <QuickActionCard
-                    title="Create New Material"
+                    title="Create Material"
                     linkHref="/dashboard/generation-hub/material"
-                    linkText="Start Now"
+                    linkText="Start"
                   />
                   <QuickActionCard
                     title="Generate Exam"
                     linkHref="/dashboard/generation-hub/exam"
-                    linkText="Start Now"
+                    linkText="Start"
                   />
                   <QuickActionCard
-                    title="Add New Student"
+                    title="Add Student"
                     linkHref="/dashboard/students/add"
-                    linkText="Start Now"
+                    linkText="Start"
                   />
                 </div>
               </div>
-            </div>
-          </AnimatedElement>
-        </aside>
+            </AnimatedElement>
+
+            <AnimatedElement animation="fade" delay={0.5}>
+              <div className={styles.workflowCard}>
+                <div className={styles.cardHeader}>
+                  <h3 className={styles.cardTitle}>Recent Activity</h3>
+                </div>
+                <div className={styles.activityList}>
+                  <div className={styles.activityItem}>
+                    <div className={styles.activityIcon}>📝</div>
+                    <div className={styles.activityContent}>
+                      <span className={styles.activityText}>Ready to create your first content</span>
+                      <span className={styles.activityTime}>Welcome</span>
+                    </div>
+                  </div>
+                  <div className={styles.activityItem}>
+                    <div className={styles.activityIcon}>👥</div>
+                    <div className={styles.activityContent}>
+                      <span className={styles.activityText}>Student management available</span>
+                      <span className={styles.activityTime}>New</span>
+                    </div>
+                  </div>
+                  <div className={styles.activityItem}>
+                    <div className={styles.activityIcon}>📊</div>
+                    <div className={styles.activityContent}>
+                      <span className={styles.activityText}>Analytics ready for setup</span>
+                      <span className={styles.activityTime}>Ready</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </AnimatedElement>
+          </div>
+        </section>
+
+        {/* Compact status bar moved to bottom - less prominent */}
+        <div className={styles.statusBar}>
+          <div className={styles.statusItem}>
+            <span className={styles.statusLabel}>System Status</span>
+            <span className={styles.statusValue}>Operational</span>
+          </div>
+          <div className={styles.statusSeparator}></div>
+          <div className={styles.statusItem}>
+            <span className={styles.statusLabel}>Last Activity</span>
+            <span className={styles.statusValue}>Just now</span>
+          </div>
+        </div>
       </div>
     </div>
   );

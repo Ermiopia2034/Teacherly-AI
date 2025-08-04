@@ -1,98 +1,183 @@
 .pageContainer {
   min-height: 100vh;
   background-color: var(--bg-primary);
-  padding: 1rem;
+  padding: 1.5rem;
+  max-width: 1600px;
+  margin: 0 auto;
 }
 
-.contentContainer {
-  max-width: 1200px;
-  margin: 0 auto;
+/* Enterprise Layout */
+.enterpriseLayout {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-.contextCard {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 1.5rem;
-}
-
-.contextHeader {
+/* Control Panel */
+.controlPanel {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  box-shadow: var(--shadow-sm);
 }
 
-.contextHeader h3 {
-  font-size: 1.125rem;
+.contextSummary {
+  flex: 1;
+}
+
+.contextBadge {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.badgeLabel {
+  font-size: 0.75rem;
   font-weight: 600;
-  color: var(--text-primary);
-  margin: 0;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.contextInfo {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1rem;
+.contextValues {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .contextItem {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: var(--primary-subtle);
+  padding: 0.25rem 0.75rem;
+  border-radius: 16px;
+  border: 1px solid var(--primary-light);
+}
+
+.contextSeparator {
+  color: var(--text-muted);
+  font-weight: 300;
+}
+
+.actionPanel {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.controlButton {
+  white-space: nowrap;
+}
+
+/* Alert Banner */
+.alertBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: var(--warning-light);
+  border: 1px solid var(--warning-border);
+  border-radius: 12px;
+  border-left: 4px solid var(--warning);
+}
+
+.alertIcon {
+  flex-shrink: 0;
+  color: var(--warning);
+  margin-top: 0.125rem;
+}
+
+.alertContent {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
 
-.contextLabel {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.contextValue {
-  font-size: 0.875rem;
-  color: var(--text-primary);
+.alertContent strong {
+  color: var(--warning);
   font-weight: 600;
+  font-size: 0.875rem;
 }
 
-.warningMessage {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem;
-  background-color: var(--warning-light);
-  border: 1px solid var(--warning-border);
-  border-radius: 8px;
-  color: var(--warning);
+.alertContent span {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.4;
 }
 
-.warningMessage svg {
-  flex-shrink: 0;
-  color: var(--warning);
-}
-
-.warningLink {
-  color: var(--info);
+.alertLink {
+  color: var(--primary);
   text-decoration: underline;
   font-weight: 600;
 }
 
-.warningLink:hover {
-  color: var(--info-hover);
+.alertLink:hover {
+  color: var(--primary-hover);
 }
 
-.sectionManagerCard {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-color);
+/* Content Grid */
+.contentGrid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.5rem;
+  min-height: 600px;
+}
+
+/* Side Panel */
+.sidePanel {
+  width: 350px;
+  transition: all 0.3s ease;
+}
+
+.sidePanelCard {
+  background: var(--surface-primary);
+  border: 1px solid var(--border-primary);
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 0;
+  overflow: hidden;
+  height: fit-content;
+  position: sticky;
+  top: 1rem;
 }
 
-.studentsSection {
-  width: 100%;
+.sidePanelHeader {
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-secondary);
+  background: var(--surface-secondary);
+}
+
+.sidePanelHeader h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* Main Content */
+.mainContent {
+  transition: all 0.3s ease;
+}
+
+.mainContent.withSidePanel {
+  grid-column: 2;
+}
+
+.mainContent.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.studentsContainer {
+  background: var(--surface-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  min-height: 500px;
+  overflow: hidden;
 }
 
 /* Responsive Design */
@@ -146,3 +231,63 @@
 }
 
 /* Theme system handles all color variations automatically */
+
+/* Enhanced Responsive Design */
+@media (max-width: 1200px) {
+  .controlPanel {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .contextValues {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .sidePanel {
+    width: 320px;
+  }
+}
+
+@media (max-width: 992px) {
+  .pageContainer {
+    padding: 1rem;
+  }
+  
+  .contentGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .sidePanel {
+    width: 100%;
+    order: 2;
+  }
+  
+  .mainContent.withSidePanel,
+  .mainContent.fullWidth {
+    grid-column: 1;
+    order: 1;
+  }
+  
+  .sidePanelCard {
+    position: static;
+  }
+}
+
+@media (max-width: 480px) {
+  .pageContainer {
+    padding: 0.5rem;
+  }
+  
+  .controlPanel {
+    padding: 0.75rem;
+  }
+  
+  .contextValues {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

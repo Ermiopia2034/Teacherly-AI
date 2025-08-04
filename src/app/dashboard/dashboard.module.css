@@ -1,84 +1,245 @@
-/* Top Summary Bar - compact indicators that do not clutter main workspace */
-.topSummaryBar {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+/* Enterprise Dashboard Layout */
+.enterpriseDashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-.summaryItem {
-  background-color: var(--surface-primary);
+/* Primary Section */
+.primarySection {
+  background: var(--surface-primary);
+  border-radius: 12px;
+  padding: 2rem;
   border: 1px solid var(--border-primary);
-  border-radius: 6px;
-  padding: 0.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   box-shadow: var(--shadow-sm);
 }
 
-.summaryItemLabel {
-  color: var(--text-muted);
-  font-size: 0.8rem;
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-secondary);
 }
 
-.summaryItemValue {
+.sectionTitle {
+  font-size: 1.375rem;
+  font-weight: 600;
   font-family: var(--font-heading);
-  font-weight: 700;
   color: var(--text-primary);
+  margin: 0;
 }
 
-/* Dashboard grid with left primary pane and right secondary pane */
-.dashboardGrid {
+.contextIndicators {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.contextDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: pulse 2s infinite;
+}
+
+.contextText {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.primaryGrid {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
 }
 
-/* Left pane holds primary features */
-.leftPane {
+/* Workflow Section */
+.workflowSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.workflowGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.workflowCard {
+  background: var(--surface-primary);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.workflowCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.cardBadge {
+  background: var(--primary);
+  color: var(--text-inverse);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.quickActionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Activity List */
+.activityList {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-/* Right pane holds secondary quick actions/utilities */
-.rightPane {
+.activityItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: var(--surface-secondary);
+  transition: all 0.2s ease;
+}
+
+.activityItem:hover {
+  background: var(--surface-hover);
+}
+
+.activityIcon {
+  font-size: 1.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-subtle);
+  border-radius: 8px;
+}
+
+.activityContent {
+  flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 0.25rem;
+}
+
+.activityText {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.activityTime {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Status Bar - Minimalist bottom indicator */
+.statusBar {
+  display: flex;
+  align-items: center;
   gap: 1rem;
-  position: sticky;
-  top: calc(50px + 1rem); /* below fixed header */
-  height: fit-content;
+  padding: 0.75rem 1rem;
+  background: var(--surface-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-secondary);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: auto;
 }
 
-/* Refine cardsGrid spacing within leftPane */
-.leftPane .cardsGrid {
-  margin-bottom: 0;
+.statusItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-/* Responsive adjustments */
+.statusLabel {
+  font-weight: 500;
+}
+
+.statusValue {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.statusSeparator {
+  width: 1px;
+  height: 1rem;
+  background: var(--border-primary);
+}
+
+/* Responsive Design */
 @media (max-width: 1200px) {
-  .topSummaryBar {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .primaryGrid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  
+  .workflowGrid {
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 992px) {
-  .dashboardGrid {
-    grid-template-columns: 1fr;
+  .enterpriseDashboard {
+    gap: 1.5rem;
   }
-  .rightPane {
-    position: static;
+  
+  .primarySection {
+    padding: 1.5rem;
   }
-  .topSummaryBar {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
   }
 }
 
-@media (max-width: 640px) {
-  .topSummaryBar {
+@media (max-width: 768px) {
+  .enterpriseDashboard {
+    gap: 1rem;
+  }
+  
+  .primarySection {
+    padding: 1rem;
+  }
+  
+  .primaryGrid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .workflowCard {
+    padding: 1rem;
+  }
+  
+  .statusBar {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
   }
 }
 .dashboardContainer {
@@ -791,4 +952,284 @@
 .cancelButton:hover {
   color: var(--text-primary);
   background-color: var(--surface-hover);
+}
+
+
+/* Generation Hub Enterprise Styles */
+.enterpriseHub {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.launchSection {
+  background: var(--surface-primary);
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid var(--border-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.creationGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.aiStatus {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.aiIndicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.aiDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: pulse 2s infinite;
+}
+
+.dualPane {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.templatePanel,
+.historyPanel {
+  background: var(--surface-primary);
+  border-radius: 12px;
+  border: 1px solid var(--border-primary);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: var(--surface-secondary);
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.panelHeader h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.templateBadge {
+  background: var(--primary);
+  color: var(--text-inverse);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.viewAllBtn {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.viewAllBtn:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+.templateGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  padding: 1.5rem;
+}
+
+.templateCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background: var(--surface-secondary);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.templateCard:hover {
+  background: var(--surface-hover);
+  transform: translateY(-1px);
+}
+
+.templateIcon {
+  font-size: 1.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-subtle);
+  border-radius: 8px;
+}
+
+.templateInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.templateName {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.templateDesc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.historyContent {
+  padding: 1.5rem;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+  padding: 2rem 1rem;
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  opacity: 0.7;
+}
+
+.emptyText h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.emptyText p {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.emptyActions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.primaryAction {
+  background: var(--primary);
+  color: var(--text-inverse);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.primaryAction:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.secondaryAction {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-primary);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.secondaryAction:hover {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+}
+
+/* Generation Hub Responsive Design */
+@media (max-width: 1200px) {
+  .dualPane {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .creationGrid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .enterpriseHub {
+    gap: 1.5rem;
+  }
+  
+  .launchSection {
+    padding: 1.5rem;
+  }
+  
+  .templateGrid {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+  
+  .panelHeader {
+    padding: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .historyContent {
+    padding: 1rem;
+  }
+  
+  .emptyState {
+    padding: 1.5rem 0.5rem;
+  }
+  
+  .emptyActions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .primaryAction,
+  .secondaryAction {
+    width: 100%;
+  }
 }

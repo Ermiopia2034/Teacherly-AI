@@ -33,43 +33,116 @@ export default function GenerationHub() {
   return (
     <FadeInContainer>
       <Breadcrumb items={breadcrumbItems} />
-      <PageHeader title="Generation Hub" />
+      <PageHeader 
+        title="Generation Hub" 
+        subtitle="AI-powered content creation for intelligent teaching materials and assessments"
+      />
 
-      <div className={styles.cardsGrid}>
-        <DashboardFeatureCard
-          title="Generate material"
-          description="Create new material, update existing materials."
-          icon={materialIcon}
-          mainContent="Use AI to generate various teaching materials for your classes."
-          linkHref="/dashboard/generation-hub/material"
-          linkText="Create Material"
-          animationDelay={0.1}
-          pulseIcon={true}
-        />
-
-        <DashboardFeatureCard
-          title="Generate Exam"
-          description="Quiz exams, mid exams, final exams."
-          icon={examIcon}
-          mainContent="Generate different types of exams tailored to your needs."
-          linkHref="/dashboard/generation-hub/exam"
-          linkText="Create Exam"
-          animationDelay={0.2}
-        />
-      </div>
-
-      <AnimatedElement animation="up" delay={0.3}>
-        <div className={styles.card} style={{ marginTop: '2rem' }}>
-          <div className={styles.cardHeader}>
-            <div>
-              <h2 className={styles.cardTitle}>Recent Generations</h2>
+      <div className={styles.enterpriseHub}>
+        {/* Quick Launch Section */}
+        <section className={styles.launchSection}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Content Creation</h2>
+            <div className={styles.aiStatus}>
+              <div className={styles.aiIndicator}>
+                <span className={styles.aiDot}></span>
+                <span>AI Ready</span>
+              </div>
             </div>
           </div>
-          <div className={styles.cardContent}>
-            <p>You haven&amp;apos;t generated any content yet. Use the cards above to create your first teaching material or exam.</p>
+          
+          <div className={styles.creationGrid}>
+            <DashboardFeatureCard
+              title="Teaching Materials"
+              description="Comprehensive content generation"
+              icon={materialIcon}
+              mainContent="Create intelligent lesson plans, worksheets, presentations, and study guides with AI assistance."
+              linkHref="/dashboard/generation-hub/material"
+              linkText="Create Material"
+              animationDelay={0.1}
+              pulseIcon={true}
+            />
+
+            <DashboardFeatureCard
+              title="Assessment Creation"
+              description="Smart examination builder"
+              icon={examIcon}
+              mainContent="Generate adaptive quizzes, comprehensive exams, and assessment rubrics tailored to your curriculum."
+              linkHref="/dashboard/generation-hub/exam"
+              linkText="Create Assessment"
+              animationDelay={0.2}
+            />
           </div>
-        </div>
-      </AnimatedElement>
+        </section>
+
+        {/* Workflow & History Section */}
+        <section className={styles.workflowSection}>
+          <div className={styles.dualPane}>
+            {/* Quick Templates */}
+            <AnimatedElement animation="fade" delay={0.3}>
+              <div className={styles.templatePanel}>
+                <div className={styles.panelHeader}>
+                  <h3>Quick Templates</h3>
+                  <span className={styles.templateBadge}>Popular</span>
+                </div>
+                <div className={styles.templateGrid}>
+                  <div className={styles.templateCard}>
+                    <div className={styles.templateIcon}>📝</div>
+                    <div className={styles.templateInfo}>
+                      <span className={styles.templateName}>Lesson Plan</span>
+                      <span className={styles.templateDesc}>Structured format</span>
+                    </div>
+                  </div>
+                  <div className={styles.templateCard}>
+                    <div className={styles.templateIcon}>📊</div>
+                    <div className={styles.templateInfo}>
+                      <span className={styles.templateName}>Quiz Template</span>
+                      <span className={styles.templateDesc}>Multiple choice</span>
+                    </div>
+                  </div>
+                  <div className={styles.templateCard}>
+                    <div className={styles.templateIcon}>📋</div>
+                    <div className={styles.templateInfo}>
+                      <span className={styles.templateName}>Assignment</span>
+                      <span className={styles.templateDesc}>Custom rubric</span>
+                    </div>
+                  </div>
+                  <div className={styles.templateCard}>
+                    <div className={styles.templateIcon}>🎯</div>
+                    <div className={styles.templateInfo}>
+                      <span className={styles.templateName}>Study Guide</span>
+                      <span className={styles.templateDesc}>Comprehensive</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </AnimatedElement>
+
+            {/* Recent Activity */}
+            <AnimatedElement animation="fade" delay={0.4}>
+              <div className={styles.historyPanel}>
+                <div className={styles.panelHeader}>
+                  <h3>Generation History</h3>
+                  <button className={styles.viewAllBtn}>View All</button>
+                </div>
+                <div className={styles.historyContent}>
+                  <div className={styles.emptyState}>
+                    <div className={styles.emptyIcon}>🚀</div>
+                    <div className={styles.emptyText}>
+                      <h4>Ready to Generate</h4>
+                      <p>Start creating your first intelligent teaching content. Your generation history will appear here.</p>
+                    </div>
+                    <div className={styles.emptyActions}>
+                      <button className={styles.primaryAction}>Create Material</button>
+                      <button className={styles.secondaryAction}>Build Assessment</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </AnimatedElement>
+          </div>
+        </section>
+      </div>
     </FadeInContainer>
   );
 }
