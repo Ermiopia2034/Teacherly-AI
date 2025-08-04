@@ -13,6 +13,25 @@
   gap: 1.5rem;
 }
 
+/* Header row with compact total badge on the right */
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.totalBadge {
+  align-self: flex-start;
+  background: var(--primary-subtle);
+  border: 1px solid var(--primary-light);
+  color: var(--text-primary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 /* Control Panel */
 .controlPanel {
   display: flex;
@@ -172,6 +191,13 @@
   grid-column: 1 / -1;
 }
 
+/* Ensure table toolbar visually attaches to DataTable container */
+.studentsContainer :global(.container) {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top: none;
+}
+
 .studentsContainer {
   background: var(--surface-primary);
   border: 1px solid var(--border-primary);
@@ -288,6 +314,12 @@
   
   .contextValues {
     flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .headerRow {
+    flex-direction: column;
+    gap: 0.5rem;
     align-items: flex-start;
   }
 }

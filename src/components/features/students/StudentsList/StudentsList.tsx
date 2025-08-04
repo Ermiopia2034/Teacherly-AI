@@ -24,7 +24,6 @@ import { Student } from '@/lib/api/students';
 import StudentCard from '@/components/features/students/StudentCard';
 import StudentRegistrationForm from '@/components/features/students/StudentRegistrationForm';
 import Button from '@/components/ui/Button/Button';
-import Card from '@/components/ui/Card/Card';
 import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
 import DataTable, { Column } from '@/components/ui/DataTable/DataTable';
 import styles from './StudentsList.module.css';
@@ -50,32 +49,28 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
   });
 
   useEffect(() => {
-    // Fetch students, stats, sections, and enrollments when component mounts
     dispatch(fetchStudentsThunk({}));
     dispatch(fetchStudentStatsThunk());
     dispatch(fetchSectionsThunk({}));
     dispatch(fetchEnrollmentsThunk({}));
   }, [dispatch]);
 
-  // Update filters when initialSectionId changes
   useEffect(() => {
     if (initialSectionId && initialSectionId !== filters.section_id) {
       setFilters(prev => ({
         ...prev,
         section_id: initialSectionId,
-        enrollment_status: 'enrolled' // Show enrolled students when filtering by section
+        enrollment_status: 'enrolled'
       }));
     }
   }, [initialSectionId, filters.section_id]);
 
   useEffect(() => {
-    // Clear any existing errors when component mounts
     dispatch(clearError());
   }, [dispatch]);
 
   const handleStudentRegistered = () => {
     setShowRegistrationForm(false);
-    // Refresh the student list and stats
     dispatch(fetchStudentsThunk({}));
     dispatch(fetchStudentStatsThunk());
   };
@@ -88,36 +83,26 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
     }));
   };
 
-  // Get students enrolled in sections
   const getStudentEnrollments = (studentId: number) => {
     return enrollments.filter(enrollment => enrollment.student_id === studentId);
   };
 
-  // Filter students based on selected filters
   const filteredStudents = students.filter(student => {
     const studentEnrollments = getStudentEnrollments(student.id);
-    
-    // Filter by section
     if (filters.section_id !== 0) {
       const isEnrolledInSection = studentEnrollments.some(
         enrollment => enrollment.section_id === filters.section_id
       );
       if (!isEnrolledInSection) return false;
     }
-    
-    // Filter by enrollment status
     if (filters.enrollment_status === 'enrolled') {
-      // Student has at least one enrollment
       if (studentEnrollments.length === 0) return false;
     } else if (filters.enrollment_status === 'not_enrolled') {
-      // Student has no enrollments
       if (studentEnrollments.length > 0) return false;
     }
-    
     return true;
   });
 
-  // Create options for filters
   const sectionOptions = [
     { value: 0, label: 'All Sections' },
     ...sections.map(section => ({
@@ -132,7 +117,6 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
     { value: 'not_enrolled', label: 'Not Enrolled' }
   ];
 
-  // Table columns configuration
   const columns: Column<Student>[] = [
     {
       key: 'avatar',
@@ -219,7 +203,6 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
 
   const handleStudentUpdated = () => {
     setEditingStudent(null);
-    // Refresh the student list and stats
     dispatch(fetchStudentsThunk({}));
     dispatch(fetchStudentStatsThunk());
   };
@@ -241,60 +224,18 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
 
   return (
     <div className={styles.container}>
+      {/* Compact header with title and add button only */}
       <div className={styles.header}>
         <div className={styles.headerContent}>
           <h1>My Students</h1>
           <p>Manage your students and their information</p>
         </div>
-        
         {!showRegistrationForm && (
           <Button onClick={() => setShowRegistrationForm(true)}>
             Add Student
           </Button>
         )}
       </div>
-
-      {/* Stats Section */}
-      {stats && (
-        <Card className={styles.statsCard}>
-          <div className={styles.statsContent}>
-            <div className={styles.statItem}>
-              <span className={styles.statNumber}>{stats.total_students}</span>
-              <span className={styles.statLabel}>Total Students</span>
-            </div>
-            {stats.teacher_name && (
-              <div className={styles.statItem}>
-                <span className={styles.statLabel}>Teacher: {stats.teacher_name}</span>
-              </div>
-            )}
-          </div>
-        </Card>
-      )}
-
-      {/* Filters */}
-      <Card className={styles.filtersCard}>
-        <div className={styles.filtersContent}>
-          <h3>Filter Students</h3>
-          <div className={styles.filters}>
-            <LabeledSelect
-              label="Filter by Section"
-              id="section_filter"
-              name="section_id"
-              value={filters.section_id}
-              onChange={handleFilterChange}
-              options={sectionOptions}
-            />
-            <LabeledSelect
-              label="Filter by Enrollment Status"
-              id="enrollment_filter"
-              name="enrollment_status"
-              value={filters.enrollment_status}
-              onChange={handleFilterChange}
-              options={enrollmentStatusOptions}
-            />
-          </div>
-        </div>
-      </Card>
 
       {/* Registration Form */}
       {showRegistrationForm && (
@@ -334,8 +275,8 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
       {error && (
         <div className={styles.errorMessage}>
           <p>Error: {error}</p>
-          <Button 
-            variant="secondary" 
+          <Button
+            variant="secondary"
             onClick={() => dispatch(clearError())}
           >
             Dismiss
@@ -343,8 +284,29 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
         </div>
       )}
 
-      {/* Students Table */}
+      {/* Students Table with integrated header toolbar */}
       <div className={styles.studentsSection}>
+        <div className={styles.tableToolbar}>
+          <div className={styles.toolbarRight}>
+            <LabeledSelect
+              label="Section"
+              id="section_filter"
+              name="section_id"
+              value={filters.section_id}
+              onChange={handleFilterChange}
+              options={sectionOptions}
+            />
+            <LabeledSelect
+              label="Status"
+              id="enrollment_filter"
+              name="enrollment_status"
+              value={filters.enrollment_status}
+              onChange={handleFilterChange}
+              options={enrollmentStatusOptions}
+            />
+          </div>
+        </div>
+
         <DataTable
           columns={columns as unknown as Column<Record<string, unknown>>[]}
           data={filteredStudents as unknown as Record<string, unknown>[]}
@@ -366,7 +328,6 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
         </div>
       )}
 
-      {/* Loading overlay for refresh operations */}
       {isLoading && students.length > 0 && (
         <div className={styles.loadingOverlay}>
           <div className={styles.spinner}></div>

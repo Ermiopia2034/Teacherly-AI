@@ -203,13 +203,6 @@ export default function MyContentsPage() {
 
     return (
       <Card>
-        <div className={styles.contentHeader}>
-          <h4>{activeTab === 'exams' ? 'Exams & Assignments' : 'Teaching Materials'}</h4>
-          <div className={styles.contentStats}>
-            Total: {currentData.length}
-          </div>
-        </div>
-        
         <DataTable
           columns={contentColumns}
           data={currentData as unknown as Record<string, unknown>[]}
@@ -226,8 +219,8 @@ export default function MyContentsPage() {
       <Breadcrumb items={breadcrumbItems} />
       
       <PageHeader
-        title="My Generated Contents"
-        subtitle="View and manage all the teaching materials you have created."
+        title="My Contents"
+        subtitle="View and manage your generated teaching resources."
       />
 
       {/* Tabs Navigation */}

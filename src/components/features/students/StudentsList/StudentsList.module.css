@@ -106,6 +106,36 @@
   position: relative;
 }
 
+/* Compact toolbar above the table header */
+.tableToolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-primary);
+  border-bottom: none;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.toolbarRight {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Make select controls compact without changing component API */
+.tableToolbar :global(select) {
+  padding: 0.375rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+.tableToolbar :global(label) {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
 .studentsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -200,6 +230,10 @@
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1rem;
   }
+
+  .tableToolbar {
+    padding: 0.5rem;
+  }
 }
 
 @media (max-width: 768px) {
@@ -240,6 +274,12 @@
     flex-direction: column;
     text-align: center;
   }
+
+  .toolbarRight {
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
 }
 
 @media (max-width: 640px) {
@@ -253,6 +293,10 @@
   
   .loadingState {
     padding: 2rem;
+  }
+
+  .tableToolbar {
+    padding: 0.5rem;
   }
 }
 

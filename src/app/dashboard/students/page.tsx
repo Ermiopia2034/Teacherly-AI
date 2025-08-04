@@ -13,6 +13,7 @@ import Card from '@/components/ui/Card/Card';
 import Button from '@/components/ui/Button/Button';
 import { Section } from '@/lib/api/sections';
 import SectionManager from '@/components/features/academic/SectionManager';
+import { selectStudentStats } from '@/lib/features/students/studentsSlice';
 import styles from './students.module.css';
 
 function StudentsPageContent() {
@@ -20,6 +21,7 @@ function StudentsPageContent() {
   const searchParams = useSearchParams();
   const currentSemester = useSelector(selectCurrentSemester);
   const currentAcademicYear = useSelector(selectCurrentAcademicYear);
+  const studentStats = useSelector(selectStudentStats);
   const [selectedSection, setSelectedSection] = useState<Section | null>(null);
   const [showSectionManager, setShowSectionManager] = useState(false);
 
@@ -48,10 +50,16 @@ function StudentsPageContent() {
   return (
     <div className={styles.pageContainer}>
       <Breadcrumb items={breadcrumbItems} />
-      <PageHeader
-        title="Student Management"
-        subtitle="Comprehensive student enrollment and academic record management"
-      />
+      <div className={styles.headerRow}>
+        <PageHeader
+          title="Student Management"
+          subtitle="Comprehensive student enrollment and academic record management"
+        />
+        {/* Compact total badge in top-right */}
+        <div className={styles.totalBadge}>
+          Total Students: {studentStats?.total_students ?? 0}
+        </div>
+      </div>
 
       <div className={styles.enterpriseLayout}>
         {/* Header Control Panel */}

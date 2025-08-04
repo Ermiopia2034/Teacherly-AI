@@ -8,24 +8,97 @@
   padding: 1.5rem;
 }
 
-/* Enterprise Container */
-.enterpriseContainer {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 2rem;
-  min-height: 600px;
-}
-
-/* Navigation Panel */
-.navigationPanel {
+/* Tabs (match My Contents styling) */
+.tabsContainer {
   background: var(--surface-primary);
   border: 1px solid var(--border-primary);
-  border-radius: 12px;
-  padding: 0;
-  overflow: hidden;
-  height: fit-content;
-  position: sticky;
-  top: 1rem;
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+.tabsList {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tabsList::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-width: fit-content;
+}
+
+.tab:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+.tab.active {
+  background: var(--primary);
+  color: var(--text-inverse);
+  opacity: 0.9;
+}
+
+.tab.active:hover {
+  background: var(--primary-hover);
+  opacity: 1;
+}
+
+.tabIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tabLabel {
+  font-weight: 500;
+}
+
+/* Inline status indicator on tabs row */
+.statusInline {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: pulse 2s infinite;
+}
+
+/* Remove enterprise two-column layout since tabs are on top now */
+.enterpriseContainer {
+  display: block;
+}
+
+/* Deprecated when using top tabs; retain definitions to avoid class conflicts but keep unused */
+.navigationPanel {
+  display: none;
 }
 
 .panelHeader {
@@ -144,6 +217,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  margin-top: 1rem;
 }
 
 .contentHeader {
@@ -246,11 +320,6 @@
 
 /* Enhanced Responsive Design */
 @media (max-width: 1200px) {
-  .enterpriseContainer {
-    grid-template-columns: 280px 1fr;
-    gap: 1.5rem;
-  }
-  
   .contentHeader {
     padding: 1.5rem 1.5rem 1rem 1.5rem;
   }
@@ -264,31 +333,13 @@
   .container {
     padding: 1rem;
   }
-  
-  .enterpriseContainer {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+
+  .tabsContainer {
+    padding: 0.5rem;
   }
-  
-  .navigationPanel {
-    position: static;
-    order: 1;
-  }
-  
-  .contentArea {
-    order: 2;
-  }
-  
-  .moduleSelector {
-    flex-direction: row;
-    overflow-x: auto;
-    padding: 1rem;
-    gap: 0.5rem;
-  }
-  
-  .moduleButton {
-    min-width: 200px;
-    flex-shrink: 0;
+
+  .tab {
+    min-width: 180px;
   }
 }
 
@@ -296,14 +347,7 @@
   .container {
     padding: 0.75rem;
   }
-  
-  .panelHeader {
-    padding: 1rem;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-  
+
   .contentHeader {
     padding: 1rem;
   }
@@ -311,26 +355,16 @@
   .moduleContent {
     padding: 1rem;
   }
-  
-  .moduleSelector {
-    flex-direction: column;
-  }
-  
-  .moduleButton {
+
+  .tab {
     min-width: auto;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
   }
-  
-  .contentTitle h2 {
-    font-size: 1.25rem;
-  }
-  
-  .placeholder {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  
-  .placeholderCard {
-    padding: 1.5rem;
+
+  .tabIcon {
+    width: 14px;
+    height: 14px;
   }
 }
 
@@ -338,24 +372,8 @@
   .container {
     padding: 0.5rem;
   }
-  
-  .moduleButton {
-    padding: 0.75rem;
-  }
-  
-  .moduleInfo {
-    gap: 0.125rem;
-  }
-  
-  .moduleLabel {
-    font-size: 0.8rem;
-  }
-  
-  .moduleDescription {
-    font-size: 0.7rem;
-  }
-  
-  .placeholderCard {
-    padding: 1rem;
+
+  .tabsContainer {
+    padding: 0.4rem;
   }
 }

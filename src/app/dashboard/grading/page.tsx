@@ -211,8 +211,8 @@ export default function GradingPage() {
       <Breadcrumb items={breadcrumbItems} />
       
       <PageHeader
-        title="OCR-Based Grading"
-        subtitle="Create assessments and automatically grade student submissions using OCR technology"
+        title="OCR Grading"
+        subtitle="Create and manage assessments with OCR-based grading."
       />
 
       {/* Stats Overview */}
@@ -278,11 +278,6 @@ export default function GradingPage() {
       {/* Main Content */}
       <Card className={styles.mainCard}>
         <div className={styles.cardHeader}>
-          <div className={styles.headerContent}>
-            <h3>Assessments</h3>
-            <p>Manage your OCR-based grading assessments</p>
-          </div>
-          
           <div className={styles.headerActions}>
             {/* Type Filter */}
             <div className={styles.filterGroup}>
