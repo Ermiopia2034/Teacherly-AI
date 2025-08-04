@@ -7,7 +7,6 @@ import {
   fetchStudentsThunk,
   fetchStudentStatsThunk,
   selectStudents,
-  selectStudentStats,
   selectStudentsLoading,
   selectStudentsError,
   clearError
@@ -35,7 +34,8 @@ interface StudentsListProps {
 export function StudentsList({ initialSectionId }: StudentsListProps) {
   const dispatch = useDispatch<AppDispatch>();
   const students = useSelector(selectStudents);
-  const stats = useSelector(selectStudentStats);
+  // stats intentionally not used here after UI compaction; using selector in page header
+  // const stats = useSelector(selectStudentStats);
   const sections = useSelector(selectSections);
   const enrollments = useSelector(selectEnrollments);
   const isLoading = useSelector(selectStudentsLoading);
