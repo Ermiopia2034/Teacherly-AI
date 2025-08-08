@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import React, { useState, useMemo } from 'react';
-import Button from '../Button/Button';
-import styles from './DataTable.module.css';
+import React, { useState, useMemo } from "react";
+import Button from "../Button/Button";
+import styles from "./DataTable.module.css";
 
 export interface Column<T = Record<string, unknown>> {
   key: string;
-  title: string;
+  title: string | React.ReactNode;
   dataIndex?: keyof T;
   render?: (value: unknown, record: T, index: number) => React.ReactNode;
   sortable?: boolean;
   width?: string | number;
-  align?: 'left' | 'center' | 'right';
+  align?: "left" | "center" | "right";
 }
 
 interface DataTableProps<T = Record<string, unknown>> {
@@ -28,7 +28,7 @@ interface DataTableProps<T = Record<string, unknown>> {
   onRowClick?: (record: T, index: number) => void;
   emptyText?: string;
   className?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
 }
 
 const DataTable = <T extends Record<string, unknown>>({
@@ -36,17 +36,17 @@ const DataTable = <T extends Record<string, unknown>>({
   data,
   loading = false,
   pagination,
-  rowKey = 'id',
+  rowKey = "id",
   onRowClick,
-  emptyText = 'No data available',
+  emptyText = "No data available",
   className,
-  size = 'md'
+  size = "md",
 }: DataTableProps<T>) => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
   const getRowKey = (record: T, index: number): string => {
-    if (typeof rowKey === 'function') {
+    if (typeof rowKey === "function") {
       return rowKey(record);
     }
     return record[rowKey]?.toString() || index.toString();
@@ -54,17 +54,17 @@ const DataTable = <T extends Record<string, unknown>>({
 
   const handleSort = (columnKey: string) => {
     if (sortColumn === columnKey) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
       setSortColumn(columnKey);
-      setSortDirection('asc');
+      setSortDirection("asc");
     }
   };
 
   const sortedData = useMemo(() => {
     if (!sortColumn) return data;
 
-    const column = columns.find(col => col.key === sortColumn);
+    const column = columns.find((col) => col.key === sortColumn);
     if (!column || !column.sortable) return data;
 
     return [...data].sort((a, b) => {
@@ -72,19 +72,19 @@ const DataTable = <T extends Record<string, unknown>>({
       const bValue = column.dataIndex ? b[column.dataIndex] : b[sortColumn];
 
       if (aValue === bValue) return 0;
-      
+
       // Convert to string for comparison to handle unknown types safely
-      const aString = String(aValue ?? '');
-      const bString = String(bValue ?? '');
-      
+      const aString = String(aValue ?? "");
+      const bString = String(bValue ?? "");
+
       const comparison = aString < bString ? -1 : 1;
-      return sortDirection === 'asc' ? comparison : -comparison;
+      return sortDirection === "asc" ? comparison : -comparison;
     });
   }, [data, sortColumn, sortDirection, columns]);
 
   const paginatedData = useMemo(() => {
     if (!pagination) return sortedData;
-    
+
     const startIndex = (pagination.current - 1) * pagination.pageSize;
     const endIndex = startIndex + pagination.pageSize;
     return sortedData.slice(startIndex, endIndex);
@@ -92,11 +92,17 @@ const DataTable = <T extends Record<string, unknown>>({
 
   const renderCell = (column: Column<T>, record: T, index: number) => {
     if (column.render) {
-      return column.render(column.dataIndex ? record[column.dataIndex] : record, record, index);
+      return column.render(
+        column.dataIndex ? record[column.dataIndex] : record,
+        record,
+        index,
+      );
     }
-    
-    const value = column.dataIndex ? record[column.dataIndex] : record[column.key];
-    return value?.toString() || '';
+
+    const value = column.dataIndex
+      ? record[column.dataIndex]
+      : record[column.key];
+    return value?.toString() || "";
   };
 
   const renderPagination = () => {
@@ -139,7 +145,7 @@ const DataTable = <T extends Record<string, unknown>>({
 
   if (loading) {
     return (
-      <div className={`${styles.container} ${className || ''}`}>
+      <div className={`${styles.container} ${className || ""}`}>
         <div className={styles.loading}>
           <div className={styles.spinner}></div>
           <p>Loading...</p>
@@ -149,7 +155,7 @@ const DataTable = <T extends Record<string, unknown>>({
   }
 
   return (
-    <div className={`${styles.container} ${className || ''}`}>
+    <div className={`${styles.container} ${className || ""}`}>
       <div className={styles.tableWrapper}>
         <table className={`${styles.table} ${styles[size]}`}>
           <thead className={styles.thead}>
@@ -157,26 +163,53 @@ const DataTable = <T extends Record<string, unknown>>({
               {columns.map((column) => (
                 <th
                   key={column.key}
-                  className={`${styles.th} ${styles[column.align || 'left']}`}
+                  className={`${styles.th} ${styles[column.align || "left"]}`}
                   style={{ width: column.width }}
-                  onClick={column.sortable ? () => handleSort(column.key) : undefined}
+                  onClick={
+                    column.sortable ? () => handleSort(column.key) : undefined
+                  }
                 >
                   <div className={styles.thContent}>
-                    <span>{column.title}</span>
+                    {typeof column.title === "string" ? (
+                      <span>{column.title}</span>
+                    ) : (
+                      column.title
+                    )}
                     {column.sortable && (
                       <div className={styles.sortIcon}>
                         {sortColumn === column.key ? (
-                          sortDirection === 'asc' ? (
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          sortDirection === "asc" ? (
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
                               <polyline points="18,15 12,9 6,15" />
                             </svg>
                           ) : (
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
                               <polyline points="6,9 12,15 18,9" />
                             </svg>
                           )
                         ) : (
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1"
+                          >
                             <polyline points="18,15 12,9 6,15" />
                             <polyline points="6,9 12,15 18,9" />
                           </svg>
@@ -194,8 +227,22 @@ const DataTable = <T extends Record<string, unknown>>({
                 <td colSpan={columns.length} className={styles.emptyCell}>
                   <div className={styles.empty}>
                     <div className={styles.emptyIcon}>
-                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                      <svg
+                        width="48"
+                        height="48"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1"
+                      >
+                        <rect
+                          x="3"
+                          y="3"
+                          width="18"
+                          height="18"
+                          rx="2"
+                          ry="2"
+                        />
                         <path d="M9 12h6" />
                         <path d="M9 16h6" />
                         <path d="M9 8h6" />
@@ -209,13 +256,15 @@ const DataTable = <T extends Record<string, unknown>>({
               paginatedData.map((record, index) => (
                 <tr
                   key={getRowKey(record, index)}
-                  className={`${styles.tr} ${onRowClick ? styles.clickable : ''}`}
-                  onClick={onRowClick ? () => onRowClick(record, index) : undefined}
+                  className={`${styles.tr} ${onRowClick ? styles.clickable : ""}`}
+                  onClick={
+                    onRowClick ? () => onRowClick(record, index) : undefined
+                  }
                 >
                   {columns.map((column) => (
                     <td
                       key={column.key}
-                      className={`${styles.td} ${styles[column.align || 'left']}`}
+                      className={`${styles.td} ${styles[column.align || "left"]}`}
                     >
                       {renderCell(column, record, index)}
                     </td>
