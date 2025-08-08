@@ -10,6 +10,7 @@ import LabeledInput from '@/components/ui/LabeledInput/LabeledInput';
 import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
 import Card from '@/components/ui/Card/Card';
 import styles from './StudentRegistrationForm.module.css';
+import { useToast } from '@/providers/ToastProvider';
 
 interface StudentRegistrationFormProps {
   onSuccess?: () => void;
@@ -18,6 +19,7 @@ interface StudentRegistrationFormProps {
 
 export function StudentRegistrationForm({ onSuccess, onCancel }: StudentRegistrationFormProps) {
   const dispatch = useDispatch<AppDispatch>();
+  const { showToast } = useToast();
   const isCreating = useSelector(selectStudentsCreating);
   const error = useSelector(selectStudentsError);
   const sections = useSelector(selectSections);
@@ -73,6 +75,7 @@ export function StudentRegistrationForm({ onSuccess, onCancel }: StudentRegistra
     e.preventDefault();
     
     if (!validateForm()) {
+      showToast({ variant: 'error', title: 'Validation error', description: 'Please correct the highlighted fields.' });
       return;
     }
 
@@ -81,6 +84,7 @@ export function StudentRegistrationForm({ onSuccess, onCancel }: StudentRegistra
       const selectedSection = sections.find(section => section.id === formData.section_id);
       if (!selectedSection) {
         setValidationErrors({ section_id: 'Selected section not found' });
+        showToast({ variant: 'error', title: 'Section not found', description: 'Please select a valid section.' });
         return;
       }
 
@@ -101,6 +105,7 @@ export function StudentRegistrationForm({ onSuccess, onCancel }: StudentRegistra
         section_id: 0
       });
       setValidationErrors({});
+      showToast({ variant: 'success', title: 'Student registered', description: 'The student has been created successfully.' });
       
       if (onSuccess) {
         onSuccess();
@@ -108,6 +113,7 @@ export function StudentRegistrationForm({ onSuccess, onCancel }: StudentRegistra
     } catch (error) {
       // Error is handled by the Redux slice
       console.error('Failed to create student:', error);
+      showToast({ variant: 'error', title: 'Registration failed', description: String(error) });
     }
   };
 

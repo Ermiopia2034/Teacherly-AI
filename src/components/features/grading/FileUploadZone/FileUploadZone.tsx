@@ -20,6 +20,7 @@ import Button from '@/components/ui/Button/Button';
 import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
 import Card from '@/components/ui/Card/Card';
 import styles from './FileUploadZone.module.css';
+import { useToast } from '@/providers/ToastProvider';
 
 interface FileUploadZoneProps {
   assessmentId: number;
@@ -37,6 +38,7 @@ interface FileUploadItem {
 
 export function FileUploadZone({ assessmentId, onUploadComplete, onUploadStart }: FileUploadZoneProps) {
   const dispatch = useDispatch<AppDispatch>();
+  const { showToast } = useToast();
   const activeUpload = useSelector(selectActiveUpload);
   const uploadError = useSelector(selectUploadError);
   const sections = useSelector(selectSections);
@@ -96,10 +98,13 @@ export function FileUploadZone({ assessmentId, onUploadComplete, onUploadStart }
   };
 
   const handleStartUpload = async () => {
-    if (files.length === 0) return;
+    if (files.length === 0) {
+      showToast({ variant: 'error', title: 'No files selected', description: 'Please add one or more files to upload.' });
+      return;
+    }
     
     if (selectedSectionId === 0) {
-      alert('Please select a section before uploading files.');
+      showToast({ variant: 'error', title: 'Section required', description: 'Please select a section before uploading files.' });
       return;
     }
 
@@ -115,12 +120,14 @@ export function FileUploadZone({ assessmentId, onUploadComplete, onUploadStart }
       })).unwrap();
 
       onUploadComplete?.();
+      showToast({ variant: 'success', title: 'Upload started', description: 'Your files are being uploaded. This may take a moment.' });
       // Clear files after successful upload
       setTimeout(() => {
         setFiles([]);
       }, 2000);
     } catch (error) {
       console.error('Upload failed:', error);
+      showToast({ variant: 'error', title: 'Upload failed', description: String(error) });
       // Error is already handled by Redux state
     }
   };

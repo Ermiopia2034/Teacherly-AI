@@ -11,6 +11,7 @@ import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
 import Card from '@/components/ui/Card/Card';
 import { ReportType, ReportFormat, getAvailableReportTypes, getAvailableFormats, getSemesters, Semester } from '@/lib/api/reports';
 import styles from './ReportConfigForm.module.css';
+import { useToast } from '@/providers/ToastProvider';
 
 interface ReportConfigFormProps {
   onSuccess?: () => void;
@@ -19,6 +20,7 @@ interface ReportConfigFormProps {
 
 export function ReportConfigForm({ onSuccess, onCancel }: ReportConfigFormProps) {
   const dispatch = useDispatch<AppDispatch>();
+  const { showToast } = useToast();
   const isGenerating = useSelector(selectReportsGenerating);
   const error = useSelector(selectReportsError);
   const students = useSelector(selectStudents);
@@ -141,6 +143,7 @@ export function ReportConfigForm({ onSuccess, onCancel }: ReportConfigFormProps)
     e.preventDefault();
     
     if (!validateForm()) {
+      showToast({ variant: 'error', title: 'Validation error', description: 'Please correct the highlighted fields.' });
       return;
     }
 
@@ -159,12 +162,18 @@ export function ReportConfigForm({ onSuccess, onCancel }: ReportConfigFormProps)
       };
 
       await dispatch(generateReportThunk(reportRequest)).unwrap();
+      showToast({
+        variant: 'success',
+        title: 'Report generated',
+        description: 'The report has been generated and sent to the recipient.'
+      });
       
       if (onSuccess) {
         onSuccess();
       }
     } catch (error) {
       console.error('Failed to generate report:', error);
+      showToast({ variant: 'error', title: 'Generation failed', description: String(error) });
     }
   };
 

@@ -5,6 +5,7 @@ import { store } from '@/lib/store';
 import AppInitializer from './AppInitializer';
 import ErrorBoundary from './common/ErrorBoundary';
 import { ThemeProvider } from '@/providers/ThemeProvider';
+import { ToastProvider } from '@/providers/ToastProvider';
 
 interface ClientProvidersProps {
   children: React.ReactNode;
@@ -15,9 +16,11 @@ export default function ClientProviders({ children }: ClientProvidersProps) {
     <Provider store={store}>
       <ErrorBoundary>
         <ThemeProvider>
-          <AppInitializer>
-            {children}
-          </AppInitializer>
+          <ToastProvider>
+            <AppInitializer>
+              {children}
+            </AppInitializer>
+          </ToastProvider>
         </ThemeProvider>
       </ErrorBoundary>
     </Provider>

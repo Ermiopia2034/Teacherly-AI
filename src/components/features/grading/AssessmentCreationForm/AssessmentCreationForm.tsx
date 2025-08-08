@@ -16,6 +16,7 @@ import FileUpload from '@/components/ui/FileUpload/FileUpload';
 import Card from '@/components/ui/Card/Card';
 import { AssessmentCreatePayload } from '@/lib/api/grading';
 import styles from './AssessmentCreationForm.module.css';
+import { useToast } from '@/providers/ToastProvider';
 
 interface AssessmentCreationFormProps {
   onSuccess?: () => void;
@@ -24,6 +25,7 @@ interface AssessmentCreationFormProps {
 
 export function AssessmentCreationForm({ onSuccess, onCancel }: AssessmentCreationFormProps) {
   const dispatch = useDispatch<AppDispatch>();
+  const { showToast } = useToast();
   const isCreating = useSelector(selectGradingCreating);
   const error = useSelector(selectGradingError);
 
@@ -114,6 +116,7 @@ export function AssessmentCreationForm({ onSuccess, onCancel }: AssessmentCreati
     e.preventDefault();
     
     if (!validateForm()) {
+      showToast({ variant: 'error', title: 'Validation error', description: 'Please correct the highlighted fields.' });
       return;
     }
 
@@ -136,10 +139,12 @@ export function AssessmentCreationForm({ onSuccess, onCancel }: AssessmentCreati
       });
       setAnswerKeyFile(null);
       setValidationErrors({});
+      showToast({ variant: 'success', title: 'Assessment created', description: 'The assessment has been created successfully.' });
 
       onSuccess?.();
     } catch (error) {
       console.error('Failed to create assessment:', error);
+      showToast({ variant: 'error', title: 'Creation failed', description: String(error) });
     }
   };
 

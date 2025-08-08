@@ -20,9 +20,11 @@ import {
   getTimezoneOptions 
 } from '@/lib/api/settings';
 import styles from './PreferencesForm.module.css';
+import { useToast } from '@/providers/ToastProvider';
 
 export function PreferencesForm() {
   const dispatch = useDispatch<AppDispatch>();
+  const { showToast } = useToast();
   const preferences = useSelector(selectUserPreferences);
   const isUpdating = useSelector(selectSettingsUpdating);
 
@@ -88,13 +90,16 @@ export function PreferencesForm() {
     e.preventDefault();
     
     if (!hasChanges) {
+      showToast({ variant: 'info', title: 'No changes', description: 'There are no updates to save.' });
       return;
     }
 
     try {
       await dispatch(updateUserPreferencesThunk(formData)).unwrap();
+      showToast({ variant: 'success', title: 'Preferences updated', description: 'Your preferences have been saved.' });
     } catch (error) {
       console.error('Failed to update preferences:', error);
+      showToast({ variant: 'error', title: 'Update failed', description: String(error) });
     }
   };
 

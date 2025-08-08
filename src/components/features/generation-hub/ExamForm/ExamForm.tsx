@@ -30,10 +30,12 @@ import {
   fetchTopics,
 } from '@/lib/api/curriculum';
 import MarkAllocationProgress from '@/components/features/academic/MarkAllocationProgress/MarkAllocationProgress';
+import { useToast } from '@/providers/ToastProvider';
 
 export default function ExamForm() {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
+  const { showToast } = useToast();
   const isSubmitting = useSelector(selectGenerationIsSubmitting);
   const submitError = useSelector(selectGenerationSubmitError);
   const showSuccessMessage = useSelector(selectShowSuccessMessage);
@@ -75,6 +77,11 @@ export default function ExamForm() {
   useEffect(() => {
     if (showSuccessMessage && submissionResponse && !hasStartedRedirectRef.current) {
       hasStartedRedirectRef.current = true;
+      showToast({
+        variant: 'success',
+        title: 'Exam generation started',
+        description: 'Your exam is being generated in the background. You will find it in My Contents once it’s ready.'
+      });
       const timer = setTimeout(() => {
         dispatch(clearSuccessMessage());
         router.push('/dashboard/my-contents');
@@ -82,7 +89,7 @@ export default function ExamForm() {
       
       return () => clearTimeout(timer);
     }
-  }, [showSuccessMessage, submissionResponse, dispatch, router]);
+  }, [showSuccessMessage, submissionResponse, dispatch, router, showToast]);
   
   useEffect(() => {
   const loadSubjects = async () => {
@@ -193,6 +200,7 @@ export default function ExamForm() {
     if (!formData.difficulty) errors.difficulty = 'Difficulty is required';
     setFieldErrors(errors);
     setError('Please fix the highlighted fields.');
+    showToast({ variant: 'error', title: 'Validation error', description: 'Please complete the required fields.' });
     return;
   }
   
@@ -203,6 +211,7 @@ export default function ExamForm() {
     if (!formData.marks) errors.marks = 'Total marks is required';
     setFieldErrors(errors);
     setError('Please fix the highlighted fields.');
+    showToast({ variant: 'error', title: 'Validation error', description: 'Enter the number of questions and total marks.' });
     return;
   }
   
@@ -210,12 +219,14 @@ export default function ExamForm() {
   if (!markValidation.isValid) {
     setFieldErrors(prev => ({ ...prev, marks: 'Allocated marks exceed the semester limit' }));
     setError('The allocated marks exceed the semester limit. Please adjust the marks.');
+    showToast({ variant: 'warning', title: 'Marks exceed limit', description: 'Adjust total marks to fit semester allocation.' });
     return;
   }
   
   // Check if semester is available
   if (!currentSemester) {
     setError('No current semester found. Please set up a semester first.');
+    showToast({ variant: 'error', title: 'Semester not set', description: 'Please configure the current semester in Academic Structure.' });
     return;
   }
   
@@ -234,6 +245,7 @@ export default function ExamForm() {
     // Success message and redirect will be handled by useEffect
   } catch (rejectedValue) {
     setError(rejectedValue as string);
+    showToast({ variant: 'error', title: 'Generation failed', description: String(rejectedValue) });
   }
   };
   
@@ -381,13 +393,7 @@ export default function ExamForm() {
             rows={4}
           />
 
-          {showSuccessMessage && submissionResponse && (
-            <div className={styles.successText}>
-              ✅ {submissionResponse.message}
-              <br />
-              <small>Redirecting to My Contents in 3 seconds...</small>
-            </div>
-          )}
+          {/* Removed inline success confirmation; toast handles this now */}
           
           {(error || submitError) && <div className={styles.errorText}>Error: {error || submitError}</div>}
           

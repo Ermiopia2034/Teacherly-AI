@@ -23,6 +23,7 @@ import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
 import LabeledInput from '@/components/ui/LabeledInput/LabeledInput';
 import { Semester, SemesterCreatePayload, SemesterType } from '@/lib/api/semesters';
 import styles from './SemesterManager.module.css';
+import { useToast } from '@/providers/ToastProvider';
 
 interface SemesterManagerProps {
   onSemesterChange?: (semester: Semester | null) => void;
@@ -38,6 +39,7 @@ export function SemesterManager({
   className = '' 
 }: SemesterManagerProps) {
   const dispatch = useDispatch<AppDispatch>();
+  const { showToast } = useToast();
   const semesters = useSelector(selectSemesters);
   const currentSemester = useSelector(selectCurrentSemester);
   const academicYears = useSelector(selectAcademicYears);
@@ -121,16 +123,19 @@ export function SemesterManager({
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.academic_year_id || !formData.name || !formData.start_date || !formData.end_date) {
+      showToast({ variant: 'error', title: 'Missing fields', description: 'Please complete all required semester fields.' });
+      return;
+    }
+    if (new Date(formData.end_date) < new Date(formData.start_date)) {
+      showToast({ variant: 'error', title: 'Invalid dates', description: 'End date must be after start date.' });
+      return;
+    }
     try {
       await dispatch(createSemesterThunk(formData)).unwrap();
-      setFormData({
-        name: '',
-        semester_type: SemesterType.FIRST,
-        start_date: '',
-        end_date: '',
-        academic_year_id: selectedAcademicYearId
-      });
       setShowForm(false);
+      setFormData(prev => ({ ...prev, name: '', start_date: '', end_date: '' }));
+      showToast({ variant: 'success', title: 'Semester created', description: 'The semester was created successfully.' });
       // Refresh the semesters list
       if (selectedAcademicYearId) {
         dispatch(fetchSemestersByAcademicYearThunk(selectedAcademicYearId));
@@ -139,6 +144,7 @@ export function SemesterManager({
       }
     } catch (error) {
       console.error('Failed to create semester:', error);
+      showToast({ variant: 'error', title: 'Creation failed', description: String(error) });
     }
   };
 

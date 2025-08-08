@@ -8,6 +8,7 @@ import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
 import LabeledTextarea from '@/components/ui/LabeledTextarea/LabeledTextarea';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
+import { useToast } from '@/providers/ToastProvider';
 import {
   submitMaterialGenerationThunk,
   selectGenerationIsSubmitting,
@@ -27,6 +28,7 @@ import {
 export default function MaterialForm() {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
+  const { showToast } = useToast();
   const isSubmitting = useSelector(selectGenerationIsSubmitting);
   const submitError = useSelector(selectGenerationSubmitError);
   const showSuccessMessage = useSelector(selectShowSuccessMessage);
@@ -111,6 +113,11 @@ export default function MaterialForm() {
   useEffect(() => {
     if (showSuccessMessage && submissionResponse && !hasStartedRedirectRef.current) {
       hasStartedRedirectRef.current = true;
+      showToast({
+        variant: 'success',
+        title: 'Material generation started',
+        description: 'Your material is being generated in the background. You will find it in My Contents once it’s ready.'
+      });
       const timer = setTimeout(() => {
         dispatch(clearSuccessMessage());
         router.push('/dashboard/my-contents');
@@ -118,7 +125,7 @@ export default function MaterialForm() {
       
       return () => clearTimeout(timer);
     }
-  }, [showSuccessMessage, submissionResponse, dispatch, router]);
+  }, [showSuccessMessage, submissionResponse, dispatch, router, showToast]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -172,6 +179,7 @@ export default function MaterialForm() {
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
       setError('Please fix the highlighted fields.');
+      showToast({ variant: 'error', title: 'Validation error', description: 'Please complete the required fields.' });
       return;
     }
 
@@ -180,6 +188,7 @@ export default function MaterialForm() {
       // Success message and redirect will be handled by useEffect
     } catch (rejectedValue) {
       setError(rejectedValue as string);
+      showToast({ variant: 'error', title: 'Generation failed', description: String(rejectedValue) });
     }
   };
 
@@ -230,13 +239,7 @@ export default function MaterialForm() {
           {fieldErrors.contentType && <div className={styles.errorText}>{fieldErrors.contentType}</div>}
           <LabeledTextarea label="Additional Information" id="additionalInfo" name="additionalInfo" value={formData.additionalInfo} onChange={handleChange} placeholder="Any specific requirements..." rows={4} />
           
-          {showSuccessMessage && submissionResponse && (
-            <div className={styles.successText}>
-              ✅ {submissionResponse.message}
-              <br />
-              <small>Redirecting to My Contents in 3 seconds...</small>
-            </div>
-          )}
+          {/* Removed inline success confirmation; toast handles this now */}
           
           {(error || submitError) && <div className={styles.errorText}>Error: {error || submitError}</div>}
 

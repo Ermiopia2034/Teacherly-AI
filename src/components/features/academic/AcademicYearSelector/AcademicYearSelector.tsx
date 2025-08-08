@@ -20,6 +20,7 @@ import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
 import LabeledInput from '@/components/ui/LabeledInput/LabeledInput';
 import { AcademicYear, AcademicYearCreatePayload } from '@/lib/api/academicYears';
 import styles from './AcademicYearSelector.module.css';
+import { useToast } from '@/providers/ToastProvider';
 
 interface AcademicYearSelectorProps {
   onAcademicYearChange?: (academicYear: AcademicYear | null) => void;
@@ -33,6 +34,7 @@ export function AcademicYearSelector({
   className = '' 
 }: AcademicYearSelectorProps) {
   const dispatch = useDispatch<AppDispatch>();
+  const { showToast } = useToast();
   const academicYears = useSelector(selectAcademicYears);
   const currentAcademicYear = useSelector(selectCurrentAcademicYear);
   const isLoading = useSelector(selectAcademicYearsLoading);
@@ -81,14 +83,25 @@ export function AcademicYearSelector({
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Basic validation
+    if (!formData.name || !formData.start_date || !formData.end_date) {
+      showToast({ variant: 'error', title: 'Missing fields', description: 'Please complete name, start date, and end date.' });
+      return;
+    }
+    if (new Date(formData.end_date) < new Date(formData.start_date)) {
+      showToast({ variant: 'error', title: 'Invalid dates', description: 'End date must be after start date.' });
+      return;
+    }
     try {
       await dispatch(createAcademicYearThunk(formData)).unwrap();
       setFormData({ name: '', start_date: '', end_date: '' });
       setShowForm(false);
       // Refresh the academic years list
       dispatch(fetchAcademicYearsThunk({}));
+      showToast({ variant: 'success', title: 'Academic year created', description: 'The academic year was created successfully.' });
     } catch (error) {
       console.error('Failed to create academic year:', error);
+      showToast({ variant: 'error', title: 'Creation failed', description: String(error) });
     }
   };
 

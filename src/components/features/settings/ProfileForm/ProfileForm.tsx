@@ -14,9 +14,11 @@ import Button from '@/components/ui/Button/Button';
 import LabeledInput from '@/components/ui/LabeledInput/LabeledInput';
 import Card from '@/components/ui/Card/Card';
 import styles from './ProfileForm.module.css';
+import { useToast } from '@/providers/ToastProvider';
 
 export function ProfileForm() {
   const dispatch = useDispatch<AppDispatch>();
+  const { showToast } = useToast();
   const user = useSelector(selectUser);
   const isUpdating = useSelector(selectSettingsUpdating);
   const error = useSelector(selectSettingsError);
@@ -87,10 +89,12 @@ export function ProfileForm() {
     e.preventDefault();
     
     if (!validateForm()) {
+      showToast({ variant: 'error', title: 'Validation error', description: 'Please correct the highlighted fields.' });
       return;
     }
 
     if (!hasChanges) {
+      showToast({ variant: 'info', title: 'No changes', description: 'There are no changes to save.' });
       return;
     }
 
@@ -115,8 +119,10 @@ export function ProfileForm() {
       }));
       
       setValidationErrors({});
+      showToast({ variant: 'success', title: 'Profile updated', description: 'Your profile has been updated successfully.' });
     } catch (error) {
       console.error('Failed to update profile:', error);
+      showToast({ variant: 'error', title: 'Update failed', description: String(error) });
     }
   };
 

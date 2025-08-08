@@ -22,6 +22,7 @@ import LabeledSelect from '@/components/ui/LabeledSelect/LabeledSelect';
 import LabeledInput from '@/components/ui/LabeledInput/LabeledInput';
 import { Section, SectionCreatePayload } from '@/lib/api/sections';
 import styles from './SectionManager.module.css';
+import { useToast } from '@/providers/ToastProvider';
 
 interface SectionManagerProps {
   onSectionChange?: (section: Section | null) => void;
@@ -39,6 +40,7 @@ export function SectionManager({
   className = '' 
 }: SectionManagerProps) {
   const dispatch = useDispatch<AppDispatch>();
+  const { showToast } = useToast();
   const router = useRouter();
   const sections = useSelector(selectSections);
   const semesters = useSelector(selectSemesters);
@@ -144,12 +146,13 @@ export function SectionManager({
     
     // Validate that a valid semester is selected
     if (formData.semester_id === 0) {
-      alert('Please select a semester before creating the section.');
+      showToast({ variant: 'error', title: 'Semester required', description: 'Please select a semester before creating a section.' });
       return;
     }
     
     try {
       await dispatch(createSectionThunk(formData)).unwrap();
+      showToast({ variant: 'success', title: 'Section created', description: 'The section was created successfully.' });
       setFormData({ 
         name: '', 
         code: '',
@@ -171,6 +174,7 @@ export function SectionManager({
       }
     } catch (error) {
       console.error('Failed to create section:', error);
+      showToast({ variant: 'error', title: 'Creation failed', description: String(error) });
     }
   };
 
