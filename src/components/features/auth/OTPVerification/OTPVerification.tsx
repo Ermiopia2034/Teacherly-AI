@@ -6,11 +6,16 @@ import { AppDispatch } from "@/lib/store";
 import {
   verifyOTPAndLogin,
   verifySignupOTPAndCompleteRegistration,
+  resendLoginOTP,
+  resendSignupOTP,
   clearAuthError,
+  decrementResendCooldown,
   selectIsAuthLoading,
   selectAuthError,
   selectPendingEmail,
   selectIsSignupFlow,
+  selectOTPStep,
+  selectResendCooldown,
 } from "@/lib/features/auth/authSlice";
 import styles from "../../../../app/auth/auth.module.css";
 
@@ -21,13 +26,15 @@ interface OTPVerificationProps {
 const OTPVerification: React.FC<OTPVerificationProps> = ({ onBack }) => {
   const [otpCode, setOtpCode] = useState("");
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
-  const [canResend, setCanResend] = useState(true);
+  const [resendSuccess, setResendSuccess] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
   const isLoading = useSelector(selectIsAuthLoading);
   const authError = useSelector(selectAuthError);
   const pendingEmail = useSelector(selectPendingEmail);
   const isSignupFlow = useSelector(selectIsSignupFlow);
+  const otpStep = useSelector(selectOTPStep);
+  const resendCooldown = useSelector(selectResendCooldown);
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -39,11 +46,22 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ onBack }) => {
     }
   }, [timeLeft]);
 
-  // Enable resend after initial load
+  // Cooldown timer for resend button
   useEffect(() => {
-    const timer = setTimeout(() => setCanResend(true), 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    if (resendCooldown > 0) {
+      const timer = setTimeout(() => dispatch(decrementResendCooldown()), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendCooldown, dispatch]);
+
+  // Handle resend success feedback
+  useEffect(() => {
+    if (otpStep === "sent" && resendCooldown === 60 && !authError) {
+      setResendSuccess(true);
+      const timer = setTimeout(() => setResendSuccess(false), 3000); // Show for 3 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [otpStep, resendCooldown, authError]);
 
   // Format time display
   const formatTime = (seconds: number) => {
@@ -129,13 +147,23 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ onBack }) => {
   };
 
   // Handle resend OTP
-  const handleResendOTP = () => {
-    if (!canResend) return;
+  const handleResendOTP = async () => {
+    if (!pendingEmail || resendCooldown > 0) return;
 
-    // For security reasons, we don't store the password
-    // So we'll take the user back to re-enter credentials
-    alert("To resend the code, please go back and re-enter your credentials.");
-    onBack();
+    dispatch(clearAuthError());
+
+    if (isSignupFlow) {
+      await dispatch(resendSignupOTP(pendingEmail));
+    } else {
+      await dispatch(resendLoginOTP(pendingEmail));
+    }
+
+    // Reset OTP input and timer on successful resend
+    setOtpCode("");
+    setTimeLeft(600); // Reset to 10 minutes
+
+    // Clear any previous success state
+    setResendSuccess(false);
   };
 
   if (!pendingEmail) {
@@ -196,13 +224,34 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ onBack }) => {
         </div>
 
         <div className={styles.otpInfo}>
-          <p className={styles.timerText}>
-            Code expires in: <strong>{formatTime(timeLeft)}</strong>
-          </p>
-          {timeLeft <= 0 && (
-            <p className={styles.expiredText}>
-              Code has expired. Please request a new one.
+          {resendSuccess && (
+            <p
+              className={styles.timerText}
+              style={{ color: "var(--success, #22c55e)" }}
+            >
+              <strong>✓ New code sent successfully!</strong>
             </p>
+          )}
+          {otpStep === "resending" ? (
+            <p className={styles.timerText}>
+              <strong>Sending new code...</strong>
+            </p>
+          ) : (
+            <>
+              <p className={styles.timerText}>
+                Code expires in: <strong>{formatTime(timeLeft)}</strong>
+              </p>
+              {timeLeft <= 0 && (
+                <p className={styles.expiredText}>
+                  Code has expired. Please request a new one.
+                </p>
+              )}
+              {resendCooldown > 0 && !resendSuccess && (
+                <p className={styles.timerText}>
+                  Resend available in: <strong>{resendCooldown}s</strong>
+                </p>
+              )}
+            </>
           )}
         </div>
 
@@ -240,9 +289,55 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ onBack }) => {
           type="button"
           onClick={handleResendOTP}
           className={styles.resendButton}
-          disabled={!canResend}
+          disabled={resendCooldown > 0 || otpStep === "resending"}
         >
-          Resend Code
+          {otpStep === "resending" ? (
+            <>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="animate-spin"
+              >
+                <line x1="12" y1="2" x2="12" y2="6"></line>
+                <line x1="12" y1="18" x2="12" y2="22"></line>
+                <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                <line x1="2" y1="12" x2="6" y2="12"></line>
+                <line x1="18" y1="12" x2="22" y2="12"></line>
+                <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+              </svg>
+              Sending...
+            </>
+          ) : resendCooldown > 0 ? (
+            `Resend in ${resendCooldown}s`
+          ) : (
+            <>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="1 4 1 10 7 10"></polyline>
+                <polyline points="23 20 23 14 17 14"></polyline>
+                <path d="m20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+              </svg>
+              Resend Code
+            </>
+          )}
         </button>
 
         <button type="button" onClick={onBack} className={styles.backButton}>

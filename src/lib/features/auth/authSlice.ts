@@ -11,6 +11,8 @@ import {
   requestLoginOTP as apiRequestLoginOTP,
   completeLoginWithOTP as apiCompleteLoginWithOTP,
   completeSignupWithOTP as apiCompleteSignupWithOTP,
+  resendLoginOTP as apiResendLoginOTP,
+  resendSignupOTP as apiResendSignupOTP,
   logout as apiLogout,
   signup as apiSignup,
   fetchCurrentUser as apiFetchCurrentUser,
@@ -24,9 +26,10 @@ interface AuthState {
   user: User | null;
   isLoading: boolean;
   error: string | null | undefined; // Can be string for error messages or undefined from rejectedWithValue
-  otpStep: "idle" | "pending" | "sent" | "verifying"; // Track OTP flow state
+  otpStep: "idle" | "pending" | "sent" | "verifying" | "resending"; // Track OTP flow state
   pendingEmail: string | null; // Store email for OTP verification step
   isSignupFlow: boolean; // Track if we're in signup OTP flow vs login OTP flow
+  resendCooldown: number; // Cooldown timer for resend button in seconds
 }
 
 const initialState: AuthState = {
@@ -36,6 +39,7 @@ const initialState: AuthState = {
   otpStep: "idle",
   pendingEmail: null,
   isSignupFlow: false,
+  resendCooldown: 0,
 };
 
 // Async Thunks
@@ -148,6 +152,38 @@ export const signupUser = createAsyncThunk<
   }
 });
 
+export const resendLoginOTP = createAsyncThunk<
+  OTPResponse,
+  string,
+  { rejectValue: string }
+>("auth/resendLoginOTP", async (email, { rejectWithValue }) => {
+  try {
+    const response = await apiResendLoginOTP(email);
+    return response;
+  } catch (err: unknown) {
+    const error = err as AxiosError<{ detail?: string }>;
+    return rejectWithValue(
+      error.response?.data?.detail || error.message || "Failed to resend OTP",
+    );
+  }
+});
+
+export const resendSignupOTP = createAsyncThunk<
+  OTPResponse,
+  string,
+  { rejectValue: string }
+>("auth/resendSignupOTP", async (email, { rejectWithValue }) => {
+  try {
+    const response = await apiResendSignupOTP(email);
+    return response;
+  } catch (err: unknown) {
+    const error = err as AxiosError<{ detail?: string }>;
+    return rejectWithValue(
+      error.response?.data?.detail || error.message || "Failed to resend OTP",
+    );
+  }
+});
+
 export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
   "auth/logout",
   async (_, { rejectWithValue }) => {
@@ -230,6 +266,7 @@ const authSlice = createSlice({
       state.pendingEmail = null;
       state.isSignupFlow = false;
       state.error = null;
+      state.resendCooldown = 0;
     },
     // If direct user setting is needed, e.g., after token refresh outside thunks
     setUser: (state, action: PayloadAction<User | null>) => {
@@ -246,6 +283,12 @@ const authSlice = createSlice({
         if (action.payload.email) state.user.email = action.payload.email;
         if (action.payload.full_name !== undefined)
           state.user.full_name = action.payload.full_name;
+      }
+    },
+    // Decrement resend cooldown
+    decrementResendCooldown: (state) => {
+      if (state.resendCooldown > 0) {
+        state.resendCooldown -= 1;
       }
     },
   },
@@ -269,6 +312,7 @@ const authSlice = createSlice({
           state.otpStep = "sent";
           state.pendingEmail = action.payload.email;
           state.error = null;
+          state.resendCooldown = 60; // 60 second initial cooldown
         },
       )
       .addCase(requestOTP.rejected, (state, action) => {
@@ -334,6 +378,7 @@ const authSlice = createSlice({
           state.pendingEmail = action.payload.email;
           state.isSignupFlow = true;
           state.error = null;
+          state.resendCooldown = 60; // 60 second initial cooldown
         },
       )
       .addCase(requestSignupOTP.rejected, (state, action) => {
@@ -384,6 +429,7 @@ const authSlice = createSlice({
           state.pendingEmail = action.payload.email;
           state.isSignupFlow = true;
           state.error = null;
+          state.resendCooldown = 60; // 60 second initial cooldown
         },
       )
       .addCase(signupUser.rejected, (state, action) => {
@@ -453,12 +499,51 @@ const authSlice = createSlice({
       .addCase(performPasswordReset.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload ?? action.error.message;
+      })
+      // Resend Login OTP
+      .addCase(resendLoginOTP.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+        state.otpStep = "resending";
+      })
+      .addCase(resendLoginOTP.fulfilled, (state) => {
+        state.isLoading = false;
+        state.otpStep = "sent";
+        state.error = null;
+        state.resendCooldown = 60; // 60 second cooldown
+      })
+      .addCase(resendLoginOTP.rejected, (state, action) => {
+        state.isLoading = false;
+        state.otpStep = "sent"; // Stay in sent state
+        state.error = action.payload ?? action.error.message;
+      })
+      // Resend Signup OTP
+      .addCase(resendSignupOTP.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+        state.otpStep = "resending";
+      })
+      .addCase(resendSignupOTP.fulfilled, (state) => {
+        state.isLoading = false;
+        state.otpStep = "sent";
+        state.error = null;
+        state.resendCooldown = 60; // 60 second cooldown
+      })
+      .addCase(resendSignupOTP.rejected, (state, action) => {
+        state.isLoading = false;
+        state.otpStep = "sent"; // Stay in sent state
+        state.error = action.payload ?? action.error.message;
       });
   },
 });
 
-export const { clearAuthError, clearOTPState, setUser, updateUserProfile } =
-  authSlice.actions;
+export const {
+  clearAuthError,
+  clearOTPState,
+  setUser,
+  updateUserProfile,
+  decrementResendCooldown,
+} = authSlice.actions;
 
 // Selectors
 export const selectUser = (state: RootState) => state.auth.user;
@@ -467,5 +552,7 @@ export const selectAuthError = (state: RootState) => state.auth.error;
 export const selectOTPStep = (state: RootState) => state.auth.otpStep;
 export const selectPendingEmail = (state: RootState) => state.auth.pendingEmail;
 export const selectIsSignupFlow = (state: RootState) => state.auth.isSignupFlow;
+export const selectResendCooldown = (state: RootState) =>
+  state.auth.resendCooldown;
 
 export default authSlice.reducer;

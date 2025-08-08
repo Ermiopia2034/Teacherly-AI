@@ -82,6 +82,22 @@ export const completeSignupWithOTP = async (
   return response.data; // Backend returns UserRead schema, token is in HttpOnly cookie
 };
 
+// Resend OTP for login flow
+export const resendLoginOTP = async (email: string): Promise<OTPResponse> => {
+  const response = await apiClient.post("/auth/resend-login-otp", {
+    email: email,
+  });
+  return response.data; // Backend returns OTP response with message and email
+};
+
+// Resend OTP for signup flow
+export const resendSignupOTP = async (email: string): Promise<OTPResponse> => {
+  const response = await apiClient.post("/auth/resend-signup-otp", {
+    email: email,
+  });
+  return response.data; // Backend returns OTP response with message and email
+};
+
 // Legacy login function for backward compatibility (if needed)
 export const login = async (): Promise<User> => {
   // For now, this could throw an error or redirect to OTP flow
