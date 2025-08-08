@@ -63,6 +63,7 @@ export default function ExamForm() {
   const [chapters, setChapters] = useState<string[]>([]);
   const [topics, setTopics] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const hasStartedRedirectRef = useRef(false);
   
   useEffect(() => {
@@ -179,21 +180,35 @@ export default function ExamForm() {
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   setError(null);
+  setFieldErrors({});
   
   // Check if all basic fields are filled
   if (!areBasicFieldsFilled) {
-    setError('Please fill in all required fields (subject, grade, unit, topics, exam type, and difficulty).');
+    const errors: Record<string, string> = {};
+    if (!formData.subject) errors.subject = 'Subject is required';
+    if (!formData.grade) errors.grade = 'Grade level is required';
+    if (!formData.unit) errors.unit = 'Unit is required';
+    if (formData.topics.length === 0) errors.topics = 'Select at least one topic';
+    if (!formData.examType) errors.examType = 'Exam type is required';
+    if (!formData.difficulty) errors.difficulty = 'Difficulty is required';
+    setFieldErrors(errors);
+    setError('Please fix the highlighted fields.');
     return;
   }
   
   // Check if marks and question count are filled
   if (!formData.questionCount || !formData.marks) {
-    setError('Please enter the number of questions and total marks.');
+    const errors: Record<string, string> = {};
+    if (!formData.questionCount) errors.questionCount = 'Number of questions is required';
+    if (!formData.marks) errors.marks = 'Total marks is required';
+    setFieldErrors(errors);
+    setError('Please fix the highlighted fields.');
     return;
   }
   
   // Check mark validation before submitting
   if (!markValidation.isValid) {
+    setFieldErrors(prev => ({ ...prev, marks: 'Allocated marks exceed the semester limit' }));
     setError('The allocated marks exceed the semester limit. Please adjust the marks.');
     return;
   }
@@ -255,8 +270,11 @@ export default function ExamForm() {
       <div className={styles.cardContent}>
         <form onSubmit={handleSubmit} className={styles.form}>
                     <LabeledSelect label="Subject" id="subject" name="subject" value={formData.subject} onChange={handleChange} options={toOptions(subjects)} placeholder="Select a subject" required />
+                    {fieldErrors.subject && <div className={styles.errorText}>{fieldErrors.subject}</div>}
                     <LabeledSelect label="Grade Level" id="grade" name="grade" value={formData.grade} onChange={handleChange} options={toOptions(grades)} placeholder="Select a grade level" required disabled={!formData.subject} />
+                    {fieldErrors.grade && <div className={styles.errorText}>{fieldErrors.grade}</div>}
                     <LabeledSelect label="Unit" id="unit" name="unit" value={formData.unit} onChange={handleChange} options={toOptions(chapters)} placeholder="Select a unit" required disabled={!formData.grade} />
+                    {fieldErrors.unit && <div className={styles.errorText}>{fieldErrors.unit}</div>}
                     <div className={styles.formGroup}>
                       <label className={styles.label}>Topics *</label>
                       <div className={styles.checkboxGroup}>
@@ -281,6 +299,7 @@ export default function ExamForm() {
                         )}
                       </div>
                     </div>
+                    {fieldErrors.topics && <div className={styles.errorText}>{fieldErrors.topics}</div>}
         <LabeledSelect
         label="Exam Type"
             id="examType"
@@ -290,6 +309,7 @@ export default function ExamForm() {
             options={examTypeOptions}
             required
           />
+          {fieldErrors.examType && <div className={styles.errorText}>{fieldErrors.examType}</div>}
 
           <LabeledSelect
             label="Difficulty Level"
@@ -300,6 +320,7 @@ export default function ExamForm() {
             options={difficultyOptions}
             required
           />
+          {fieldErrors.difficulty && <div className={styles.errorText}>{fieldErrors.difficulty}</div>}
 
           <LabeledInput
             label="Number of Questions"
@@ -314,6 +335,7 @@ export default function ExamForm() {
             disabled={!areBasicFieldsFilled}
             placeholder={areBasicFieldsFilled ? "Enter number of questions" : "Fill required fields first"}
           />
+          {fieldErrors.questionCount && <div className={styles.errorText}>{fieldErrors.questionCount}</div>}
 
           <LabeledInput
             label="Total Marks"
@@ -328,6 +350,7 @@ export default function ExamForm() {
             disabled={!areBasicFieldsFilled}
             placeholder={areBasicFieldsFilled ? "Enter total marks" : "Fill required fields first"}
           />
+          {fieldErrors.marks && <div className={styles.errorText}>{fieldErrors.marks}</div>}
 
           {/* Mark Allocation Progress */}
           {currentSemester && areBasicFieldsFilled && formData.marks && (

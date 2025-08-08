@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import PageHeader from '@/components/ui/PageHeader/PageHeader';
 import Breadcrumb from '@/components/ui/Breadcrumb/Breadcrumb';
 import GradeStats from '@/components/features/grades/GradeStats/GradeStats';
 import GradesList from '@/components/features/grades/GradesList/GradesList';
@@ -84,10 +83,7 @@ export default function GradesPage() {
     <div className={styles.container}>
       <Breadcrumb items={breadcrumbItems} />
       
-      <PageHeader
-        title="Performance Analytics"
-        subtitle="Comprehensive student performance tracking and attendance management"
-      />
+      {/* Removed PageHeader to avoid duplicate title with breadcrumbs */}
 
       {/* Top Tabs to match My Contents styling */}
       <div className={styles.tabsContainer}>

@@ -3,7 +3,6 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
-import PageHeader from '@/components/ui/PageHeader/PageHeader';
 import Breadcrumb from '@/components/ui/Breadcrumb/Breadcrumb';
 import Card from '@/components/ui/Card/Card';
 import DataTable, { Column } from '@/components/ui/DataTable/DataTable';
@@ -218,10 +217,7 @@ export default function MyContentsPage() {
     <div className={styles.container}>
       <Breadcrumb items={breadcrumbItems} />
       
-      <PageHeader
-        title="My Contents"
-        subtitle="View and manage your generated teaching resources."
-      />
+      {/* Removed PageHeader to avoid duplicate title with breadcrumbs */}
 
       {/* Tabs Navigation */}
       <div className={styles.tabsContainer}>

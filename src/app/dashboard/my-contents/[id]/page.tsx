@@ -11,7 +11,6 @@ import {
   selectContentError,
 } from '@/lib/features/content/contentSlice';
 import Breadcrumb from '@/components/ui/Breadcrumb/Breadcrumb';
-import PageHeader from '@/components/ui/PageHeader/PageHeader';
 import MarkdownRenderer from '@/components/common/MarkdownRenderer';
 import styles from './ContentDetailPage.module.css';
 
@@ -64,10 +63,7 @@ export default function ContentDetailPage() {
   return (
     <div className={styles.pageContainer}>
       <Breadcrumb items={breadcrumbItems} />
-      <PageHeader
-        title={content ? content.title : 'Loading...'}
-        subtitle={`Type: ${content ? content.content_type : '...'}`}
-      />
+      {/* Removed PageHeader to avoid duplicate title with breadcrumbs */}
       {renderContentDetail()}
     </div>
   );

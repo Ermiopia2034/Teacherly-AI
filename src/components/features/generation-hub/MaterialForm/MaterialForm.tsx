@@ -46,6 +46,7 @@ export default function MaterialForm() {
   const [chapters, setChapters] = useState<string[]>([]);
   const [topics, setTopics] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const hasStartedRedirectRef = useRef(false);
 
   useEffect(() => {
@@ -157,8 +158,22 @@ export default function MaterialForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setFieldErrors({});
     dispatch(resetGenerationState());
     hasStartedRedirectRef.current = false;
+
+    // Minimal client-side validation to guide users
+    const errors: Record<string, string> = {};
+    if (!formData.subject) errors.subject = 'Subject is required';
+    if (!formData.grade) errors.grade = 'Grade level is required';
+    if (!formData.unit) errors.unit = 'Unit is required';
+    if (formData.topics.length === 0) errors.topics = 'Select at least one topic';
+    if (!formData.contentType) errors.contentType = 'Content type is required';
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setError('Please fix the highlighted fields.');
+      return;
+    }
 
     try {
       await dispatch(submitMaterialGenerationThunk(formData)).unwrap();
@@ -181,8 +196,11 @@ export default function MaterialForm() {
       <div className={styles.cardContent}>
         <form onSubmit={handleSubmit} className={styles.form}>
           <LabeledSelect label="Subject" id="subject" name="subject" value={formData.subject} onChange={handleChange} options={toOptions(subjects)} placeholder="Select a subject" required />
+          {fieldErrors.subject && <div className={styles.errorText}>{fieldErrors.subject}</div>}
           <LabeledSelect label="Grade Level" id="grade" name="grade" value={formData.grade} onChange={handleChange} options={toOptions(grades)} placeholder="Select a grade level" required disabled={!formData.subject} />
+          {fieldErrors.grade && <div className={styles.errorText}>{fieldErrors.grade}</div>}
           <LabeledSelect label="Unit" id="unit" name="unit" value={formData.unit} onChange={handleChange} options={toOptions(chapters)} placeholder="Select a unit" required disabled={!formData.grade} />
+          {fieldErrors.unit && <div className={styles.errorText}>{fieldErrors.unit}</div>}
           <div className={styles.formGroup}>
             <label className={styles.label}>Topics *</label>
             <div className={styles.checkboxGroup}>
@@ -207,7 +225,9 @@ export default function MaterialForm() {
               )}
             </div>
           </div>
+          {fieldErrors.topics && <div className={styles.errorText}>{fieldErrors.topics}</div>}
           <LabeledSelect label="Content Type" id="contentType" name="contentType" value={formData.contentType} onChange={handleChange} options={[{ value: 'note', label: 'Teaching Note' }, { value: 'homework', label: 'Homework Assignment' }]} required />
+          {fieldErrors.contentType && <div className={styles.errorText}>{fieldErrors.contentType}</div>}
           <LabeledTextarea label="Additional Information" id="additionalInfo" name="additionalInfo" value={formData.additionalInfo} onChange={handleChange} placeholder="Any specific requirements..." rows={4} />
           
           {showSuccessMessage && submissionResponse && (

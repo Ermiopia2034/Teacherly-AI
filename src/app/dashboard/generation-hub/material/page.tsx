@@ -2,7 +2,6 @@
 
 import React from 'react';
 import AnimatedElement from '@/components/common/AnimatedElement/AnimatedElement';
-import PageHeader from '@/components/ui/PageHeader/PageHeader';
 import MaterialForm from '@/components/features/generation-hub/MaterialForm/MaterialForm';
 import Breadcrumb from '@/components/ui/Breadcrumb/Breadcrumb';
 
@@ -16,7 +15,7 @@ export default function MaterialGeneration() {
   return (
     <div>
       <Breadcrumb items={breadcrumbItems} />
-      <PageHeader title="Create Teaching Material" />
+      {/* Removed PageHeader to avoid duplicate title with breadcrumbs */}
 
       <AnimatedElement animation="up" delay={0.1}>
         <MaterialForm />

@@ -18,7 +18,6 @@ import {
   clearCurrentAssessment
 } from '@/lib/features/grading/gradingSlice';
 import { fetchStudentsThunk } from '@/lib/features/students/studentsSlice';
-import PageHeader from '@/components/ui/PageHeader/PageHeader';
 import Breadcrumb from '@/components/ui/Breadcrumb/Breadcrumb';
 import Button from '@/components/ui/Button/Button';
 import Card from '@/components/ui/Card/Card';
@@ -425,10 +424,7 @@ export default function AssessmentDetailPage() {
     <div className={styles.container}>
       <Breadcrumb items={breadcrumbItems} />
       
-      <PageHeader
-        title={currentAssessment.title}
-        subtitle={currentAssessment.description}
-      />
+      {/* Removed PageHeader to avoid duplicate title with breadcrumbs */}
 
       {/* Assessment Info Bar */}
       <Card className={styles.infoBar}>

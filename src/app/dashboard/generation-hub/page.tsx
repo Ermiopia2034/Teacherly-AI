@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from '@/app/dashboard/dashboard.module.css';
 import AnimatedElement from '@/components/AnimatedElement';
-import PageHeader from '@/components/ui/PageHeader/PageHeader';
 import DashboardFeatureCard from '@/components/features/dashboard/DashboardFeatureCard/DashboardFeatureCard';
 import Breadcrumb from '@/components/ui/Breadcrumb/Breadcrumb';
 import FadeInContainer from '@/components/common/FadeInContainer/FadeInContainer';
@@ -33,10 +32,7 @@ export default function GenerationHub() {
   return (
     <FadeInContainer>
       <Breadcrumb items={breadcrumbItems} />
-      <PageHeader 
-        title="Generation Hub" 
-        subtitle="AI-powered content creation for intelligent teaching materials and assessments"
-      />
+      {/* Removed PageHeader to avoid duplicate title with breadcrumbs */}
 
       <div className={styles.enterpriseHub}>
         {/* Quick Launch Section */}
