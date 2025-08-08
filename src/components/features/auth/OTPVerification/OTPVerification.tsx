@@ -3,12 +3,14 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/lib/store";
-import { 
-  verifyOTPAndLogin, 
-  clearAuthError, 
-  selectIsAuthLoading, 
-  selectAuthError, 
-  selectPendingEmail 
+import {
+  verifyOTPAndLogin,
+  verifySignupOTPAndCompleteRegistration,
+  clearAuthError,
+  selectIsAuthLoading,
+  selectAuthError,
+  selectPendingEmail,
+  selectIsSignupFlow,
 } from "@/lib/features/auth/authSlice";
 import styles from "../../../../app/auth/auth.module.css";
 
@@ -20,12 +22,13 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ onBack }) => {
   const [otpCode, setOtpCode] = useState("");
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
   const [canResend, setCanResend] = useState(true);
-  
+
   const dispatch = useDispatch<AppDispatch>();
   const isLoading = useSelector(selectIsAuthLoading);
   const authError = useSelector(selectAuthError);
   const pendingEmail = useSelector(selectPendingEmail);
-  
+  const isSignupFlow = useSelector(selectIsSignupFlow);
+
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // Timer for OTP expiry
@@ -46,17 +49,17 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ onBack }) => {
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
   // Handle OTP input change
   const handleOTPChange = (value: string, index: number) => {
     if (value.length > 1) return; // Only allow single character
     if (value && !/^\d$/.test(value)) return; // Only allow digits
-    
-    const newOTP = otpCode.split('');
+
+    const newOTP = otpCode.split("");
     newOTP[index] = value;
-    const updatedOTP = newOTP.join('');
+    const updatedOTP = newOTP.join("");
     setOtpCode(updatedOTP);
 
     // Auto-focus next input
@@ -67,7 +70,7 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ onBack }) => {
 
   // Handle backspace
   const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
-    if (e.key === 'Backspace' && !otpCode[index] && index > 0) {
+    if (e.key === "Backspace" && !otpCode[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
   };
@@ -75,8 +78,8 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ onBack }) => {
   // Handle paste event
   const handlePaste = (e: React.ClipboardEvent, index: number) => {
     e.preventDefault();
-    const pastedData = e.clipboardData.getData('text').replace(/\D/g, ''); // Extract only digits
-    
+    const pastedData = e.clipboardData.getData("text").replace(/\D/g, ""); // Extract only digits
+
     if (pastedData.length === 6) {
       // If exactly 6 digits, fill all fields
       setOtpCode(pastedData);
@@ -86,16 +89,16 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ onBack }) => {
       }, 0);
     } else if (pastedData.length > 0) {
       // If fewer digits, fill from current position
-      const newOTP = otpCode.split('');
+      const newOTP = otpCode.split("");
       const remainingSlots = 6 - index;
       const digitsToFill = pastedData.slice(0, remainingSlots);
-      
+
       for (let i = 0; i < digitsToFill.length; i++) {
         newOTP[index + i] = digitsToFill[i];
       }
-      
-      setOtpCode(newOTP.join(''));
-      
+
+      setOtpCode(newOTP.join(""));
+
       // Focus on the next empty field or last filled field
       const nextFocusIndex = Math.min(index + digitsToFill.length, 5);
       setTimeout(() => {
@@ -110,7 +113,19 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ onBack }) => {
     if (!pendingEmail || otpCode.length !== 6) return;
 
     dispatch(clearAuthError());
-    await dispatch(verifyOTPAndLogin({ email: pendingEmail, otp_code: otpCode }));
+
+    if (isSignupFlow) {
+      await dispatch(
+        verifySignupOTPAndCompleteRegistration({
+          email: pendingEmail,
+          otp_code: otpCode,
+        }),
+      );
+    } else {
+      await dispatch(
+        verifyOTPAndLogin({ email: pendingEmail, otp_code: otpCode }),
+      );
+    }
   };
 
   // Handle resend OTP
@@ -142,9 +157,14 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ onBack }) => {
         </div>
       </div>
 
-      <h1 className={styles.title}>Enter Verification Code</h1>
+      <h1 className={styles.title}>
+        {isSignupFlow
+          ? "Complete Your Registration"
+          : "Enter Verification Code"}
+      </h1>
       <p className={styles.subtitle}>
         We&apos;ve sent a 6-digit code to <strong>{pendingEmail}</strong>
+        {isSignupFlow ? " to complete your registration" : ""}
       </p>
 
       {authError && <p className={styles.errorMessage}>{authError}</p>}
@@ -156,10 +176,12 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ onBack }) => {
             {[0, 1, 2, 3, 4, 5].map((index) => (
               <input
                 key={index}
-                ref={(el) => { inputRefs.current[index] = el; }}
+                ref={(el) => {
+                  inputRefs.current[index] = el;
+                }}
                 type="text"
                 className={styles.otpInput}
-                value={otpCode[index] || ''}
+                value={otpCode[index] || ""}
                 onChange={(e) => handleOTPChange(e.target.value, index)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
                 onPaste={(e) => handlePaste(e, index)}
@@ -178,18 +200,34 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ onBack }) => {
             Code expires in: <strong>{formatTime(timeLeft)}</strong>
           </p>
           {timeLeft <= 0 && (
-            <p className={styles.expiredText}>Code has expired. Please request a new one.</p>
+            <p className={styles.expiredText}>
+              Code has expired. Please request a new one.
+            </p>
           )}
         </div>
 
-        <button 
-          type="submit" 
-          className={styles.submitButton} 
+        <button
+          type="submit"
+          className={styles.submitButton}
           disabled={isLoading || otpCode.length !== 6 || timeLeft <= 0}
         >
-          {isLoading ? "Verifying..." : "Verify & Sign In"}
+          {isLoading
+            ? "Verifying..."
+            : isSignupFlow
+              ? "Verify & Complete Registration"
+              : "Verify & Sign In"}
           <span className={styles.buttonIcon}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>
             </svg>
@@ -206,13 +244,9 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ onBack }) => {
         >
           Resend Code
         </button>
-        
-        <button 
-          type="button" 
-          onClick={onBack}
-          className={styles.backButton}
-        >
-          Back to Login
+
+        <button type="button" onClick={onBack} className={styles.backButton}>
+          {isSignupFlow ? "Back to Sign Up" : "Back to Login"}
         </button>
       </div>
     </div>

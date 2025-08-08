@@ -1,5 +1,5 @@
-import apiClient from './client';
-import { isAxiosError } from 'axios'; // For error checking in fetchCurrentUser
+import apiClient from "./client";
+import { isAxiosError } from "axios"; // For error checking in fetchCurrentUser
 
 // Define interfaces for expected data structures
 // These should align with your backend Pydantic schemas
@@ -8,7 +8,7 @@ export interface User {
   id: number;
   email: string;
   full_name?: string;
-  role: 'teacher' | 'admin'; // Assuming UserRole enum values
+  role: "teacher" | "admin"; // Assuming UserRole enum values
   is_active: boolean;
   created_at: string; // ISO date string
 }
@@ -32,33 +32,50 @@ export interface OTPResponse {
   email: string;
 }
 
-export const signup = async (credentials: SignupCredentials): Promise<User> => {
-  const response = await apiClient.post('/auth/register', {
+export const signup = async (
+  credentials: SignupCredentials,
+): Promise<OTPResponse> => {
+  const response = await apiClient.post("/auth/register", {
     email: credentials.email,
     password: credentials.password,
     full_name: credentials.full_name,
   });
-  return response.data; // Backend returns UserRead schema
+  return response.data; // Backend returns OTPResponse schema
 };
 
 // Step 1: Request OTP after credential validation
-export const requestLoginOTP = async (credentials: LoginCredentials): Promise<OTPResponse> => {
+export const requestLoginOTP = async (
+  credentials: LoginCredentials,
+): Promise<OTPResponse> => {
   // Backend expects form data for OAuth2PasswordRequestForm
   const formData = new URLSearchParams();
-  formData.append('username', credentials.email); // 'username' is the field OAuth2 expects
-  formData.append('password', credentials.password);
+  formData.append("username", credentials.email); // 'username' is the field OAuth2 expects
+  formData.append("password", credentials.password);
 
-  const response = await apiClient.post('/auth/login', formData, {
+  const response = await apiClient.post("/auth/login", formData, {
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      "Content-Type": "application/x-www-form-urlencoded",
     },
   });
   return response.data; // Backend returns OTP response with message and email
 };
 
 // Step 2: Complete login with OTP verification
-export const completeLoginWithOTP = async (credentials: OTPVerificationCredentials): Promise<User> => {
-  const response = await apiClient.post('/auth/complete-login', {
+export const completeLoginWithOTP = async (
+  credentials: OTPVerificationCredentials,
+): Promise<User> => {
+  const response = await apiClient.post("/auth/complete-login", {
+    email: credentials.email,
+    otp_code: credentials.otp_code,
+  });
+  return response.data; // Backend returns UserRead schema, token is in HttpOnly cookie
+};
+
+// Step 2: Complete signup with OTP verification
+export const completeSignupWithOTP = async (
+  credentials: OTPVerificationCredentials,
+): Promise<User> => {
+  const response = await apiClient.post("/auth/complete-signup", {
     email: credentials.email,
     otp_code: credentials.otp_code,
   });
@@ -68,17 +85,19 @@ export const completeLoginWithOTP = async (credentials: OTPVerificationCredentia
 // Legacy login function for backward compatibility (if needed)
 export const login = async (): Promise<User> => {
   // For now, this could throw an error or redirect to OTP flow
-  throw new Error('Direct login is no longer supported. Please use OTP authentication.');
+  throw new Error(
+    "Direct login is no longer supported. Please use OTP authentication.",
+  );
 };
 
 export const logout = async (): Promise<{ message: string }> => {
-  const response = await apiClient.post('/auth/logout');
+  const response = await apiClient.post("/auth/logout");
   return response.data;
 };
 
 export const fetchCurrentUser = async (): Promise<User | null> => {
   try {
-    const response = await apiClient.get('/auth/users/me');
+    const response = await apiClient.get("/auth/users/me");
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response?.status === 401) {
@@ -93,7 +112,7 @@ export const fetchCurrentUser = async (): Promise<User | null> => {
 // Interfaces for Password Reset
 export interface ForgotPasswordPayload {
   email: string;
-  origin?: string;  // Optional origin to determine frontend URL
+  origin?: string; // Optional origin to determine frontend URL
 }
 
 export interface ResetPasswordPayload {
@@ -108,19 +127,23 @@ export interface MessageResponse {
 
 // --- Password Reset Functions ---
 
-export const requestPasswordReset = async (payload: ForgotPasswordPayload): Promise<MessageResponse> => {
+export const requestPasswordReset = async (
+  payload: ForgotPasswordPayload,
+): Promise<MessageResponse> => {
   // Add the origin to help backend determine which URL to use
-  const data = { 
+  const data = {
     email: payload.email,
-    origin: typeof window !== 'undefined' ? window.location.origin : undefined
+    origin: typeof window !== "undefined" ? window.location.origin : undefined,
   };
-  
-  const response = await apiClient.post('/auth/forgot-password', data);
+
+  const response = await apiClient.post("/auth/forgot-password", data);
   return response.data; // Returns { "message": "..." }
 };
 
-export const resetPassword = async (payload: ResetPasswordPayload): Promise<MessageResponse> => {
+export const resetPassword = async (
+  payload: ResetPasswordPayload,
+): Promise<MessageResponse> => {
   // Backend expects { "token": "...", "new_password": "..." }
-  const response = await apiClient.post('/auth/reset-password', payload);
+  const response = await apiClient.post("/auth/reset-password", payload);
   return response.data; // Returns { "message": "..." }
 };
