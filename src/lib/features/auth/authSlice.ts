@@ -285,12 +285,6 @@ const authSlice = createSlice({
           state.user.full_name = action.payload.full_name;
       }
     },
-    // Decrement resend cooldown
-    decrementResendCooldown: (state) => {
-      if (state.resendCooldown > 0) {
-        state.resendCooldown -= 1;
-      }
-    },
   },
   extraReducers: (builder) => {
     builder

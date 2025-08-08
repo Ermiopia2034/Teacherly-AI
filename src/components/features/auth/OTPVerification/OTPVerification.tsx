@@ -224,34 +224,13 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ onBack }) => {
         </div>
 
         <div className={styles.otpInfo}>
-          {resendSuccess && (
-            <p
-              className={styles.timerText}
-              style={{ color: "var(--success, #22c55e)" }}
-            >
-              <strong>✓ New code sent successfully!</strong>
+          <p className={styles.timerText}>
+            Code expires in: <strong>{formatTime(timeLeft)}</strong>
+          </p>
+          {timeLeft <= 0 && (
+            <p className={styles.expiredText}>
+              Code has expired. Please request a new one.
             </p>
-          )}
-          {otpStep === "resending" ? (
-            <p className={styles.timerText}>
-              <strong>Sending new code...</strong>
-            </p>
-          ) : (
-            <>
-              <p className={styles.timerText}>
-                Code expires in: <strong>{formatTime(timeLeft)}</strong>
-              </p>
-              {timeLeft <= 0 && (
-                <p className={styles.expiredText}>
-                  Code has expired. Please request a new one.
-                </p>
-              )}
-              {resendCooldown > 0 && !resendSuccess && (
-                <p className={styles.timerText}>
-                  Resend available in: <strong>{resendCooldown}s</strong>
-                </p>
-              )}
-            </>
           )}
         </div>
 
