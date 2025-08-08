@@ -25,23 +25,25 @@ const MarkdownRenderer = ({ markdownContent }: { markdownContent: string }) => {
           [rehypeKatex, { throwOnError: false, strict: 'ignore', trust: true }],
         ]}
         components={{
-          a: ({ node, ...props }) => (
-            <a {...props} target={props.href?.startsWith('#') ? undefined : '_blank'} rel={props.href?.startsWith('#') ? undefined : 'noopener noreferrer'} />
+          a: (props: React.ComponentPropsWithoutRef<'a'>) => (
+            <a
+              {...props}
+              target={props.href?.startsWith('#') ? undefined : '_blank'}
+              rel={props.href?.startsWith('#') ? undefined : 'noopener noreferrer'}
+            />
           ),
-          table: ({ node, ...props }) => (
+          table: (props: React.ComponentPropsWithoutRef<'table'>) => (
             <div style={{ overflowX: 'auto' }}>
               <table {...props} />
             </div>
           ),
           // Ensure display math blocks don't overflow horizontally
-          div: ({ node, ...props }) => {
-            const className = (props as any)?.className || '';
-            if (className.includes('katex-display')) {
-              return (
-                <div style={{ overflowX: 'auto' }} {...props} />
-              );
+          div: (props: React.ComponentPropsWithoutRef<'div'>) => {
+            const { className, ...rest } = props;
+            if (className && className.includes('katex-display')) {
+              return <div style={{ overflowX: 'auto' }} className={className} {...rest} />;
             }
-            return <div {...props} />;
+            return <div className={className} {...rest} />;
           },
         }}
       >
