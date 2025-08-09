@@ -227,6 +227,11 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ onBack }) => {
           <p className={styles.timerText}>
             Code expires in: <strong>{formatTime(timeLeft)}</strong>
           </p>
+          {resendSuccess && (
+            <p className={styles.successText}>
+              ✅ Verification code sent successfully!
+            </p>
+          )}
           {timeLeft <= 0 && (
             <p className={styles.expiredText}>
               Code has expired. Please request a new one.
