@@ -1,55 +1,62 @@
-'use client';
+"use client";
 
-import React, { useState, FormEvent } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '@/lib/store';
+import React, { useState, FormEvent } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/lib/store";
 import {
   createAssessmentThunk,
   selectGradingCreating,
   selectGradingError,
-  clearError
-} from '@/lib/features/grading/gradingSlice';
-import Button from '@/components/ui/Button/Button';
-import LabeledInput from '@/components/ui/LabeledInput/LabeledInput';
-import LabeledTextarea from '@/components/ui/LabeledTextarea/LabeledTextarea';
-import FileUpload from '@/components/ui/FileUpload/FileUpload';
-import Card from '@/components/ui/Card/Card';
-import { AssessmentCreatePayload } from '@/lib/api/grading';
-import styles from './AssessmentCreationForm.module.css';
-import { useToast } from '@/providers/ToastProvider';
+  clearError,
+} from "@/lib/features/grading/gradingSlice";
+import Button from "@/components/ui/Button/Button";
+import LabeledInput from "@/components/ui/LabeledInput/LabeledInput";
+import LabeledTextarea from "@/components/ui/LabeledTextarea/LabeledTextarea";
+import FileUpload from "@/components/ui/FileUpload/FileUpload";
+import Card from "@/components/ui/Card/Card";
+import { AssessmentCreatePayload } from "@/lib/api/grading";
+import styles from "./AssessmentCreationForm.module.css";
+import { useToast } from "@/providers/ToastProvider";
 
 interface AssessmentCreationFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
 }
 
-export function AssessmentCreationForm({ onSuccess, onCancel }: AssessmentCreationFormProps) {
+export function AssessmentCreationForm({
+  onSuccess,
+  onCancel,
+}: AssessmentCreationFormProps) {
   const dispatch = useDispatch<AppDispatch>();
   const { showToast } = useToast();
   const isCreating = useSelector(selectGradingCreating);
   const error = useSelector(selectGradingError);
 
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
+    title: "",
+    description: "",
     max_score: 100,
-    answer_key: ''
+    answer_key: "",
   });
 
   const [answerKeyFile, setAnswerKeyFile] = useState<File | null>(null);
-  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({});
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value, type } = e.target;
-    
-    setFormData(prev => ({ 
-      ...prev, 
-      [name]: type === 'number' ? Number(value) : value
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "number" ? Number(value) : value,
     }));
-    
+
     // Clear validation error when user starts typing
     if (validationErrors[name]) {
-      setValidationErrors(prev => ({ ...prev, [name]: '' }));
+      setValidationErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
@@ -57,26 +64,26 @@ export function AssessmentCreationForm({ onSuccess, onCancel }: AssessmentCreati
     if (files.length > 0) {
       const file = files[0];
       setAnswerKeyFile(file);
-      
+
       // Read file content for text files
-      if (file.type === 'text/plain') {
+      if (file.type === "text/plain") {
         const reader = new FileReader();
         reader.onload = (e) => {
           const content = e.target?.result as string;
-          setFormData(prev => ({ ...prev, answer_key: content }));
+          setFormData((prev) => ({ ...prev, answer_key: content }));
         };
         reader.readAsText(file);
       } else {
         // For other file types, just use the filename as placeholder
-        setFormData(prev => ({ 
-          ...prev, 
-          answer_key: `Answer key file: ${file.name}` 
+        setFormData((prev) => ({
+          ...prev,
+          answer_key: `Answer key file: ${file.name}`,
         }));
       }
 
       // Clear validation error
       if (validationErrors.answer_key) {
-        setValidationErrors(prev => ({ ...prev, answer_key: '' }));
+        setValidationErrors((prev) => ({ ...prev, answer_key: "" }));
       }
     }
   };
@@ -85,19 +92,19 @@ export function AssessmentCreationForm({ onSuccess, onCancel }: AssessmentCreati
     const errors: Record<string, string> = {};
 
     if (!formData.title.trim()) {
-      errors.title = 'Assessment title is required';
+      errors.title = "Assessment title is required";
     }
 
     if (formData.title.trim().length > 200) {
-      errors.title = 'Title must be 200 characters or less';
+      errors.title = "Title must be 200 characters or less";
     }
 
     if (formData.description.length > 1000) {
-      errors.description = 'Description must be 1000 characters or less';
+      errors.description = "Description must be 1000 characters or less";
     }
 
     if (formData.max_score <= 0) {
-      errors.max_score = 'Maximum score must be greater than 0';
+      errors.max_score = "Maximum score must be greater than 0";
     }
 
     if (formData.max_score > 1000) {
@@ -105,7 +112,7 @@ export function AssessmentCreationForm({ onSuccess, onCancel }: AssessmentCreati
     }
 
     if (!formData.answer_key.trim() && !answerKeyFile) {
-      errors.answer_key = 'Answer key is required';
+      errors.answer_key = "Answer key is required";
     }
 
     setValidationErrors(errors);
@@ -114,9 +121,13 @@ export function AssessmentCreationForm({ onSuccess, onCancel }: AssessmentCreati
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
-      showToast({ variant: 'error', title: 'Validation error', description: 'Please correct the highlighted fields.' });
+      showToast({
+        variant: "error",
+        title: "Validation error",
+        description: "Please correct the highlighted fields.",
+      });
       return;
     }
 
@@ -125,36 +136,44 @@ export function AssessmentCreationForm({ onSuccess, onCancel }: AssessmentCreati
         title: formData.title.trim(),
         description: formData.description.trim() || undefined,
         max_score: formData.max_score,
-        answer_key: formData.answer_key.trim()
+        answer_key: formData.answer_key.trim(),
       };
 
       await dispatch(createAssessmentThunk(payload)).unwrap();
-      
+
       // Reset form
       setFormData({
-        title: '',
-        description: '',
+        title: "",
+        description: "",
         max_score: 100,
-        answer_key: ''
+        answer_key: "",
       });
       setAnswerKeyFile(null);
       setValidationErrors({});
-      showToast({ variant: 'success', title: 'Assessment created', description: 'The assessment has been created successfully.' });
+      showToast({
+        variant: "success",
+        title: "Assessment created",
+        description: "The assessment has been created successfully.",
+      });
 
       onSuccess?.();
     } catch (error) {
-      console.error('Failed to create assessment:', error);
-      showToast({ variant: 'error', title: 'Creation failed', description: String(error) });
+      console.error("Failed to create assessment:", error);
+      showToast({
+        variant: "error",
+        title: "Creation failed",
+        description: String(error),
+      });
     }
   };
 
   const handleCancel = () => {
     // Reset form
     setFormData({
-      title: '',
-      description: '',
+      title: "",
+      description: "",
       max_score: 100,
-      answer_key: ''
+      answer_key: "",
     });
     setAnswerKeyFile(null);
     setValidationErrors({});
@@ -173,7 +192,7 @@ export function AssessmentCreationForm({ onSuccess, onCancel }: AssessmentCreati
         {/* Basic Information */}
         <div className={styles.section}>
           <h4>Assessment Information</h4>
-          
+
           <LabeledInput
             label="Assessment Title"
             id="title"
@@ -198,7 +217,9 @@ export function AssessmentCreationForm({ onSuccess, onCancel }: AssessmentCreati
             rows={3}
           />
           {validationErrors.description && (
-            <div className={styles.fieldError}>{validationErrors.description}</div>
+            <div className={styles.fieldError}>
+              {validationErrors.description}
+            </div>
           )}
 
           <LabeledInput
@@ -213,7 +234,9 @@ export function AssessmentCreationForm({ onSuccess, onCancel }: AssessmentCreati
             required
           />
           {validationErrors.max_score && (
-            <div className={styles.fieldError}>{validationErrors.max_score}</div>
+            <div className={styles.fieldError}>
+              {validationErrors.max_score}
+            </div>
           )}
         </div>
 
@@ -234,7 +257,14 @@ export function AssessmentCreationForm({ onSuccess, onCancel }: AssessmentCreati
             >
               <div className={styles.uploadPrompt}>
                 <div className={styles.uploadIcon}>
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                     <polyline points="14,2 14,8 20,8" />
                     <line x1="16" y1="13" x2="8" y2="13" />
@@ -250,7 +280,14 @@ export function AssessmentCreationForm({ onSuccess, onCancel }: AssessmentCreati
             {answerKeyFile && (
               <div className={styles.fileInfo}>
                 <div className={styles.fileName}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                     <polyline points="14,2 14,8 20,8" />
                   </svg>
@@ -262,7 +299,7 @@ export function AssessmentCreationForm({ onSuccess, onCancel }: AssessmentCreati
                   size="sm"
                   onClick={() => {
                     setAnswerKeyFile(null);
-                    setFormData(prev => ({ ...prev, answer_key: '' }));
+                    setFormData((prev) => ({ ...prev, answer_key: "" }));
                   }}
                 >
                   Remove
@@ -284,24 +321,33 @@ export function AssessmentCreationForm({ onSuccess, onCancel }: AssessmentCreati
               rows={6}
             />
           </div>
-          
+
           {validationErrors.answer_key && (
-            <div className={styles.fieldError}>{validationErrors.answer_key}</div>
+            <div className={styles.fieldError}>
+              {validationErrors.answer_key}
+            </div>
           )}
         </div>
 
         {/* Error Display */}
         {error && (
           <div className={styles.errorMessage}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <circle cx="12" cy="12" r="10" />
               <line x1="15" y1="9" x2="9" y2="15" />
               <line x1="9" y1="9" x2="15" y2="15" />
             </svg>
             <p>{error}</p>
-            <Button 
+            <Button
               type="button"
-              variant="ghost" 
+              variant="ghost"
               size="sm"
               onClick={() => dispatch(clearError())}
             >
@@ -320,12 +366,8 @@ export function AssessmentCreationForm({ onSuccess, onCancel }: AssessmentCreati
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            disabled={isCreating}
-            isLoading={isCreating}
-          >
-            {isCreating ? 'Creating...' : 'Create Assessment'}
+          <Button type="submit" disabled={isCreating} isLoading={isCreating}>
+            {isCreating ? "Creating..." : "Create Assessment"}
           </Button>
         </div>
       </form>

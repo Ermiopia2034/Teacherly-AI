@@ -35,6 +35,9 @@ export interface ExamGenerationRequest {
   difficulty: string;
   questionCount: string;
   additionalInfo: string;
+  // Mark allocation context
+  marks?: number;
+  semester_id?: number;
 }
 
 /**
