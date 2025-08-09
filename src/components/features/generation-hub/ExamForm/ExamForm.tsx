@@ -31,6 +31,7 @@ import {
 } from "@/lib/api/curriculum";
 import MarkAllocationProgress from "@/components/features/academic/MarkAllocationProgress/MarkAllocationProgress";
 import { useToast } from "@/providers/ToastProvider";
+import { selectCurrentSemesterAllocation, fetchCurrentSemesterAllocationThunk } from "@/lib/features/academic/markAllocationSlice";
 
 export default function ExamForm() {
   const dispatch: AppDispatch = useDispatch();
@@ -42,6 +43,7 @@ export default function ExamForm() {
   const submissionResponse = useSelector(selectLastSubmissionResponse);
   const currentSemester = useSelector(selectCurrentSemester);
   const semestersLoading = useSelector(selectSemestersLoading);
+  const currentAllocation = useSelector(selectCurrentSemesterAllocation);
 
   const [formData, setFormData] = useState({
     subject: "",
@@ -72,6 +74,13 @@ export default function ExamForm() {
     // Fetch current semester when component mounts
     dispatch(fetchCurrentSemesterThunk());
   }, [dispatch]);
+
+  // Ensure current semester allocation is loaded early so the marks input can be capped by remaining marks
+  useEffect(() => {
+    if (currentSemester?.id) {
+      dispatch(fetchCurrentSemesterAllocationThunk());
+    }
+  }, [dispatch, currentSemester?.id]);
 
   // Handle success message and delayed redirect
   useEffect(() => {
@@ -459,12 +468,12 @@ export default function ExamForm() {
             value={formData.marks}
             onChange={handleChange}
             min="1"
-            max="100"
+            max={(currentAllocation?.remaining_marks ?? 100).toString()}
             required
             disabled={!areBasicFieldsFilled}
             placeholder={
               areBasicFieldsFilled
-                ? "Enter total marks"
+                ? `Enter total marks (remaining: ${currentAllocation?.remaining_marks ?? 100})`
                 : "Fill required fields first"
             }
           />

@@ -287,6 +287,25 @@
     text-decoration: underline;
 }
 
+/* Error styles for auth forms */
+.errorMessage {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.75rem 0 0;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    background: var(--error-light);
+    border: 1px solid var(--error-border);
+    color: var(--error);
+    font-size: 0.9rem;
+    line-height: 1.3;
+}
+
+.errorIcon {
+    color: var(--error);
+}
+
 /* Animations */
 @keyframes fadeIn {
     from {

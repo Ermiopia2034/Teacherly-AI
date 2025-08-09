@@ -117,6 +117,28 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
     { value: 'not_enrolled', label: 'Not Enrolled' }
   ];
 
+  // Convert technical errors (e.g., network/502) into user-friendly messages
+  const getFriendlyErrorMessage = (rawError: unknown): string => {
+    const text = String(rawError ?? '').toLowerCase();
+    if (!text) return 'Something went wrong. Please try again.';
+    if (text.includes('network') || text.includes('502') || text.includes('503') || text.includes('504') || text.includes('timeout')) {
+      return 'We’re having trouble connecting right now. Please check your connection or try again shortly.';
+    }
+    if (text.includes('401') || text.includes('unauthorized')) {
+      return 'Your session may have expired. Please sign in again and retry.';
+    }
+    if (text.includes('403') || text.includes('forbidden')) {
+      return 'You don’t have permission to perform this action. If this seems wrong, contact your administrator.';
+    }
+    if (text.includes('not found') || text.includes('404')) {
+      return 'We couldn’t find the requested student data.';
+    }
+    if (text.includes('bad request') || text.includes('400') || text.includes('validation') || text.includes('invalid')) {
+      return 'Some information looks invalid. Please review your inputs and try again.';
+    }
+    return String(rawError ?? 'An error occurred.');
+  };
+
   const columns: Column<Student>[] = [
     {
       key: 'avatar',
@@ -274,7 +296,7 @@ export function StudentsList({ initialSectionId }: StudentsListProps) {
       {/* Error Display */}
       {error && (
         <div className={styles.errorMessage}>
-          <p>Error: {error}</p>
+          <p>{getFriendlyErrorMessage(error)}</p>
           <Button
             variant="secondary"
             onClick={() => dispatch(clearError())}

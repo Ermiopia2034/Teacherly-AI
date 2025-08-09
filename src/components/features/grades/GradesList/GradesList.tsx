@@ -156,6 +156,28 @@ export function GradesList() {
     }))
   ];
 
+  // Map raw error strings (e.g., "Network Error", "502 Bad Gateway") to user-friendly messages
+  const getFriendlyErrorMessage = (rawError: unknown): string => {
+    const text = String(rawError ?? '').toLowerCase();
+    if (!text) return 'Something went wrong. Please try again.';
+    if (text.includes('network') || text.includes('502') || text.includes('503') || text.includes('504') || text.includes('timeout')) {
+      return 'We’re having trouble connecting right now. Please check your connection or try again shortly.';
+    }
+    if (text.includes('401') || text.includes('unauthorized')) {
+      return 'Your session may have expired. Please sign in again and retry.';
+    }
+    if (text.includes('403') || text.includes('forbidden')) {
+      return 'You don’t have permission to perform this action. If this seems wrong, contact your administrator.';
+    }
+    if (text.includes('not found') || text.includes('404')) {
+      return 'The requested grade data could not be found.';
+    }
+    if (text.includes('bad request') || text.includes('400') || text.includes('validation') || text.includes('invalid')) {
+      return 'Some information looks invalid. Please review your inputs and try again.';
+    }
+    return String(rawError ?? 'An error occurred.');
+  };
+
   if (isLoading && grades.length === 0) {
     return (
       <div className={styles.container}>
@@ -264,9 +286,9 @@ export function GradesList() {
       {/* Error Display */}
       {error && (
         <div className={styles.errorMessage}>
-          <p>Error: {error}</p>
-          <Button 
-            variant="secondary" 
+          <p>{getFriendlyErrorMessage(error)}</p>
+          <Button
+            variant="secondary"
             onClick={() => dispatch(clearError())}
           >
             Dismiss

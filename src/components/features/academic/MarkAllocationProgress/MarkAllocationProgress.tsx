@@ -124,6 +124,28 @@ export function MarkAllocationProgress({
     return Math.min(percentage, 100);
   };
 
+  // Translate technical errors to user-friendly copy
+  const getFriendlyErrorMessage = (rawError: unknown): string => {
+    const text = String(rawError ?? '').toLowerCase();
+    if (!text) return 'Something went wrong. Please try again.';
+    if (text.includes('network') || text.includes('502') || text.includes('503') || text.includes('504') || text.includes('timeout')) {
+      return 'We’re having trouble connecting right now. Please check your connection or try again shortly.';
+    }
+    if (text.includes('401') || text.includes('unauthorized')) {
+      return 'Your session may have expired. Please sign in again and retry.';
+    }
+    if (text.includes('403') || text.includes('forbidden')) {
+      return 'You don’t have permission to perform this action. If this seems wrong, contact your administrator.';
+    }
+    if (text.includes('not found') || text.includes('404')) {
+      return 'We couldn’t find mark allocation data.';
+    }
+    if (text.includes('bad request') || text.includes('400') || text.includes('validation') || text.includes('invalid')) {
+      return 'Some information looks invalid. Please review and try again.';
+    }
+    return String(rawError ?? 'An error occurred.');
+  };
+
   if (isLoading && !allocation) {
     return (
       <Card className={`${styles.container} ${className}`}>
@@ -267,7 +289,7 @@ export function MarkAllocationProgress({
       {/* Error Display */}
       {error && (
         <div className={styles.errorMessage}>
-          <p>Error: {error}</p>
+          <p>{getFriendlyErrorMessage(error)}</p>
           <Button 
             variant="secondary" 
             size="sm"
